@@ -8,7 +8,7 @@ services:
      # - 27017:27017
   tutor-web:
     build:
-      context: ./tutor-web
+      context: ./
       dockerfile: web.dockerfile
     environment:
       PORT: 3000
