@@ -1,10 +1,10 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine as build
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY /Tutor.Api .
 RUN dotnet restore
-RUN dotnet publish -o /app/published-app
+RUN dotnet publish -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine as runtime
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
-COPY --from=build /app/published-app /app
-ENTRYPOINT [ "dotnet", "/app/DockerNetExample.dll" ]
+COPY --from=build-env /App/out .
+ENTRYPOINT [ "dotnet", "Tutor.Api.dll" ]
