@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine as build
 WORKDIR /app
-COPY /Wordle.Api .
+COPY /Tutor.Api .
 RUN dotnet restore
 RUN dotnet publish -o /app/published-app
 
