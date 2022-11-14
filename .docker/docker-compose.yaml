@@ -8,7 +8,7 @@ services:
      # - 27017:27017
   tutor-web:
     build:
-      context: ../tutor-web
+      context: ./tutor-web
       dockerfile: web.dockerfile
     environment:
       PORT: 3000
@@ -17,7 +17,7 @@ services:
       - 3000:3000
   playground-web-backend:
     build: 
-      context: ../
+      context: ./
       dockerfile: app.dockerfile
     #environment:
      # MONGODB_URI: mongodb://playground-web-db:27017/playground-web
