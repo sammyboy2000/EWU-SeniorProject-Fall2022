@@ -18,7 +18,7 @@ RUN npm install
 COPY tutor-web/ .
 
 # Build the app
-RUN npm run generate
+RUN npm run build
 
 # Expose $PORT on container.
 # We use a variable here as the port is something that can differ on the environment.
