@@ -15,7 +15,7 @@ services:
       PROXY_API: http://tutor-api:8080/
     ports:
       - 3000:3000
-  playground-web-backend:
+  Tutor-Api:
     build: 
       context: ./
       dockerfile: app.dockerfile
