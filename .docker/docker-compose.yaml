@@ -12,14 +12,14 @@ services:
     image: adminer
     restart: always
     ports:
-      - 400:400
+      - 8080:8080
   tutor-web:
     build:
       context: ./
       dockerfile: web.dockerfile
     environment:
       PORT: 3000
-      PROXY_API: http://tutor-api:8080/
+      PROXY_API: http://tutor-api:7125/
     ports:
       - 3000:3000
   tutor-api:
@@ -29,4 +29,4 @@ services:
     #environment:
      # MYSQL_URI: mongodb://playground-web-db:27017/playground-web
     ports:
-      - 8080:8080
+      - 7125:7125
