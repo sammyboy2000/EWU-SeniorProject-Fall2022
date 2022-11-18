@@ -25,13 +25,13 @@ RUN npm run generate
 
 # Expose port on container.
 # We use 3000 as it's the default Nuxt app port.
-EXPOSE 3000
+EXPOSE $PORT
 
 # Set host to localhost / the docker image
 ENV NUXT_HOST=0.0.0.0
 
 # Set app port
-ENV NUXT_PORT=3000
+ENV NUXT_PORT=$PORT
 
 # Set the base url
 ENV PROXY_API=$PROXY_API

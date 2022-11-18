@@ -1,11 +1,30 @@
 version: '3'
 services:
-  #playground-web-db:
-   # image: mongo:4.2.2
-    #environment:
-     # MONGO_INITDB_DATABASE: playground-web
-    #ports:
-     # - 27017:27017
+  sql-server-db:
+    image: mysql:8.031
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'tutor-db'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'user'
+      # TODO: Replace passwords with environment variable that can be changed on CI/CD of choice
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'password'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3306:3306'
+    expose:
+      # Opens port 3306 on the container
+      # TODO: Remove after testing it works with the API
+      - '3306'
+      # Where our data will be persisted
+    volumes:
+      - my-db:/var/lib/mysql
+# Names our volume
+volumes:
+  my-db:
   tutor-web:
     build:
       context: ./
@@ -20,6 +39,6 @@ services:
       context: ./
       dockerfile: app.dockerfile
     #environment:
-     # MONGODB_URI: mongodb://playground-web-db:27017/playground-web
+     # MYSQL_URI: mongodb://playground-web-db:27017/playground-web
     ports:
       - 8080:8080
