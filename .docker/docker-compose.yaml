@@ -13,9 +13,6 @@ services:
     restart: always
     ports:
       - 8080:8080
-# Names our volume
-volumes:
-  my-db:
   tutor-web:
     build:
       context: ./
