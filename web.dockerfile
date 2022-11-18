@@ -20,6 +20,9 @@ COPY tutor-web/ .
 # Build the app
 RUN npm run build
 
+#Generate the static portion with Nuxt
+RUN npm run generate
+
 # Expose $PORT on container.
 # We use a variable here as the port is something that can differ on the environment.
 EXPOSE $PORT
