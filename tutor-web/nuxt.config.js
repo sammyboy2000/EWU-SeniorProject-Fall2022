@@ -9,8 +9,8 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - wordle-web',
-    title: 'wordle-web',
+    titleTemplate: '%s - tutor-web',
+    title: 'tutor-web',
     htmlAttrs: {
       lang: 'en',
     },
