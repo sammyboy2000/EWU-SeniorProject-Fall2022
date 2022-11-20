@@ -25,8 +25,8 @@ import { Component, Vue } from 'vue-property-decorator'
 @Component({})
 export default class Weather extends Vue {
   date: Date = new Date
-  temperatureC: number = 0
-  temperatureF: number= 0
+  temperatureC: string = ''
+  temperatureF: string = ''
   summary: string = ''
   showF: boolean = false
 
@@ -41,8 +41,8 @@ export default class Weather extends Vue {
   initializeWeather() {
     this.$axios.get('Weather').then((response) => {
       this.date = response.data[0].date
-      this.temperatureC = `${response.data[0].temperatureC}c`
-      this.temperatureF = `${response.data[0].temperatureF}f`
+      this.temperatureC = `${response.data[0].temperatureC} c`
+      this.temperatureF = `${response.data[0].temperatureF} f`
       this.summary = response.data[0].summary
     })
   }

@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-btn icon @click="toggleDialog">
-      <v-icon> mdi-cog </v-icon>
-    </v-btn>
+    <v-container @click="toggleDialog">
+      Settings <v-icon>mdi-cog</v-icon>
+    </v-container>
 
     <v-dialog v-model="dialog" width="450">
       <v-card>
@@ -66,7 +66,7 @@ export default class SettingsDialog extends Vue {
   }
 
   turnOffTheLights() {
-    // Implement Me
+    this.$vuetify.theme.dark = true
   }
 
   purpleTheme() {
