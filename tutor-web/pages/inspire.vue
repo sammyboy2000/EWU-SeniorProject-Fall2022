@@ -6,14 +6,13 @@
           <v-card-text v-if="!showF"> {{ temperatureC }}</v-card-text>
           <v-card-text v-if="showF"> {{ temperatureF }}</v-card-text>
           <v-card-text > {{ summary }}</v-card-text>
-          <v-btn
+        <footer>
+          <small>
+            <v-btn
                   color="blue darken-1"
                   text
                   @click="switchUnits"
                 > switch units</v-btn>
-        <footer>
-          <small>
-            <em>&mdash;in Spokane</em>
           </small>
         </footer>
       </v-card>
@@ -40,11 +39,11 @@ export default class Weather extends Vue {
   }
 
   initializeWeather() {
-    this.$axios.get('/api/Weather').then((response) => {
-      this.date = response.data.date
-      this.temperatureC = response.data.temperatureC
-      this.temperatureF = response.data.temperatureF
-      this.summary = response.data.summary
+    this.$axios.get('Weather').then((response) => {
+      this.date = response.data[0].date
+      this.temperatureC = `${response.data[0].temperatureC}c`
+      this.temperatureF = `${response.data[0].temperatureF}f`
+      this.summary = response.data[0].summary
     })
   }
 }
