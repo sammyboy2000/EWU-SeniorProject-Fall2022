@@ -3,7 +3,7 @@
     <v-app-bar :clipped-left="clipped" fixed app>
       <v-toolbar-title>
         <v-btn nuxt to="/">
-          <v-img src="EWUlogo.png" width="150" contain></v-img>
+          <v-img src="/EWUlogo.png" width="150" contain></v-img>
           <v-text>Tutoring</v-text>
         </v-btn>
       </v-toolbar-title>
