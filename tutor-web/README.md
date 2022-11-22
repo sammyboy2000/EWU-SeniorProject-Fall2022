@@ -1,4 +1,4 @@
-# wordle-web
+# tutor-web
 
 ## Build Setup
 
