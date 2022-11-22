@@ -7,11 +7,6 @@ export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
-  // Set file target to be /static
-  static: {
-    prefix: true
-  },
-
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - tutor-web',
