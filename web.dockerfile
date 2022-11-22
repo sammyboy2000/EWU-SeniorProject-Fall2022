@@ -9,13 +9,13 @@ RUN mkdir -p /web
 WORKDIR /web
 
 # Copy the app package and package-lock.json file
-COPY tutor-web/package*.json ./
+# COPY tutor-web/package*.json ./
+
+# Copy or project directory (locally) in the current directory of our docker image (/web)
+COPY tutor-web/ .
 
 # Install node packages
 RUN npm install
-
-# Copy or project directory (locally) in the current directory of our docker image (/app)
-COPY tutor-web/ .
 
 # Build the app
 RUN npm run build
