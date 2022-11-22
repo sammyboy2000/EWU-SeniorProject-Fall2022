@@ -28,7 +28,7 @@ RUN npm run generate
 EXPOSE $PORT
 
 # Set host to localhost / the docker image
-ENV NUXT_HOST=0.0.0.0
+ENV NUXT_HOST=127.0.0.1
 
 # Set app port
 ENV NUXT_PORT=$PORT
