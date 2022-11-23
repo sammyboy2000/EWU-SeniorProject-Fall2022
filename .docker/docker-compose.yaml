@@ -10,12 +10,10 @@ services:
       MYSQL_ROOT_PASSWORD: example
     volumes:
       - tutor-volume:/var/lib/mysql
-  volumes:
-    tutor-volume:
-      container_name: tutor_volume
-      image: mysql:latest
-      volumes:
-        - tutor_volume:/var/lib/mysql
+  tutor-volume:
+    image: mysql:latest
+    volumes:
+      - tutor_volume:/var/lib/mysql
     command: "true"
   adminer:
     image: adminer
