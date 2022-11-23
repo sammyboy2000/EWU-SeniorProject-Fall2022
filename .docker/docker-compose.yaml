@@ -10,8 +10,6 @@ services:
       MYSQL_ROOT_PASSWORD: example
     volumes:
       - tutor-volume:/var/lib/mysql
-volumes:
-  tutor-volume:
   adminer:
     image: adminer
     restart: always
