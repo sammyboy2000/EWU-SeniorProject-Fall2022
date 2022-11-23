@@ -14,7 +14,7 @@ COPY tutor-web/package*.json ./
 # Install node packages
 RUN npm install
 
-# Copy or project directory (locally) in the current directory of our docker image (/app)
+# Copy or project directory (locally) in the current directory of our docker image (/web)
 COPY tutor-web/ .
 
 # Build the app
