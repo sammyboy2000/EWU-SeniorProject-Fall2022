@@ -21,7 +21,7 @@ services:
       PORT: 3000
       PROXY_API: https://tutor-api:7125/
     ports:
-      - 3000:80
+      - 3000:3000
   tutor-api:
     build: 
       context: ./
