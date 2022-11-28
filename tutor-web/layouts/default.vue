@@ -27,7 +27,7 @@
         </v-list-item>
 
         <v-list-item>
-          <v-btn text block nuxt to="/questions">
+          <v-btn text block nuxt to="/student">
             Ask A Question <v-icon>mdi-controller-classic</v-icon></v-btn
           >
         </v-list-item>
