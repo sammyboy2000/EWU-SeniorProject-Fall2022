@@ -7,4 +7,7 @@ export class QuestionType {
 
     char: string
 
+    get isOther(): boolean {
+        return true
+    }
 }
