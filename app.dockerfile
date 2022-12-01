@@ -1,6 +1,5 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine as build
 WORKDIR /app
-ENV ASPNETCORE_URLS=http://+:7125
 
 #remove when done debugging
 EXPOSE 7125
@@ -13,5 +12,5 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine as runtime
 WORKDIR /app
 COPY --from=build /app/published-app /app
 
-
+ENV ASPNETCORE_URLS=https://+:7125
 ENTRYPOINT [ "dotnet", "/app/Tutor.Api.dll" ]
