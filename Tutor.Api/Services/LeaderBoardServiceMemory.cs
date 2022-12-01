@@ -1,4 +1,4 @@
-﻿namespace Wordle.api.Services
+﻿namespace Tutor.api.Services
 {
     public class LeaderBoardServiceMemory : ILeaderBoardService
     {

@@ -1,4 +1,4 @@
-using Wordle.api.Services;
+using Tutor.api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
