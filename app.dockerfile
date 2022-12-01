@@ -12,7 +12,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine as runtime
 WORKDIR /app
 COPY --from=build /app/published-app /app
 
-ENV ASPNETCORE_URLS=https://+:7125
+ENV ASPNETCORE_URLS=http://+:7125
 ENV ASPNETCORE_HTTPS_PORT=7125
 
 ENTRYPOINT [ "dotnet", "/app/Tutor.Api.dll" ]
