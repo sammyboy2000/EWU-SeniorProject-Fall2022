@@ -28,3 +28,5 @@ services:
       dockerfile: app.dockerfile
     ports:
       - 7125:7125
+volumes:
+  tutor-volume:
