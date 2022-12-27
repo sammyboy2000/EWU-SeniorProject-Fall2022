@@ -1,13 +1,9 @@
-
-
 export class QuestionType {
-    constructor(char: string) {
-        this.char = char
-    }
 
-    char: string
-
-    get isOther(): boolean {
-        return true
+    public isOther(value: string) {
+        if(value == "other")
+            return "<div id=\"otherInput\" onchange=\"QuestionType(value);\"><input type=\"text\" value=\"Input other topic\" id=\"otherInput\"></div>"
+        else
+            return ""
     }
 }
