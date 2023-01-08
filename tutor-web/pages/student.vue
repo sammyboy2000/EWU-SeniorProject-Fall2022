@@ -29,9 +29,33 @@
                     </div>
                     <br>
                     <div v-show="selectTopic == 'other'">
-                        <textarea name="otherBox" style="border:1px solid gray" id="other">Please enter a topic...</textarea>
+                        <textarea 
+                        name="otherBox" 
+                        style="border:2px solid gray; 
+                            border-radius: 4px;
+                            resize: none;
+                            height: 50px;
+                            width: 40%;
+                            font-size: 14pt;" 
+                        v-model="other">
+                        Please enter a topic...
+                        </textarea>
                     </div>
-
+                    <br>
+                    <div>
+                        <v-header style="font-size: 16pt; color: black;">Question:</v-header>
+                        <br>
+                        <textarea 
+                        name="questionBox" 
+                        style="border:2px solid gray; 
+                            border-radius: 4px; 
+                            resize: none; 
+                            height: 200px; 
+                            width: 100%;
+                            font-size: 14pt;" 
+                        id="question">
+                        </textarea>
+                    </div>
                 </v-card-text>
                 <v-row class="px-2">
                     <v-col cols="12">
@@ -48,11 +72,14 @@
 
 
 <script lang="ts">
+var temp = '0';
+
 export default {
     data() {
         return {
             selectClass: '',
             selectTopic: '',
+            other: '',
         }
     }
 }
