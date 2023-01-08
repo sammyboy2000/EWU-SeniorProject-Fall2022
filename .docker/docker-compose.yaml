@@ -8,11 +8,6 @@ services:
       MYSQL_ROOT_PASSWORD: example
     volumes:
       - tutor-volume:/var/lib/mysql
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
   tutor-web:
     build:
       context: ./
