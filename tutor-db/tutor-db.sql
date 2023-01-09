@@ -24,11 +24,11 @@ DROP TABLE IF EXISTS `Student`;
 
 CREATE TABLE `Student` (
   `id` int NOT NULL,
-  `external_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
   `first_name` INT NOT NULL,
   `last_name` INT NOT NULL,
   PRIMARY KEY `id` (`id`),
-  FOREIGN KEY (external_id) REFERENCES Users(user_id)
+  FOREIGN KEY (user_id) REFERENCES Users(user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
@@ -39,11 +39,11 @@ DROP TABLE IF EXISTS `Tutor`;
 
 CREATE TABLE `Tutor` (
   `id` int NOT NULL,
-  `external_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
   `first_name` INT NOT NULL,
   `last_name` INT NOT NULL,
   PRIMARY KEY `id` (`id`),
-  FOREIGN KEY (external_id) REFERENCES Users(user_id)
+  FOREIGN KEY (user_id) REFERENCES Users(user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
@@ -54,11 +54,11 @@ DROP TABLE IF EXISTS `Admin`;
 
 CREATE TABLE `Admin` (
   `id` int NOT NULL,
-  `external_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
   `first_name` INT NOT NULL,
   `last_name` INT NOT NULL,
   PRIMARY KEY `id` (`id`),
-  FOREIGN KEY (external_id) REFERENCES Users(user_id)
+  FOREIGN KEY (user_id) REFERENCES Users(user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
