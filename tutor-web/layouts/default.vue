@@ -4,7 +4,7 @@
       <v-toolbar-title>
         <v-btn nuxt to="/">
           <v-img src="/EWUlogo.png" width="150" contain></v-img>
-          <v-text>Tutoring</v-text>
+          Tutoring
         </v-btn>
       </v-toolbar-title>
       <v-spacer />

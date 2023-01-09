@@ -3,7 +3,7 @@
     <v-col cols="12" sm="8" md="6">
       <v-card>
         <v-card-title class="headline">
-          You should automatically be redirected. If not, <v-btn> click here </v-btn>
+          You should automatically be redirected. If not, <v-btn color="primary" to="testLogin"> click here </v-btn>
         </v-card-title>
       </v-card>
     </v-col>
@@ -11,22 +11,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { Component, Vue } from 'vue-property-decorator'
+export default class Login extends Vue {
 
-@Component
-export default class IndexPage extends Vue {
-  name: string = 'IndexPage'
-  buttonText: string = 'Inspire me!'
-  isLoading: boolean = false
-
-  changeButtonText() {
-    this.buttonText =
-      this.buttonText === 'Inspire me!' ? 'Inspire me again!' : 'Inspire me!'
-    this.isLoading = true
+  mounted() {
     setTimeout(() => {
-      this.isLoading = false
-    }, 1000)
+      console.log("active")
+    }, 3000)
   }
+
 }
 </script>

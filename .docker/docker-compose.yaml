@@ -1,6 +1,6 @@
 version: "3"
 services:
-  sql-db:
+  tutor-db:
     image: mysql:8.0.31
     command: --default-authentication-plugin=mysql_native_password
     restart: always
