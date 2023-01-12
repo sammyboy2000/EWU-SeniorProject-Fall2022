@@ -1,4 +1,7 @@
+using Microsoft.Extensions.DependencyInjection;
+using MySqlConnector;
 using Tutor.api.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,10 @@ var allowAll = builder.Services.AddCors(options => {
 });
 
 // Add services to the container.
+
+// Add connection to MySQL
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddTransient<MySqlConnection>(_ => new MySqlConnection(connectionString));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
