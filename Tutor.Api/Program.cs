@@ -18,15 +18,14 @@ var allowAll = builder.Services.AddCors(options => {
 
 // Add services to the container.
 
-// Add connection to MySQL
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddTransient<MySqlConnection>(_ => new MySqlConnection(connectionString));
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ILeaderBoardService, LeaderBoardServiceMemory>();
+// Add connection to MySQL
 builder.Services.AddScoped<DatabaseService>();
 
 var app = builder.Build();

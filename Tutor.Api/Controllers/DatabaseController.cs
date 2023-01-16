@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MySqlConnector;
 using Tutor.api.Services;
 using Tutor.Api.Services;
 
@@ -11,27 +10,24 @@ namespace Tutor.Api.Controllers
     {
         private readonly ILogger<DatabaseController> _logger;
         private readonly DatabaseService _databaseService;
-        private readonly MySqlConnection _connecection;
 
         public DatabaseController(ILogger<DatabaseController> logger,
-            DatabaseService databaseService, MySqlConnection connection)
+            DatabaseService databaseService)
         {
             _logger = logger;
             _databaseService = databaseService;
-            _connecection = connection;
         }
 
-        [HttpGet]
+        [HttpGet("~/GetClasses")]
         public IEnumerable<Class> GetClasses() { 
             _logger.LogInformation("DatabaseController.Get()");
-            return _databaseService.GetClasses(_connecection);
+            return _databaseService.GetClasses();
         }
-
-        [HttpPost]
-        public void Post([FromBody] GameScore score)
+        [HttpGet("~/GetSchema")]
+        public IEnumerable<String> GetSchema()
         {
-            //_logger.LogInformation("LeaderBoardController.Post()");
-            //_leaderBoardService.AddScore(score);
+            _logger.LogInformation("DatabaseController.Get()");
+            return _databaseService.GetSchema();
         }
 
 
