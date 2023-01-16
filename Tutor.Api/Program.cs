@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using MySqlConnector;
+using MySql.Data.MySqlClient;
 using Tutor.api.Services;
 
 
@@ -27,6 +27,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ILeaderBoardService, LeaderBoardServiceMemory>();
+builder.Services.AddScoped<DatabaseService>();
 
 var app = builder.Build();
 
