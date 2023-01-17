@@ -1,0 +1,68 @@
+﻿{
+   "CodeGenerationMode": 2,
+   "ContextClassName": "tutor_dbContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": true,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "Tutor.Api",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "[dbo].[Admin]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Answered_Questions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Class]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Questions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Student]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Topic]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Tutor]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Users]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "(localdb)\\MSSQLLocalDB.tutor_db",
+   "UncountableWords": null,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSpatial": false,
+   "UseT4": false
+}
