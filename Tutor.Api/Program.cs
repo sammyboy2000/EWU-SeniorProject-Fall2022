@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using MySql.Data.MySqlClient;
 using Tutor.api.Services;
 
 
