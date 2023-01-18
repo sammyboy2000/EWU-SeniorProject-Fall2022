@@ -2,12 +2,13 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Tutor.Api.Models
 {
-    public partial class tutor_dbContext : DbContext
+    public partial class tutor_dbContext : IdentityDbContext<AppUser>
     {
         public tutor_dbContext()
         {
@@ -25,7 +26,7 @@ namespace Tutor.Api.Models
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<Topic> Topics { get; set; }
         public virtual DbSet<Tutor> Tutors { get; set; }
-        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<ApiUser> ApiUsers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -38,6 +39,8 @@ namespace Tutor.Api.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Admin>(entity =>
             {
                 entity.ToTable("Admin");
@@ -267,7 +270,7 @@ namespace Tutor.Api.Models
                     .HasConstraintName("FK_Tutor_Users");
             });
 
-            modelBuilder.Entity<User>(entity =>
+            modelBuilder.Entity<ApiUser>(entity =>
             {
                 entity.Property(e => e.UserId)
                     .ValueGeneratedNever()

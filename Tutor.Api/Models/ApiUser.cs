@@ -2,18 +2,19 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Tutor.Api.Models
 {
-    public partial class User
+    public partial class ApiUser
     {
-        public User()
+        public ApiUser()
         {
             Admins = new HashSet<Admin>();
             Students = new HashSet<Student>();
             Tutors = new HashSet<Tutor>();
         }
-
+        [Key]
         public int UserId { get; set; }
         public string ExternalId { get; set; }
         public bool IsStudent { get; set; }

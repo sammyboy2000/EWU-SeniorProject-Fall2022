@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Tutor.Api.Models
 {
@@ -13,7 +14,7 @@ namespace Tutor.Api.Models
             Questions = new HashSet<Question>();
             Topics = new HashSet<Topic>();
         }
-
+        [Key]
         public int Id { get; set; }
         public string ClassCode { get; set; }
         public string ClassName { get; set; }
@@ -22,5 +23,26 @@ namespace Tutor.Api.Models
         public virtual ICollection<AnsweredQuestion> AnsweredQuestions { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
         public virtual ICollection<Topic> Topics { get; set; }
+
+        internal static void Seed(tutor_dbContext context, string filename = "Classes.csv")
+        {
+                // Read the file and update the database
+                var classLines = System.IO.File.ReadAllLines($"Content\\{filename}");
+
+                // Load all current words
+                var classes = context.Classes.ToDictionary(f => f.ClassCode);
+
+                foreach (var classLine in classLines)
+                {
+                    var parts = classLine.Split(",");
+                    
+                        if (!classes.ContainsKey(parts[0]))
+                        {
+                            context.Classes.Add(new Class { ClassCode = parts[0] });
+                        }
+                    
+                }
+                context.SaveChanges();
+        }
     }
 }

@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Tutor.Api.Models
 {
@@ -12,7 +13,7 @@ namespace Tutor.Api.Models
             AnsweredQuestions = new HashSet<AnsweredQuestion>();
             Questions = new HashSet<Question>();
         }
-
+        [Key]
         public int Id { get; set; }
         public int ClassId { get; set; }
         public string Topic1 { get; set; }
