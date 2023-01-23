@@ -8,44 +8,37 @@
       <v-card>
         <v-container>
           <v-form ref="form" lazy-validation>
-            
-              <v-row>
-                <v-col>
+            <v-row>
+              <v-col>
                 <v-text-field
                   v-model="username"
                   ma="4"
                   label="Username"
                   required
                 ></v-text-field>
-            </v-col>
-              </v-row>
+              </v-col>
+            </v-row>
 
-              <v-row>
-                <v-col>
+            <v-row>
+              <v-col>
                 <v-text-field
                   v-model="password"
                   :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
-           
-            :type="show ? 'text' : 'password'"
-            label="Password"
-            counter
-            @click:append="show = !show"
+                  :type="show ? 'text' : 'password'"
+                  label="Password"
+                  counter
                   required
+                  @click:append="show = !show"
                 ></v-text-field>
-            </v-col>
-              </v-row>
-              <v-row>
-                <v-col
-                class="text-right">
-                <v-btn
-                  color="primary"
-                  @click="submitCredentials()"
-                >
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="text-right">
+                <v-btn color="primary" @click="submitCredentials()">
                   submit
                 </v-btn>
-            </v-col>
-              </v-row>
-            
+              </v-col>
+            </v-row>
           </v-form>
         </v-container>
       </v-card>
@@ -80,10 +73,9 @@ export default class SettingsDialog extends Vue {
         //   'Bearer ' + result.data.token
         this.$axios.get('Token/TestAdmin').then((result) => {
           console.log(result)
-          this.dialog=!this.dialog
+          this.dialog = !this.dialog
         })
       })
-    
   }
 }
 </script>
