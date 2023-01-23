@@ -1,11 +1,13 @@
 version: "3"
 services:
   tutor-db:
-    image: mysql:8.0.31
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    ports:
+      - "1433:1433"
     environment:
-      MYSQL_ROOT_PASSWORD: example
+        SA_PASSWORD: "ExamplePassword"
+        ACCEPT_EULA: "Y"
+        MSSQL_PID: "Express"
     volumes:
       - tutor-volume:/var/lib/mysql
   adminer:
