@@ -39,6 +39,12 @@
         </v-list-item>
 
         <v-list-item>
+          <v-btn text block>
+            <login-dialog />
+          </v-btn>
+        </v-list-item>
+
+        <v-list-item>
           <v-btn text block nuxt to="/logout">
             Log Out <v-icon>mdi-equalizer</v-icon>
           </v-btn>

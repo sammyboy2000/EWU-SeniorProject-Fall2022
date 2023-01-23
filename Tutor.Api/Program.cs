@@ -29,7 +29,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(config =>
 {
-    config.SwaggerDoc("v1", new OpenApiInfo { Title = "Wordle API", Version = "v1" });
+    config.SwaggerDoc("v1", new OpenApiInfo { Title = "Tutor API", Version = "v1" });
     config.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
@@ -85,8 +85,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //Add Policies
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy(Policies.RandomAdmin, Policies.RandomAdminPolicy);
-    options.AddPolicy("IsGrantPolicy", policy => policy.RequireRole("Grant"));
+    //options.AddPolicy(Policies.RequireAdmin, Policies.RequireAdminPolicy);
+    
 });
 
 var app = builder.Build();
@@ -102,16 +102,17 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-app.UseSwagger();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
     app.UseSwaggerUI();
-//}
+}
 
 //app.UseHttpsRedirection();
 
 app.UseCors(allowance);
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

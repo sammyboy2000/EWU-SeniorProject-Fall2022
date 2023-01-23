@@ -6,7 +6,7 @@
         <v-card-text>
           <p>
             This website was created for a senior project starting in Fall 2022.
-            <br>
+            <br />
             Created by: Sam Shaw, Jesse Dale, Blaine Gann, Garrett Harty
           </p>
         </v-card-text>
