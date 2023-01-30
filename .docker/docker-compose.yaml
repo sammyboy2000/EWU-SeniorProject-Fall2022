@@ -7,7 +7,6 @@ services:
     environment:
         SA_PASSWORD: "ExamplePassword"
         ACCEPT_EULA: "Y"
-        MSSQL_PID: "Express"
     volumes:
       - tutor-volume:/var/lib/mysql
   adminer:
