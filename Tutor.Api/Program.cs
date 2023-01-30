@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NETCore.MailKit.Core;
 using System;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -53,7 +54,11 @@ builder.Services.AddSwaggerGen(config =>
         }
     });
 });
-builder.Services.AddScoped<ILeaderBoardService, LeaderBoardServiceMemory>();
+var emailConfig = builder.Configuration
+        .GetSection("EmailConfiguration")
+        .Get<EmailConfiguration>();
+builder.Services.AddSingleton(emailConfig);
+builder.Services.AddScoped<Tutor.Api.Services.EmailService>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<tutor_dbContext>(options => options.UseSqlServer(connectionString));
