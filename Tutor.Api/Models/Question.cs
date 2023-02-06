@@ -18,5 +18,18 @@ namespace Tutor.Api.Models
         public virtual Class Class { get; set; }
         public virtual Student Student { get; set; }
         public virtual Topic Topic { get; set; }
+
+        internal static void Seed(tutor_dbContext context)
+        {
+            Question q = new Question();
+            q.ClassId = 1;
+            q.StudentId = 1;
+            q.TopicId = 1;
+            q.Question1 = "This is a test question";
+
+            context.Questions.Add(q);
+            context.SaveChanges();
+        }
     }
+   
 }

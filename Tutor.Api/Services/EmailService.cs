@@ -48,5 +48,19 @@ namespace Tutor.Api.Services
                 }
             }
         }
+
+        internal Boolean SendQuestionConfirmation(Guid questionId, string studentUsername)
+        {
+            var message = new Message(new string[] { studentUsername }, "Question Confirmation", "Your question has successfully been submitted.\nQuestion ID: " + questionId);
+            try
+            {
+                SendEmail(message);
+            }
+            catch
+            { 
+                return false; 
+            }
+            return true;
+        }
     }
 }
