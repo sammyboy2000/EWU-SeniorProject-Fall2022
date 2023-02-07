@@ -101,10 +101,12 @@ using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<tutor_dbContext>();
     context.Database.Migrate();
-    Class.Seed(context);
-    Question.Seed(context);
     await IdentitySeed.SeedAsync(scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>(),
-        scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>());
+        scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>(), context);
+    Class.Seed(context);
+    Topic.Seed(context);
+    Question.Seed(context);
+    
 }
 
 // Configure the HTTP request pipeline.

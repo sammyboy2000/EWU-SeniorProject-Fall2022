@@ -34,6 +34,7 @@ namespace Tutor.Api.Controllers
             int topicId = _database.getTopicId(topic);
 
             Question q = new();
+            q.QuestionId = Guid.NewGuid();
             q.StudentId= studentId;
             q.ClassId= classId;
             q.TopicId= topicId;

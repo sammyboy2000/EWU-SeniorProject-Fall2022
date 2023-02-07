@@ -5,22 +5,22 @@ namespace Tutor.Api.Identity
 {
     public static class IdentitySeed
     {
-        public static async Task SeedAsync(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedAsync(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, tutor_dbContext context)
         {
             // Seed Roles
             await SeedRolesAsync(roleManager);
 
             // Seed Super User
-            await SeedSuperUserAsync(userManager);
+            await SeedSuperUserAsync(userManager,  context);
 
             // Seed Admin User
-            await SeedAdminUserAsync(userManager);
+            await SeedAdminUserAsync(userManager, context);
 
             // Seed Tutor User
-            await SeedTutorUserAsync(userManager);
+            await SeedTutorUserAsync(userManager, context);
 
             // Seed Student User
-            await SeedStudentUserAsync(userManager);
+            await SeedStudentUserAsync(userManager, context);
         }
 
         private static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
@@ -40,7 +40,7 @@ namespace Tutor.Api.Identity
             }
         }
 
-        private static async Task SeedSuperUserAsync(UserManager<AppUser> userManager)
+        private static async Task SeedSuperUserAsync(UserManager<AppUser> userManager, tutor_dbContext context)
         {
             // Seed Super User
             if (await userManager.FindByNameAsync("sshaw16@ewu.edu") == null)
@@ -55,13 +55,43 @@ namespace Tutor.Api.Identity
 
                 if (result.Succeeded)
                 {
+                    ApiUser appUser = new();
+                    appUser.ExternalId = user.UserName;
+                    appUser.IsAdmin = true;
+                    appUser.IsTutor = true;
+                    appUser.IsStudent = true;
+                    context.ApiUsers.Add(appUser);
+                    
                     await userManager.AddToRoleAsync(user, Roles.Admin);
+
+                    Admin a = new Admin();
+                    a.UserId = appUser.UserId;
+                    a.FirstName = "Samuel";
+                    a.LastName = "Shaw";
+                    context.Admins.Add(a);
+
                     await userManager.AddToRoleAsync(user, Roles.Tutor);
+
+                    Models.Tutor t = new();
+                    t.UserId = appUser.UserId;
+                    t.FirstName = "Samuel";
+                    t.LastName = "Shaw";
+                    context.Tutors.Add(t);
+
                     await userManager.AddToRoleAsync(user, Roles.Student);
+
+                    Student s = new();
+                    s.UserId = appUser.UserId;
+                    s.FirstName = "Samuel";
+                    s.LastName = "Shaw";
+                    s.Email = appUser.ExternalId;
+                    context.Students.Add(s);
+
+                    context.SaveChanges();
                 }
             }
         }
-        private static async Task SeedAdminUserAsync(UserManager<AppUser> userManager)
+        private static async Task SeedAdminUserAsync(UserManager<AppUser> userManager, tutor_dbContext context)
         {
             // Seed Super User
             if (await userManager.FindByNameAsync("admin@ewu.edu") == null)
@@ -80,7 +110,7 @@ namespace Tutor.Api.Identity
                 }
             }
         }
-        private static async Task SeedTutorUserAsync(UserManager<AppUser> userManager)
+        private static async Task SeedTutorUserAsync(UserManager<AppUser> userManager, tutor_dbContext context)
         {
             // Seed Super User
             if (await userManager.FindByNameAsync("tutor@ewu.edu") == null)
@@ -99,7 +129,7 @@ namespace Tutor.Api.Identity
                 }
             }
         }
-        private static async Task SeedStudentUserAsync(UserManager<AppUser> userManager)
+        private static async Task SeedStudentUserAsync(UserManager<AppUser> userManager, tutor_dbContext context)
         {
             // Seed Super User
             if (await userManager.FindByNameAsync("student@ewu.edu") == null)
