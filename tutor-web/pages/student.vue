@@ -8,21 +8,15 @@
         </v-card-title>
 
         <v-card-text>
-          <label for="class">Please select a class: </label>
-          <select
-            v-model="selectClass"
-            name="class"
-            style="border-bottom: 2px solid gray"
-          >
-            <option value="0">Please select a class</option>
-            <option value="class1">CSCD 211 - Programming Principles I</option>
-            <option value="class2">CSCD 212 - Programming Principles II</option>
-            <option value="class3">CSCD 300 - Data Structures</option>
-            <option value="class4">CSCD 488 - Senior Project</option>
-          </select>
-          <br /><br />
+          <v-select
+            v-model="selectedClass"
+            :items="classData"
+            label="Class"
+            style="width: 25%; padding: 5px;"
+          ></v-select>
+          <br />
 
-          <div v-show="Number(selectClass) != 0">
+          <div v-show="Number(selectedClass) != 0">
             <label for="topic">Select a topic: </label>
             <select
               v-model="selectTopic"
@@ -88,15 +82,34 @@
 </template>
 
 <script lang="ts">
-const temp = '0'
+import { Component, Vue } from 'vue-property-decorator'
 
-export default {
-  data() {
-    return {
-      selectClass: '',
-      selectTopic: '',
-      other: '',
+@Component({})
+export default class Student extends Vue {
+    classData: string = ''
+    selectedClass: string = ''
+    topicData: string = ''
+    selectedTopic: string = ''
+    selectClass: string = ''
+    selectTopic: string = ''
+    other: string = ''
+
+    mounted() {
+        this.initializeClassData()
+        this.initializeTopicData()
     }
-  },
+
+    initializeClassData() {
+        this.$axios.get('/database/getClasses').then((response) => {
+        this.classData = response.data
+        })
+    }
+
+    initializeTopicData() {
+        this.$axios.get('/database/getTopics').then((response) => {
+        this.topicData = response.data
+        })
+    }
+    
 }
 </script>

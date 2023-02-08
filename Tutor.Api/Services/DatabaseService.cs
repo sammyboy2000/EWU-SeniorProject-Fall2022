@@ -34,5 +34,19 @@ namespace Tutor.api.Services
             _context.SaveChanges();
 
         }
+
+        internal IEnumerable<string> getTopics(string? searchString)
+        {
+            throw new NotImplementedException();
+        }
+        /*
+            if (searchString == null)
+            {
+                return _context.Topics.Select(x => x.Topic1);
+
+            }
+            return _context.Topics.Select(x => x.Topic1)
+                .Where(x => x.Contains(searchString));
+        */
     }
 }
