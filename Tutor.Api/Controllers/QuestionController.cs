@@ -20,17 +20,27 @@ namespace Tutor.Api.Controllers
             _service = service;
             _database = database;   
         }
-        [HttpGet]
+        [HttpGet("GetQuestions")]
+        [Authorize(Roles = "Tutor, Admin")]
+        public IEnumerable<Question>? GetQuestions(String? classCode, String? topic)
+        {
+            return _database.GetQuestions(classCode, topic);
+
+        }
+
+        [HttpPost("AskQuestion")]
         [Authorize(Roles = Roles.Student)]
         public String AddQuestion(String studentUsername, String classCode, String topic, String question) 
         { 
-            if (string.IsNullOrWhiteSpace(studentUsername)) { return "Error, studentUsername cannot be blank."; }
+            if (string.IsNullOrWhiteSpace(studentUsername)) 
             if (string.IsNullOrWhiteSpace(classCode)) { return "Error, classCode cannot be blank."; }
             if (string.IsNullOrWhiteSpace(topic)) { return "Error, topic cannot be blank."; }
             if (string.IsNullOrWhiteSpace(question)) { return "Error, question cannot be blank."; }
 
             int studentId = _database.getStudentId(studentUsername);
-            int classId = _database.getClassId(classCode);
+            int? checkId = _database.getClassId(classCode);
+            if (!checkId.HasValue) { return "Error, class does not exist."; }
+            int classId = (int)checkId;
             int topicId = _database.getTopicId(topic);
 
             Question q = new();
@@ -60,7 +70,33 @@ namespace Tutor.Api.Controllers
             }
         }
 
-        
+        [HttpPost("AnswerQuestion")]
+        [Authorize(Roles = Roles.Tutor)]
+        public String AnswerQuestion(Guid questionID, String tutorUsername, String answer)
+        {
+            if(tutorUsername == null) { return "Error, tutorUsername cannot be blank."; }
+            if(answer == null) { return "Error, answer cannot be blank."; }
+
+            Question q = _database.GetQuestion(questionID);
+
+            if(q == null) { return "Error, Question not found."; }
+
+            int tutorId = _database.getTutorId(tutorUsername);
+
+            AnsweredQuestion a = new();
+            a.QuestionId = q.QuestionId;
+            a.StudentId = q.StudentId;
+            a.TutorId = tutorId;
+            a.ClassId = q.ClassId;
+            a.TopicId = q.TopicId;
+            a.Question = q.Question1;
+            a.Response = answer;
+
+            Boolean result = _database.AnswerQuestion(a);
+            if(result) { return "Successfully answered question."; }
+            else { return "Error, could not save answer."; }
+        }
+
     }
 
 }

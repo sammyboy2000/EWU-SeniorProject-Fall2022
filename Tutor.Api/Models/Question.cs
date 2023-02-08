@@ -21,15 +21,18 @@ namespace Tutor.Api.Models
 
         internal static void Seed(tutor_dbContext context)
         {
-            Question q = new Question();
-            q.QuestionId = Guid.NewGuid();
-            q.ClassId = 1;
-            q.StudentId = 0;
-            q.TopicId = 1;
-            q.Question1 = "This is a test question";
+            if(context.Questions.Count() < 1) 
+            { 
+                Question q = new Question();
+                q.QuestionId = Guid.NewGuid();
+                q.ClassId = 1;
+                q.StudentId = 0;
+                q.TopicId = 1;
+                q.Question1 = "This is a test question";
 
-            context.Questions.Add(q);
-            context.SaveChanges();
+                context.Questions.Add(q);
+                context.SaveChanges();
+            }
         }
     }
    

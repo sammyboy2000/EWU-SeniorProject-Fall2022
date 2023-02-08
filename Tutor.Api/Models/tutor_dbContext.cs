@@ -292,6 +292,7 @@ namespace Tutor.Api.Models
             OnModelCreatingPartial(modelBuilder);
         }
 
+
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

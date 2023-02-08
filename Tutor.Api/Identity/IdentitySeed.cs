@@ -14,7 +14,7 @@ namespace Tutor.Api.Identity
             await SeedSuperUserAsync(userManager,  context);
 
             // Seed Admin User
-            await SeedAdminUserAsync(userManager, context);
+            await SeedAdminUsersAsync(userManager, context);
 
             // Seed Tutor User
             await SeedTutorUserAsync(userManager, context);
@@ -91,9 +91,9 @@ namespace Tutor.Api.Identity
                 }
             }
         }
-        private static async Task SeedAdminUserAsync(UserManager<AppUser> userManager, tutor_dbContext context)
+        private static async Task SeedAdminUsersAsync(UserManager<AppUser> userManager, tutor_dbContext context)
         {
-            // Seed Super User
+            // Seed Admin Users
             if (await userManager.FindByNameAsync("admin@ewu.edu") == null)
             {
                 AppUser user = new AppUser
@@ -109,10 +109,26 @@ namespace Tutor.Api.Identity
                     await userManager.AddToRoleAsync(user, Roles.Admin);
                 }
             }
+
+            if (await userManager.FindByNameAsync("ssteiner@ewu.edu") == null)
+            {
+                AppUser user = new AppUser
+                {
+                    UserName = "ssteiner@ewu.edu",
+                    Email = "ssteiner@ewu.edu",
+                };
+
+                IdentityResult result = userManager.CreateAsync(user, "P@ssw0rd123").Result;
+
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, Roles.Admin);
+                }
+            }
         }
         private static async Task SeedTutorUserAsync(UserManager<AppUser> userManager, tutor_dbContext context)
         {
-            // Seed Super User
+            // Seed Tutor User
             if (await userManager.FindByNameAsync("tutor@ewu.edu") == null)
             {
                 AppUser user = new AppUser
@@ -131,7 +147,7 @@ namespace Tutor.Api.Identity
         }
         private static async Task SeedStudentUserAsync(UserManager<AppUser> userManager, tutor_dbContext context)
         {
-            // Seed Super User
+            // Seed Student User
             if (await userManager.FindByNameAsync("student@ewu.edu") == null)
             {
                 AppUser user = new AppUser
