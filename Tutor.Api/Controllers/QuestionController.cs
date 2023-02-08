@@ -37,11 +37,11 @@ namespace Tutor.Api.Controllers
             if (string.IsNullOrWhiteSpace(topic)) { return "Error, topic cannot be blank."; }
             if (string.IsNullOrWhiteSpace(question)) { return "Error, question cannot be blank."; }
 
-            int studentId = _database.getStudentId(studentUsername);
-            int? checkId = _database.getClassId(classCode);
+            int studentId = _database.GetStudentId(studentUsername);
+            int? checkId = _database.GetClassId(classCode);
             if (!checkId.HasValue) { return "Error, class does not exist."; }
             int classId = (int)checkId;
-            int topicId = _database.getTopicId(topic);
+            int topicId = _database.GetTopicId(topic);
 
             Question q = new()
             {
@@ -54,7 +54,7 @@ namespace Tutor.Api.Controllers
 
             try
             {
-                _database.addQuestion(q);
+                _database.AddQuestion(q);
             }
             catch (Exception ex)
             {
@@ -83,7 +83,7 @@ namespace Tutor.Api.Controllers
 
             if(q == null) { return "Error, Question not found."; }
 
-            int tutorId = _database.getTutorId(tutorUsername);
+            int tutorId = _database.GetTutorId(tutorUsername);
 
             AnsweredQuestion a = new()
             {
