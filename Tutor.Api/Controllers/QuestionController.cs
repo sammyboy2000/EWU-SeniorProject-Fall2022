@@ -43,12 +43,14 @@ namespace Tutor.Api.Controllers
             int classId = (int)checkId;
             int topicId = _database.getTopicId(topic);
 
-            Question q = new();
-            q.QuestionId = Guid.NewGuid();
-            q.StudentId= studentId;
-            q.ClassId= classId;
-            q.TopicId= topicId;
-            q.Question1= question;
+            Question q = new()
+            {
+                QuestionId = Guid.NewGuid(),
+                StudentId = studentId,
+                ClassId = classId,
+                TopicId = topicId,
+                Question1 = question
+            };
 
             try
             {
@@ -83,14 +85,16 @@ namespace Tutor.Api.Controllers
 
             int tutorId = _database.getTutorId(tutorUsername);
 
-            AnsweredQuestion a = new();
-            a.QuestionId = q.QuestionId;
-            a.StudentId = q.StudentId;
-            a.TutorId = tutorId;
-            a.ClassId = q.ClassId;
-            a.TopicId = q.TopicId;
-            a.Question = q.Question1;
-            a.Response = answer;
+            AnsweredQuestion a = new()
+            {
+                QuestionId = q.QuestionId,
+                StudentId = q.StudentId,
+                TutorId = tutorId,
+                ClassId = q.ClassId,
+                TopicId = q.TopicId,
+                Question = q.Question1,
+                Response = answer
+            };
 
             Boolean result = _database.AnswerQuestion(a);
             if(result) { return "Successfully answered question."; }
