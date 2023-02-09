@@ -10,8 +10,6 @@ namespace Tutor.Api.Models
     {
         public Class()
         {
-            AnsweredQuestions = new HashSet<AnsweredQuestion>();
-            Questions = new HashSet<Question>();
             Topics = new HashSet<Topic>();
         }
         [Key]

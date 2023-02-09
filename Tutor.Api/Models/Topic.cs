@@ -8,11 +8,6 @@ namespace Tutor.Api.Models
 {
     public partial class Topic
     {
-        public Topic()
-        {
-            AnsweredQuestions = new HashSet<AnsweredQuestion>();
-            Questions = new HashSet<Question>();
-        }
         [Key]
         public int Id { get; set; }
         public int ClassId { get; set; }
@@ -21,5 +16,15 @@ namespace Tutor.Api.Models
         public virtual Class Class { get; set; }
         public virtual ICollection<AnsweredQuestion> AnsweredQuestions { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
+
+        internal static void Seed(tutor_dbContext context)
+        {
+            Topic t = new();
+            t.ClassId = 1; 
+            t.Topic1 = "Lists";
+
+            context.Topics.Add(t);
+            context.SaveChanges();
+        }
     }
 }
