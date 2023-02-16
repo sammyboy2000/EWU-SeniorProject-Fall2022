@@ -107,6 +107,18 @@ namespace Tutor.Api.Identity
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, Roles.Admin);
+                    ApiUser appUser = new();
+                    appUser.ExternalId = user.UserName;
+                    appUser.IsAdmin = true;
+                    appUser.UserId = context.ApiUsers.OrderBy(x => x.UserId).Last().UserId + 1;
+                    context.ApiUsers.Add(appUser);
+                    Admin a = new Admin();
+                    a.UserId = appUser.UserId;
+                    a.FirstName = "Admin";
+                    a.LastName = "Test";
+                    a.Id = context.Admins.OrderBy(x => x.Id).Last().Id + 1;
+                    context.Admins.Add(a);
+
                 }
             }
 
@@ -123,6 +135,25 @@ namespace Tutor.Api.Identity
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, Roles.Admin);
+                    ApiUser appUser = new();
+                    appUser.ExternalId = user.UserName;
+                    appUser.IsAdmin = true;
+                    appUser.IsTutor= true;
+                    appUser.UserId = context.ApiUsers.OrderBy(x => x.UserId).Last().UserId + 1;
+                    context.ApiUsers.Add(appUser);
+                    Admin a = new Admin();
+                    a.UserId = appUser.UserId;
+                    a.FirstName = "Stu";
+                    a.LastName = "Steiner";
+                    a.Id = context.Admins.OrderBy(x => x.Id).Last().Id + 1;
+                    context.Admins.Add(a);
+                    Models.Tutor t = new();
+                    t.UserId = appUser.UserId;
+                    t.FirstName = "Stu";
+                    t.LastName = "Steiner";
+                    t.Id = context.Tutors.OrderBy(x => x.Id).Last().Id + 1;
+                    context.Tutors.Add(t);
+
                 }
             }
         }
@@ -142,6 +173,17 @@ namespace Tutor.Api.Identity
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, Roles.Tutor);
+                    ApiUser appUser = new();
+                    appUser.ExternalId = user.UserName;
+                    appUser.IsTutor = true;
+                    appUser.UserId = context.ApiUsers.OrderBy(x => x.UserId).Last().UserId + 1;
+                    context.ApiUsers.Add(appUser);
+                    Models.Tutor t = new();
+                    t.UserId = appUser.UserId;
+                    t.FirstName = "Tutor";
+                    t.LastName = "Test";
+                    t.Id = context.Tutors.OrderBy(x => x.Id).Last().Id + 1;
+                    context.Tutors.Add(t);
                 }
             }
         }
@@ -161,6 +203,18 @@ namespace Tutor.Api.Identity
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, Roles.Student);
+                    ApiUser appUser = new();
+                    appUser.ExternalId = user.UserName;
+                    appUser.IsStudent = true;
+                    appUser.UserId = context.ApiUsers.OrderBy(x => x.UserId).Last().UserId + 1;
+                    context.ApiUsers.Add(appUser);
+                    Student s = new();
+                    s.UserId = appUser.UserId;
+                    s.FirstName = "Student";
+                    s.LastName = "Test";
+                    s.Email = appUser.ExternalId;
+                    s.Id = context.Students.OrderBy(x => x.Id).Last().Id + 1;
+                    context.Students.Add(s);
                 }
             }
         }

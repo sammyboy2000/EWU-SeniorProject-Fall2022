@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Bcpg;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using Tutor.Api.Identity;
@@ -71,7 +75,94 @@ public class TokenController : Controller
         return Unauthorized("The username or password is incorrect");
     }
 
-    [HttpGet("test")]
+    [HttpPost("RegisterStudent")]
+    public async Task<string> RegisterStudentAsync(String username, String password, String firstName, String lastName)
+    {
+        if (await _userManager.FindByNameAsync(username) == null)
+        {
+            try
+            {
+                var emailAddress = new MailAddress(username);
+            }
+            catch
+            {
+                return "Error, username is not a vaild email.";
+            }
+
+            AppUser user = new AppUser
+            {
+                UserName = username,
+                Email = username,
+            };
+            IdentityResult result = _userManager.CreateAsync(user, password).Result;
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, Roles.Student);
+                ApiUser appUser = new()
+                {
+                    ExternalId = user.UserName,
+                    IsStudent = true,
+                    UserId = _context.ApiUsers.OrderBy(x => x.UserId).Last().UserId + 1
+                };
+                _context.ApiUsers.Add(appUser);
+                Student s = new()
+                {
+                    UserId = appUser.UserId,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    Email = appUser.ExternalId,
+                    Id = _context.Students.OrderBy(x => x.Id).Last().Id + 1
+                };
+                _context.Students.Add(s);
+                return "Success, user registered.";
+            }
+            return "Error, failed to create role.";
+        }
+        return "Error, user already exists.";
+    }
+
+    [HttpPost("AddTutor")]
+    [Authorize(Roles = "Tutor, Admin")]
+    public async Task<string> AddTutorAsync(String username)
+    {
+        if (await _userManager.FindByNameAsync(username) == null)
+        {
+            return "Error, user does not exist";
+        }
+
+        ApiUser apiUser = _context.ApiUsers.Where(x => x.ExternalId == username).First();
+        if (apiUser == null) { return "Error, internal user does not exist."; }
+        apiUser.IsTutor = true;
+        _context.ApiUsers.Update(apiUser);
+        String fname = "";
+        String lname = "";
+        Student s = await _context.Students.Where(x => x.UserId == apiUser.UserId).FirstAsync();
+        Admin a = await _context.Admins.Where(x => x.UserId == apiUser.UserId).FirstAsync();
+        if (s != null)
+        {
+            fname = s.FirstName; lname = s.LastName;
+        }
+        else if(a!= null) 
+        { 
+            fname = a.FirstName; lname = a.LastName;
+        }
+        else 
+        { 
+            _context.ApiUsers.Remove(apiUser);
+            return "Error, failed find existing Student or Admin"; 
+        }
+        Models.Tutor t = new()
+        {
+            Id = _context.Tutors.OrderBy(x => x.Id).Select(x => x.Id).Last() + 1,
+            UserId = apiUser.UserId,
+            FirstName = fname,
+            LastName = lname,
+        };
+        _context.Tutors.Add(t);
+        return "Success, added tutor privliges to user.";
+    }
+
+        [HttpGet("test")]
     [Authorize]
     public string Test()
     {
