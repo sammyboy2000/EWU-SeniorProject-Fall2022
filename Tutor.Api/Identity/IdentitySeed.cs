@@ -118,6 +118,7 @@ namespace Tutor.Api.Identity
                     a.LastName = "Test";
                     a.Id = context.Admins.OrderBy(x => x.Id).Last().Id + 1;
                     context.Admins.Add(a);
+                    context.SaveChanges();
 
                 }
             }
@@ -153,7 +154,7 @@ namespace Tutor.Api.Identity
                     t.LastName = "Steiner";
                     t.Id = context.Tutors.OrderBy(x => x.Id).Last().Id + 1;
                     context.Tutors.Add(t);
-
+                    context.SaveChanges();
                 }
             }
         }
@@ -184,6 +185,7 @@ namespace Tutor.Api.Identity
                     t.LastName = "Test";
                     t.Id = context.Tutors.OrderBy(x => x.Id).Last().Id + 1;
                     context.Tutors.Add(t);
+                    context.SaveChanges();
                 }
             }
         }
@@ -215,6 +217,7 @@ namespace Tutor.Api.Identity
                     s.Email = appUser.ExternalId;
                     s.Id = context.Students.OrderBy(x => x.Id).Last().Id + 1;
                     context.Students.Add(s);
+                    context.SaveChanges();
                 }
             }
         }

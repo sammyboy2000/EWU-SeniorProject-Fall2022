@@ -114,6 +114,7 @@ public class TokenController : Controller
                     Id = _context.Students.OrderBy(x => x.Id).Last().Id + 1
                 };
                 _context.Students.Add(s);
+                _context.SaveChanges();
                 return "Success, user registered.";
             }
             return "Error, failed to create role.";
@@ -136,8 +137,18 @@ public class TokenController : Controller
         _context.ApiUsers.Update(apiUser);
         String fname = "";
         String lname = "";
-        Student s = await _context.Students.Where(x => x.UserId == apiUser.UserId).FirstAsync();
-        Admin a = await _context.Admins.Where(x => x.UserId == apiUser.UserId).FirstAsync();
+        Student? s = null;
+        Admin? a = null;
+        try
+        {
+            s = await _context.Students.Where(x => x.UserId == apiUser.UserId).FirstAsync();
+        }
+        catch { }
+        try
+        {
+            a = await _context.Admins.Where(x => x.UserId == apiUser.UserId).FirstAsync();
+        }
+        catch { }
         if (s != null)
         {
             fname = s.FirstName; lname = s.LastName;
@@ -148,7 +159,6 @@ public class TokenController : Controller
         }
         else 
         { 
-            _context.ApiUsers.Remove(apiUser);
             return "Error, failed find existing Student or Admin"; 
         }
         Models.Tutor t = new()
@@ -159,6 +169,7 @@ public class TokenController : Controller
             LastName = lname,
         };
         _context.Tutors.Add(t);
+        _context.SaveChanges();
         return "Success, added tutor privliges to user.";
     }
 
