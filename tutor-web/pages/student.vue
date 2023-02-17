@@ -15,7 +15,7 @@
             style="width: 25%; padding: 5px;"
           ></v-select>
           <br />
-
+          
           <div v-show="Number(selectedClass) != 0">
             <label for="topic">Select a topic: </label>
             <select

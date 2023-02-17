@@ -1,5 +1,6 @@
 <template>
   <div>
+    ##Not Implemented##
     <input v-model="classCode" type="text" />
     <button @click="addClass">Add Class</button>
   </div>
