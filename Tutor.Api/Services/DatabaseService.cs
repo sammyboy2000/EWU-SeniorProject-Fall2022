@@ -23,6 +23,19 @@ namespace Tutor.api.Services
             return _context.Classes.Select(x => x.ClassCode)
                 .Where(x => x.Contains(searchString));
         }
+
+        //Added to get topics to populate dropdown --Jesse 2/17/2023
+        internal IEnumerable<String> getTopics(string? searchString)
+        { 
+            if(searchString == null) 
+            {
+                //return _context.Classes.Select(x => x.ClassCode);
+                return _context.Topics.Select(x => x.Topic1);
+            }
+            return _context.Topics.Select(x => x.Topic1)
+                .Where(x => x.Contains(searchString));
+        }
+
         internal void AddClass(string classCode)
         {
             var classes = _context.Classes.ToDictionary(f => f.ClassCode);

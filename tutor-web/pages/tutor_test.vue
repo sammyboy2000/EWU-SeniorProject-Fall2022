@@ -11,7 +11,7 @@
               label="Questions"
               style="width: 25%; padding: 5px;"
             ></v-select>
-            <v-textarea v-model="answer" label="Answer" rows="10" ></v-textarea>
+            <v-textarea v-model="answer" label="Answer" rows="1" ></v-textarea>
             <v-btn color="primary">Submit</v-btn>
           </v-card-text>
         </v-card>
@@ -48,14 +48,19 @@ export default class Tutor extends Vue {
 
   initializeQuestionData() {
     this.$axios.get('/database/GetQuestions', {
-      params: {
-        classCode: "1",
-        topic: "1"
-      }
+      params: { classCode: "1", topic: "1" }
     }).then((response) => {
+      console.log(response.data);
       this.questionData = response.data.slice(0, 4)
     })
   };
 }
 
 </script>
+
+<!--
+  Add way for tutor to select the class and topic
+  Figure out how to POST data to the database
+  Maybe split into 2 pages. One for the tutor to select class and topic like student
+  then pass in class and topic to another page for the tutor to answer the question
+-->

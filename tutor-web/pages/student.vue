@@ -17,20 +17,15 @@
           <br />
           
           <div v-show="Number(selectedClass) != 0">
-            <label for="topic">Select a topic: </label>
-            <select
-              v-model="selectTopic"
-              name="topic"
-              style="border-bottom: 2px solid gray"
-            >
-              <option value="0">Please select a topic</option>
-              <option value="1" name="ifs">If statements</option>
-              <option value="2" name="loops">Loops</option>
-              <option value="other" name="other">Other</option>
-            </select>
+            <v-select
+              v-model="selectedTopic"
+              :items="topicData"
+              label="Topic"
+              style="width: 25%; padding: 5px;"
+            ></v-select>
           </div>
           <br />
-          <div v-show="selectTopic == 'other'">
+          <div v-show="selectedTopic == 'other'">
             <textarea
               v-model="other"
               name="otherBox"

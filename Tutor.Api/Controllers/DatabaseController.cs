@@ -26,9 +26,21 @@ namespace Tutor.Api.Controllers
             return _service.getClasses(searchString);
         }
 
+        //Added to get topics to populate dropdown --Jesse 2/17/2023
+        [HttpGet("getTopics")]
+        [Authorize]
+        public IEnumerable<String> getTopics(String? searchString)
+        {
+            return _service.getTopics(searchString);
+        }
 
-
-
+        //Added to get questions to populate dropdown --Jesse 2/17/2023
+        [HttpGet("GetQuestions")]
+        [Authorize]
+        public IEnumerable<Question> GetQuestions(String? searchString)
+        {
+            return _service.GetQuestions(searchString);
+        }
 
     }
 }
