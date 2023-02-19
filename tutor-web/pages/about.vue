@@ -5,7 +5,7 @@
         <v-card-title>About this website.</v-card-title>
         <v-card-text>
           <p>
-            This website was created for a senior project starting in Fall 2022.
+            This website was created for a senior project starting in Fall 2022 for our employer Stu Steiner.
             <br />
             Created by: Sam Shaw, Jesse Dale, Blaine Gann, Garrett Harty
           </p>
