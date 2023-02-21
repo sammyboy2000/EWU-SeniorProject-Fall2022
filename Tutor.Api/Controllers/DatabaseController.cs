@@ -35,11 +35,11 @@ namespace Tutor.Api.Controllers
         }
 
         //Added to get questions to populate dropdown --Jesse 2/17/2023
-        [HttpGet("GetQuestions")]
+        [HttpGet("GetAllQuestions")]
         [Authorize]
-        public IEnumerable<Question> GetQuestions(String? searchString)
+        public IEnumerable<String> GetAllQuestions(String? searchString)
         {
-            return _service.GetQuestions(searchString);
+            return _service.GetAllQuestions(searchString);
         }
 
     }

@@ -12,7 +12,7 @@
               style="width: 25%; padding: 5px;"
             ></v-select>
             <v-textarea v-model="answer" label="Answer" rows="1" ></v-textarea>
-            <v-btn color="primary">Submit</v-btn>
+            <v-btn color="primary" @click="answerQuestion(), removeQuestion()">Submit</v-btn>
           </v-card-text>
         </v-card>
       </v-col>
@@ -44,16 +44,35 @@ export default class Tutor extends Vue {
 
   mounted() {
     this.initializeQuestionData();
+    this.answerQuestion();
+    this.removeQuestion();
   }
 
   initializeQuestionData() {
-    this.$axios.get('/database/GetQuestions', {
+    this.$axios.get('/database/GetAllQuestions', {
       params: { classCode: "1", topic: "1" }
     }).then((response) => {
       console.log(response.data);
       this.questionData = response.data.slice(0, 4)
     })
   };
+
+  answerQuestion() {
+    this.$axios.post('/Questions/AnswerQuestion', {
+      params: { question: this.question, answer: this.answer }
+    }).then((response) => {
+      console.log(response.data);
+    })
+  }
+
+  removeQuestion() {
+    this.$axios.post('/Questions/RemoveQuestion', {
+      params: { question: this.question }
+    }).then((response) => {
+      console.log(response.data);
+    })
+  }
+
 }
 
 </script>

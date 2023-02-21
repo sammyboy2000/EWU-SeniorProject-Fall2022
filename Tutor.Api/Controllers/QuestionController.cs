@@ -37,7 +37,8 @@ namespace Tutor.Api.Controllers
             if (string.IsNullOrWhiteSpace(topic)) { return "Error, topic cannot be blank."; }
             if (string.IsNullOrWhiteSpace(question)) { return "Error, question cannot be blank."; }
 
-            int studentId = _database.GetStudentId(studentUsername);
+            //int studentId = _database.GetStudentId(studentUsername);
+            int studentId = 0;
             int? checkId = _database.GetClassId(classCode);
             if (!checkId.HasValue) { return "Error, class does not exist."; }
             int classId = (int)checkId;

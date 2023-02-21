@@ -47,7 +47,7 @@
             <v-header style="font-size: 16pt; color: black">Question:</v-header>
             <br />
             <textarea
-              id="question"
+              v-model="question"
               name="questionBox"
               style="
                 border: 2px solid gray;
@@ -65,9 +65,9 @@
           <v-col cols="12">
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn class="black red--text"
-                ><a href="http://google.com">Submit</a></v-btn
-              >
+              <v-btn color="primary" @click="submitQuestion">
+                Submit
+              </v-btn>
             </v-card-actions>
           </v-col>
         </v-row>
@@ -88,22 +88,37 @@ export default class Student extends Vue {
     selectClass: string = ''
     selectTopic: string = ''
     other: string = ''
+    question: string = ''
+    studentName: string = 'sshaw16@ewu.edu'
+    
 
     mounted() {
-        this.initializeClassData()
-        this.initializeTopicData()
+      this.initializeClassData()
+      this.initializeTopicData()
     }
 
     initializeClassData() {
-        this.$axios.get('/database/getClasses').then((response) => {
+      this.$axios.get('/database/getClasses').then((response) => {
         this.classData = response.data
-        })
+      })
     }
 
     initializeTopicData() {
-        this.$axios.get('/database/getTopics').then((response) => {
+      this.$axios.get('/database/getTopics').then((response) => {
         this.topicData = response.data
-        })
+      })
+    }
+
+    submitQuestion() {
+      this.$axios.post('/Questions/AskQuestion', {
+        params: {
+          studentUsername: this.studentName,
+          classCode: this.selectedClass,
+          topic: this.selectedTopic,
+          question: this.question,
+        }
+      })
+      console.log(this.studentName, this.selectedClass, this.selectedTopic, this.question)
     }
     
 }
