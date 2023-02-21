@@ -110,7 +110,8 @@ export default class Student extends Vue {
     }
 
     submitQuestion() {
-      this.$axios.post('/Questions/AskQuestion', {
+      this.$axios.post('/Questions/AskQuestion', {},
+      {
         params: {
           studentUsername: this.studentName,
           classCode: this.selectedClass,
