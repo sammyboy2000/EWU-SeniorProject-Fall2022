@@ -55,36 +55,44 @@ namespace Tutor.Api.Identity
 
                 if (result.Succeeded)
                 {
-                    ApiUser appUser = new();
-                    appUser.ExternalId = user.UserName;
-                    appUser.IsAdmin = true;
-                    appUser.IsTutor = true;
-                    appUser.IsStudent = true;
+                    ApiUser appUser = new()
+                    {
+                        ExternalId = user.UserName,
+                        IsAdmin = true,
+                        IsTutor = true,
+                        IsStudent = true
+                    };
                     context.ApiUsers.Add(appUser);
                     
                     await userManager.AddToRoleAsync(user, Roles.Admin);
 
-                    Admin a = new Admin();
-                    a.UserId = appUser.UserId;
-                    a.FirstName = "Samuel";
-                    a.LastName = "Shaw";
+                    Admin a = new Admin
+                    {
+                        UserId = appUser.UserId,
+                        FirstName = "Samuel",
+                        LastName = "Shaw"
+                    };
                     context.Admins.Add(a);
 
                     await userManager.AddToRoleAsync(user, Roles.Tutor);
 
-                    Models.Tutor t = new();
-                    t.UserId = appUser.UserId;
-                    t.FirstName = "Samuel";
-                    t.LastName = "Shaw";
+                    Models.Tutor t = new()
+                    {
+                        UserId = appUser.UserId,
+                        FirstName = "Samuel",
+                        LastName = "Shaw"
+                    };
                     context.Tutors.Add(t);
 
                     await userManager.AddToRoleAsync(user, Roles.Student);
 
-                    Student s = new();
-                    s.UserId = appUser.UserId;
-                    s.FirstName = "Samuel";
-                    s.LastName = "Shaw";
-                    s.Email = appUser.ExternalId;
+                    Student s = new()
+                    {
+                        UserId = appUser.UserId,
+                        FirstName = "Samuel",
+                        LastName = "Shaw",
+                        Email = appUser.ExternalId
+                    };
                     context.Students.Add(s);
 
                     context.SaveChanges();
@@ -107,16 +115,20 @@ namespace Tutor.Api.Identity
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, Roles.Admin);
-                    ApiUser appUser = new();
-                    appUser.ExternalId = user.UserName;
-                    appUser.IsAdmin = true;
-                    appUser.UserId = context.ApiUsers.OrderBy(x => x.UserId).Last().UserId + 1;
+                    ApiUser appUser = new()
+                    {
+                        ExternalId = user.UserName,
+                        IsAdmin = true,
+                        UserId = context.ApiUsers.OrderBy(x => x.UserId).Last().UserId + 1
+                    };
                     context.ApiUsers.Add(appUser);
-                    Admin a = new Admin();
-                    a.UserId = appUser.UserId;
-                    a.FirstName = "Admin";
-                    a.LastName = "Test";
-                    a.Id = context.Admins.OrderBy(x => x.Id).Last().Id + 1;
+                    Admin a = new Admin
+                    {
+                        UserId = appUser.UserId,
+                        FirstName = "Admin",
+                        LastName = "Test",
+                        Id = context.Admins.OrderBy(x => x.Id).Last().Id + 1
+                    };
                     context.Admins.Add(a);
                     context.SaveChanges();
 
@@ -136,23 +148,29 @@ namespace Tutor.Api.Identity
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, Roles.Admin);
-                    ApiUser appUser = new();
-                    appUser.ExternalId = user.UserName;
-                    appUser.IsAdmin = true;
-                    appUser.IsTutor= true;
-                    appUser.UserId = context.ApiUsers.OrderBy(x => x.UserId).Last().UserId + 1;
+                    ApiUser appUser = new()
+                    {
+                        ExternalId = user.UserName,
+                        IsAdmin = true,
+                        IsTutor = true,
+                        UserId = context.ApiUsers.OrderBy(x => x.UserId).Last().UserId + 1
+                    };
                     context.ApiUsers.Add(appUser);
-                    Admin a = new Admin();
-                    a.UserId = appUser.UserId;
-                    a.FirstName = "Stu";
-                    a.LastName = "Steiner";
-                    a.Id = context.Admins.OrderBy(x => x.Id).Last().Id + 1;
+                    Admin a = new Admin
+                    {
+                        UserId = appUser.UserId,
+                        FirstName = "Stu",
+                        LastName = "Steiner",
+                        Id = context.Admins.OrderBy(x => x.Id).Last().Id + 1
+                    };
                     context.Admins.Add(a);
-                    Models.Tutor t = new();
-                    t.UserId = appUser.UserId;
-                    t.FirstName = "Stu";
-                    t.LastName = "Steiner";
-                    t.Id = context.Tutors.OrderBy(x => x.Id).Last().Id + 1;
+                    Models.Tutor t = new()
+                    {
+                        UserId = appUser.UserId,
+                        FirstName = "Stu",
+                        LastName = "Steiner",
+                        Id = context.Tutors.OrderBy(x => x.Id).Last().Id + 1
+                    };
                     context.Tutors.Add(t);
                     context.SaveChanges();
                 }
@@ -174,16 +192,20 @@ namespace Tutor.Api.Identity
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, Roles.Tutor);
-                    ApiUser appUser = new();
-                    appUser.ExternalId = user.UserName;
-                    appUser.IsTutor = true;
-                    appUser.UserId = context.ApiUsers.OrderBy(x => x.UserId).Last().UserId + 1;
+                    ApiUser appUser = new()
+                    {
+                        ExternalId = user.UserName,
+                        IsTutor = true,
+                        UserId = context.ApiUsers.OrderBy(x => x.UserId).Last().UserId + 1
+                    };
                     context.ApiUsers.Add(appUser);
-                    Models.Tutor t = new();
-                    t.UserId = appUser.UserId;
-                    t.FirstName = "Tutor";
-                    t.LastName = "Test";
-                    t.Id = context.Tutors.OrderBy(x => x.Id).Last().Id + 1;
+                    Models.Tutor t = new()
+                    {
+                        UserId = appUser.UserId,
+                        FirstName = "Tutor",
+                        LastName = "Test",
+                        Id = context.Tutors.OrderBy(x => x.Id).Last().Id + 1
+                    };
                     context.Tutors.Add(t);
                     context.SaveChanges();
                 }
@@ -205,17 +227,21 @@ namespace Tutor.Api.Identity
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, Roles.Student);
-                    ApiUser appUser = new();
-                    appUser.ExternalId = user.UserName;
-                    appUser.IsStudent = true;
-                    appUser.UserId = context.ApiUsers.OrderBy(x => x.UserId).Last().UserId + 1;
+                    ApiUser appUser = new()
+                    {
+                        ExternalId = user.UserName,
+                        IsStudent = true,
+                        UserId = context.ApiUsers.OrderBy(x => x.UserId).Last().UserId + 1
+                    };
                     context.ApiUsers.Add(appUser);
-                    Student s = new();
-                    s.UserId = appUser.UserId;
-                    s.FirstName = "Student";
-                    s.LastName = "Test";
-                    s.Email = appUser.ExternalId;
-                    s.Id = context.Students.OrderBy(x => x.Id).Last().Id + 1;
+                    Student s = new()
+                    {
+                        UserId = appUser.UserId,
+                        FirstName = "Student",
+                        LastName = "Test",
+                        Email = appUser.ExternalId,
+                        Id = context.Students.OrderBy(x => x.Id).Last().Id + 1
+                    };
                     context.Students.Add(s);
                     context.SaveChanges();
                 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tutor.api.Services;
+using Tutor.Api.Identity;
 using Tutor.Api.Models;
 
 namespace Tutor.Api.Controllers
@@ -36,10 +37,28 @@ namespace Tutor.Api.Controllers
 
         //Added to get questions to populate dropdown --Jesse 2/17/2023
         [HttpGet("GetAllQuestions")]
-        [Authorize]
+        [Authorize(Roles = Roles.Tutor)]
         public IEnumerable<String> GetAllQuestions(String? searchString)
         {
             return _service.GetAllQuestions(searchString);
+        }
+
+        [HttpGet("GetQuestionData")]
+        [Authorize(Roles = Roles.Admin)]
+        public IEnumerable<TopicAggregate>? GetQuestionData(String? className, String? topicName) 
+        { 
+            if(className == null && topicName == null) 
+            {
+                return _service.GetQuestionStatistics();
+            }
+            if(className != null && topicName == null)
+            {
+                return _service.GetQuestionStatistics(className);
+            }
+            else
+            {
+                return _service.GetQuestionStatistics(className, topicName);
+            }
         }
 
     }
