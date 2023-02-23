@@ -5,10 +5,9 @@
     <button @click="addClass">Add Class</button>
   </div>
 </template>
-
+<!--
 <script lang="ts">
 import axios from 'axios';
-
 export default {
   data() {
     return {
@@ -29,4 +28,4 @@ export default {
     }
   }
 };
-</script>
+</script> -->
