@@ -2,7 +2,7 @@ version: "3"
 services:
   tutor-db:
     image: "mcr.microsoft.com/mssql/server:2022-latest"
-    user: root
+    user: SA
     ports:
       - "1433:1433"
     environment:
