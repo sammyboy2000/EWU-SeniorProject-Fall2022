@@ -10,11 +10,6 @@ services:
         ACCEPT_EULA: "Y"
     volumes:
       - tutor-volume:/var/opt/mssql/data
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
   tutor-web:
     build:
       context: ./
