@@ -60,9 +60,14 @@ var emailConfig = builder.Configuration
 builder.Services.AddSingleton(emailConfig);
 builder.Services.AddScoped<Tutor.Api.Services.EmailService>();
 
+//TO-DO Remove after testing
+Console.WriteLine("Begin SQL Connection");
+//End TO-DO
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<tutor_dbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<DatabaseService>();
+
+Console.WriteLine("End SQL Connection.");
 
 //Identity stuff
 builder.Services.AddIdentityCore<AppUser>(options => options.SignIn.RequireConfirmedAccount = false)
