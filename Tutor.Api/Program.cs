@@ -106,12 +106,18 @@ Console.WriteLine("Begin database build");
 //Create database
 using (var scope = app.Services.CreateScope())
 {
+    Console.WriteLine("Begin context scope grab");
     var context = scope.ServiceProvider.GetRequiredService<tutor_dbContext>();
+    Console.WriteLine("Begin migrations");
     context.Database.Migrate();
+    Console.WriteLine("Begin identity seed.");
     await IdentitySeed.SeedAsync(scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>(),
         scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>(), context);
+    Console.WriteLine("Begin class seeding");
     Class.Seed(context);
+    Console.WriteLine("Begin topic seeding");
     Topic.Seed(context);
+    Console.WriteLine("Begin question seeding");
     Question.Seed(context);
     
 }
