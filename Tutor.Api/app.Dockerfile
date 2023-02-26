@@ -23,5 +23,6 @@ COPY --from=publish /app/publish .
 
 ENV ASPNETCORE_URLS=http://+:7125
 ENV ASPNETCORE_HTTPS_PORT=7125
+ENV ASPNETCORE_ENVIRONMENT=Development
 
 ENTRYPOINT ["dotnet", "Tutor.Api.dll"]
