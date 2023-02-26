@@ -1,0 +1,34 @@
+version: '3.4'
+
+services:
+  tutor.api:
+    image: ${DOCKER_REGISTRY-}tutorapi
+    build:
+      context: .
+      dockerfile: ../Tutor.Api/app.Dockerfile
+    ports:
+      - "7125:7125"
+    depends_on: 
+        - tutor-db
+  tutor-db:
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    user: root
+    environment:
+        MSSQL_SA_PASSWORD: "S3cur3P@ssW0rd!"
+        ACCEPT_EULA: "Y"
+        MSSQL_PID: "Express"
+    volumes:
+      - tutor-volume:/var/opt/mssql/data
+    ports:
+      - "1433:1433"
+  tutor-web:
+    build:
+      context: ../
+      dockerfile: web.dockerfile
+    environment:
+      PORT: 3000
+      PROXY_API: http://tutor-api:7125/
+    ports:
+      - 3000:3000
+volumes:
+  tutor-volume:
