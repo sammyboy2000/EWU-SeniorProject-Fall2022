@@ -5,7 +5,7 @@ services:
     image: ${DOCKER_REGISTRY-}tutorapi
     build:
       context: .
-      dockerfile: ../Tutor.Api/app.Dockerfile
+      dockerfile: ./Tutor.Api/app.Dockerfile
     ports:
       - "7125:7125"
     depends_on: 
@@ -23,7 +23,7 @@ services:
       - "1433:1433"
   tutor-web:
     build:
-      context: ../
+      context: ./
       dockerfile: web.dockerfile
     environment:
       PORT: 3000
