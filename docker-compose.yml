@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: Tutor.Api/app.Dockerfile
+    ports:
+      - "7125:7125"
     depends_on: 
         - tutor-db
   tutor-db:
