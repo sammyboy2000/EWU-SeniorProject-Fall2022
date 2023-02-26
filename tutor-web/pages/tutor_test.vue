@@ -9,7 +9,7 @@
               {{ selectedQuestion.question1 }}
             </v-card-title>
             <v-textarea v-model="answer" label="Answer" rows="1" ></v-textarea>
-            <v-btn color="primary" @click="answerQuestion(), removeQuestion()">Submit</v-btn>
+            <v-btn color="primary" @click="answerQuestion()">Submit</v-btn>
           </v-card-text>
         </v-card>
       </v-col>
@@ -67,20 +67,13 @@ export default class Tutor extends Vue {
       this.$axios.post('/Questions/AnswerQuestion', {},
       {
         params: {
-          question: this.question,
+          questionId: this.selectedQuestion?.questionId,
+          tutorUsername: "sshaw16@ewu.edu",
           answer: this.answer
         }
       })
     }
 
-  removeQuestion() {
-    this.$axios.post('/Questions/RemoveQuestion', {
-      params: { question: this.question }
-    }).then((response) => {
-      console.log(response.data);
-    })
-  }
-  
   selectQuestion(index: number) {
     this.selectedQuestion = this.questionData[index];
   }

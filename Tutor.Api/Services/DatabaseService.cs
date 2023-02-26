@@ -158,6 +158,7 @@ namespace Tutor.api.Services
             } 
             catch { return false; }
         }
+
         private bool RemoveQuestion(Guid questionId)
         {
             Question q = _context.Questions.Where(x => x.QuestionId.Equals(questionId)).First();
