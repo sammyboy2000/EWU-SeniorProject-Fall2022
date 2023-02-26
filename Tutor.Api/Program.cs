@@ -60,15 +60,20 @@ var emailConfig = builder.Configuration
 builder.Services.AddSingleton(emailConfig);
 builder.Services.AddScoped<Tutor.Api.Services.EmailService>();
 
+Console.WriteLine("Begin SQL Connection");
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<tutor_dbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<DatabaseService>();
+Console.WriteLine("End SQL Connection.");
 
+Console.WriteLine("Begin Identity Generation");
 //Identity stuff
 builder.Services.AddIdentityCore<AppUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<tutor_dbContext>();
+Console.WriteLine("End Identity Generation");
 
+Console.WriteLine("Begin JWT configuration");
 //JWT Token setup
 JwtConfiguration jwtConfiguration = builder.Configuration.GetSection("Jwt").Get<JwtConfiguration>();
 builder.Services.AddSingleton(jwtConfiguration);
@@ -86,35 +91,47 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.Secret))
         };
     });
+Console.WriteLine("End JWT configuration");
 
 //Add Policies
-builder.Services.AddAuthorization(options =>
-{
-    //options.AddPolicy(Policies.RequireAdmin, Policies.RequireAdminPolicy);
-    
-});
-
+//builder.Services.AddAuthorization(options =>
+//{
+//  options.AddPolicy(Policies.RequireAdmin, Policies.RequireAdminPolicy); 
+//});
+Console.WriteLine("Begin Build");
 var app = builder.Build();
+Console.WriteLine("End Build");
 
+Console.WriteLine("Begin database build");
 //Create database
 using (var scope = app.Services.CreateScope())
 {
+    Console.WriteLine("Begin context scope grab");
     var context = scope.ServiceProvider.GetRequiredService<tutor_dbContext>();
+    Console.WriteLine("Begin migrations");
     context.Database.Migrate();
+    Console.WriteLine("Begin identity seed.");
     await IdentitySeed.SeedAsync(scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>(),
         scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>(), context);
+    Console.WriteLine("Begin class seeding");
     Class.Seed(context);
+    Console.WriteLine("Begin topic seeding");
     Topic.Seed(context);
+    Console.WriteLine("Begin question seeding");
     Question.Seed(context);
     
 }
+Console.WriteLine("End database build");
 
+Console.WriteLine("Begin HTTP configuration");
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
+app.UseSwagger();
+//if (app.Environment.IsDevelopment())
+//{
+    Console.WriteLine("Enable Swagger UI");
     app.UseSwaggerUI();
-}
+//}
+Console.WriteLine("End HTTP configuration");
 
 //app.UseHttpsRedirection();
 

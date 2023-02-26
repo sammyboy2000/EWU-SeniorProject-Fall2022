@@ -12,7 +12,7 @@ using Tutor.Api.Models;
 namespace Tutor.Api.Migrations
 {
     [DbContext(typeof(tutor_dbContext))]
-    [Migration("20230118015414_InitialCreate")]
+    [Migration("20230224060939_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
