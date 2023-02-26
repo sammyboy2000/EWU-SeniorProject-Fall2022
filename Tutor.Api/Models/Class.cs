@@ -25,7 +25,7 @@ namespace Tutor.Api.Models
         internal static void Seed(tutor_dbContext context, string filename = "Classes.csv")
         {
                 // Read the file and update the database
-                var classLines = System.IO.File.ReadAllLines($"Content\\{filename}");
+                var classLines = System.IO.File.ReadAllLines($"Content//{filename}");
 
                 // Load all current words
                 var classes = context.Classes.ToDictionary(f => f.ClassCode);
