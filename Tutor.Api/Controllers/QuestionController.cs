@@ -28,6 +28,18 @@ namespace Tutor.Api.Controllers
 
         }
 
+        //Added to get questions to populate dropdown --Jesse 2/24/2023
+        [HttpGet("GetStudentsQuestions")]
+        [Authorize(Roles = Roles.Student)]
+        public IEnumerable<Question>? GetStudentsQuestions(String? studentUsername)
+        {
+            if (string.IsNullOrWhiteSpace(studentUsername)) { 
+                return null; 
+            }
+            int studentId = _database.GetStudentId(studentUsername);
+            return _database.GetStudentsQuestions(studentId);
+        }
+
         [HttpPost("AskQuestion")]
         [Authorize(Roles = Roles.Student)]
         public String AddQuestion(String studentUsername, String classCode, String topic, String question) 

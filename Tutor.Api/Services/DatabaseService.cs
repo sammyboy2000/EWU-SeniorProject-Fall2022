@@ -72,6 +72,18 @@ namespace Tutor.api.Services
                 .Where(x => x.Contains(searchString));
         }
 
+        //Added to get questions to populate dropdown --Jesse 2/24/2023
+        internal IEnumerable<Question> GetStudentsQuestions(int studentId)
+        { 
+            if(studentId == null) 
+            {
+                return _context.Questions;
+                    
+            }
+            return _context.Questions.Where(x => x.StudentId == studentId);
+
+        }
+
 
         internal int GetStudentId(string studentUsername)
         {
