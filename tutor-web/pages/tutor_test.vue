@@ -48,6 +48,7 @@ export default class Tutor extends Vue {
   classCode: string = "";
   topic: string = "";
   selectedQuestion: Question | null = null;
+  tutorUsername: string = "sshaw16@ewu.edu";
 
   mounted() {
     this.initializeQuestionData();
@@ -68,7 +69,7 @@ export default class Tutor extends Vue {
       {
         params: {
           questionId: this.selectedQuestion?.questionId,
-          tutorUsername: "sshaw16@ewu.edu",
+          tutorUsername: this.tutorUsername,
           answer: this.answer
         }
       })
