@@ -40,6 +40,18 @@ namespace Tutor.Api.Controllers
             return _database.GetStudentsQuestions(studentId);
         }
 
+        //Added to get answers displayed for student --Jesse 2/27/2023
+        [HttpGet("GetAnsweredQuestions")]
+        [Authorize(Roles = Roles.Student)]
+        public IEnumerable<AnsweredQuestion>? GetAnsweredQuestions(String? studentUsername)
+        {
+            if (string.IsNullOrWhiteSpace(studentUsername)) { 
+                return null; 
+            }
+            int studentId = _database.GetStudentId(studentUsername);
+            return _database.GetAnsweredQuestions(studentId);
+        }
+
         [HttpPost("AskQuestion")]
         [Authorize(Roles = Roles.Student)]
         public String AddQuestion(String studentUsername, String classCode, String topic, String question) 

@@ -81,9 +81,18 @@ namespace Tutor.api.Services
                     
             }
             return _context.Questions.Where(x => x.StudentId == studentId);
-
         }
 
+        //Added to get questions to populate dropdown --Jesse 2/27/2023
+        internal IEnumerable<AnsweredQuestion> GetAnsweredQuestions(int studentId)
+        { 
+            if(studentId == null) 
+            {
+                return _context.AnsweredQuestions;
+                    
+            }
+            return _context.AnsweredQuestions.Where(x => x.StudentId == studentId);
+        }
 
         internal int GetStudentId(string studentUsername)
         {

@@ -8,7 +8,7 @@
             <v-card-title v-if="selectedQuestion !== null">
               {{ selectedQuestion.question1 }}
             </v-card-title>
-            <v-textarea v-model="answer" label="Answer" rows="1" ></v-textarea>
+            <v-textarea v-model="answer" label="Answer" rows="1" auto-grow></v-textarea>
             <v-btn color="primary" @click="answerQuestion()">Submit</v-btn>
           </v-card-text>
         </v-card>

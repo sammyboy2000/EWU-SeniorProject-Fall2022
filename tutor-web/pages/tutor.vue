@@ -5,14 +5,11 @@
         <v-card>
           <v-card-title>Tutor Page</v-card-title>
           <v-card-text>
-            <v-select
-              v-model="question"
-              :items="questionData"
-              label="Questions"
-              style="width: 25%; padding: 5px;"
-            ></v-select>
-            <v-textarea v-model="answer" label="Answer" rows="1" ></v-textarea>
-            <v-btn color="primary" @click="answerQuestion(), removeQuestion()">Submit</v-btn>
+            <v-card-title v-if="selectedQuestion !== null">
+              {{ selectedQuestion.question1 }}
+            </v-card-title>
+            <v-textarea v-model="answer" label="Answer" rows="1" auto-grow></v-textarea>
+            <v-btn color="primary" @click="answerQuestion()">Submit</v-btn>
           </v-card-text>
         </v-card>
       </v-col>
@@ -20,11 +17,10 @@
         <v-card style="margin-bottom: 5px;">
           <v-card-title>Recent Questions</v-card-title>
         </v-card>
-        <v-card v-for="(question, index) in questionData" :key="index" style="margin-bottom: 10px;">
+        <v-card v-for="(question, index) in questionData" :key="index" style="margin-bottom: 10px;" @click="selectQuestion(index)">
           <v-card-title>Question {{ index + 1 }}</v-card-title>
           <v-card-text>
-            {{ question }}
-            {{ classCode }}
+            {{ question.question1 }}
           </v-card-text>
         </v-card>
         <br />
@@ -37,9 +33,11 @@
 import { Component, Vue } from "vue-property-decorator";
 
 interface Question {
-  question: string;
-  classCode: number;
-  topic: number;
+  questionId: string;
+  studentId: number;
+  classId: number;
+  topicId: number;
+  question1: string;
 }
 
 @Component({})
@@ -49,60 +47,41 @@ export default class Tutor extends Vue {
   answer: string = "";
   classCode: string = "";
   topic: string = "";
+  selectedQuestion: Question | null = null;
+  tutorUsername: string = "sshaw16@ewu.edu";
 
   mounted() {
     this.initializeQuestionData();
   }
 
   // Get questions in FIFO order
-  initializeQuestionData() {
-    this.$axios.get('/database/GetAllQuestions', {
-      params: { classCode: "1", topic: "1" }
+  initializeQuestionData(options?: string) {
+    this.$axios.get('/Questions/GetQuestions', {
+      params: { options }
     }).then((response) => {
       console.log(response.data);
-      this.questionData = response.data.slice(0, 4)
+      this.questionData = response.data.slice(0, 4);
     })
   };
-
-  // Get the data from rows corresponding to the class and topic
-  getQuestionData() {
-    this.$axios.get('/Questions/GetQuestions', 
-    {
-      params: {
-        classCode: "1",
-        topic: "1"
-      }
-    }).then((response) => {
-      this.questionData = response.data;
-      console.log(response.data);
-    })
-  }
 
   answerQuestion() {
       this.$axios.post('/Questions/AnswerQuestion', {},
       {
         params: {
-          question: this.question,
+          questionId: this.selectedQuestion?.questionId,
+          tutorUsername: this.tutorUsername,
           answer: this.answer
         }
       })
     }
 
-  removeQuestion() {
-    this.$axios.post('/Questions/RemoveQuestion', {
-      params: { question: this.question }
-    }).then((response) => {
-      console.log(response.data);
-    })
+  selectQuestion(index: number) {
+    this.selectedQuestion = this.questionData[index];
   }
+
+
 
 }
 
 </script>
 
-<!--
-  Add way for tutor to select the class and topic
-  Figure out how to POST data to the database
-  Maybe split into 2 pages. One for the tutor to select class and topic like student
-  then pass in class and topic to another page for the tutor to answer the question
--->

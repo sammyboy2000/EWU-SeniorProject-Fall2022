@@ -4,6 +4,7 @@
       <v-btn @click="userOption = 1">Ask a Question</v-btn>
       <v-btn @click="userOption = 2">Edit a Question</v-btn>
       <v-btn @click="userOption = 3">Delete a Question</v-btn>
+      <v-btn @click="userOption = 4, getAnsweredQuestionData()">View Answered Questions</v-btn>
     </v-row>
     <v-row>
       <v-col cols="8" >
@@ -49,6 +50,19 @@
               </v-col>
             </v-row>
           </v-card>
+          <v-card v-show="userOption == 2">
+            <v-card-title>Edit Previous Question</v-card-title>
+          </v-card>
+          <v-card v-show="userOption == 3">
+            <v-card-title>Remove Previous Question</v-card-title>
+          </v-card>
+          <v-card v-show="userOption == 4">
+            <v-card-title>View Answered Questions</v-card-title>
+            <v-card v-for="answer in answeredQuestions" :key="answer">
+              <v-card-title>{{ answer.question }}</v-card-title>
+              <v-card-text>{{ answer.response }}</v-card-text>
+            </v-card>
+          </v-card>
         </v-col>
         <v-col cols="4">
           <v-card style="margin-bottom: 5px;">
@@ -59,6 +73,11 @@
             <v-card-text>
               {{ question.question1 }}
             </v-card-text>
+            <div v-if="selectedQuestionIndex === index">
+              <v-textarea v-if="selectedQuestionIndex === index" v-model="question.question1" auto-grow></v-textarea>
+              <v-btn color="primary" @click="editSelectedQuestion()">Edit</v-btn>
+              <v-btn color="secondary" @click="removeSelectedQuestion()">Remove</v-btn>
+            </div>
           </v-card>
           <br />
         </v-col>
@@ -77,6 +96,16 @@ interface Question {
   question1: string;
 }
 
+interface AnsweredQuestion {
+  questionId: string;
+  studentId: number;
+  tutorId: number;
+  classId: number;
+  topicId: number;
+  question: string;
+  response: string;
+}
+
 @Component({})
 export default class Student extends Vue {
   userOption: number = 1  
@@ -88,15 +117,18 @@ export default class Student extends Vue {
   selectTopic: string = ''
   other: string = ''
   question: string = ''
+  modQuestion: string = ''
   studentName: string = 'sshaw16@ewu.edu'
   studentQuestions: Question[] = []
+  answeredQuestions: AnsweredQuestion[] = []
   selectedQuestion: Question | null = null;
-  
+  selectedQuestionIndex: number = -1;
 
   mounted() {
     this.initializeClassData()
     this.initializeTopicData()
     this.initializeQuestionData()
+    this.getAnsweredQuestionData()
   }
 
   initializeClassData() {
@@ -108,23 +140,6 @@ export default class Student extends Vue {
   initializeTopicData() {
     this.$axios.get('/database/getTopics').then((response) => {
       this.topicData = response.data
-    })
-  }
-
-  submitQuestion() {
-    this.$axios.post('/Questions/AskQuestion', {},
-    {
-      params: {
-        studentUsername: this.studentName,
-        classCode: this.selectedClass,
-        topic: this.selectedTopic,
-        question: this.question,
-      }
-    }).then((response) => {
-      console.log(response.data);
-      this.initializeQuestionData(); // Refresh the list of questions
-    }).catch((error) => {
-      console.log(error);
     })
   }
 
@@ -140,11 +155,79 @@ export default class Student extends Vue {
     })
   };
 
+  // Get Answered Questions for Student
+  getAnsweredQuestionData() {
+    this.$axios.get('/Questions/GetAnsweredQuestions', {
+      params: {
+        studentUsername: this.studentName
+      }
+    }).then((response) => {
+      console.log(response.data);
+      this.answeredQuestions = response.data
+    })
+  };
+
+  submitQuestion() {
+    this.$axios.post('/Questions/AskQuestion', {},
+    {
+      params: {
+        studentUsername: this.studentName,
+        classCode: this.selectedClass,
+        topic: this.selectedTopic,
+        question: this.question,
+      }
+    }).then((response) => {
+      console.log(response.data);
+      this.initializeQuestionData(); // Refresh the list of questions
+    })
+  }
+
+  // Not truely implemented yet
+  editSelectedQuestion() {
+    this.$axios.post('/Questions/EditQuestion', {},
+    {
+      params: {
+        questionId: this.selectedQuestion?.questionId,
+        studentUsername: this.selectedQuestion?.studentId,
+        classCode: this.selectedQuestion?.classId,
+        topic: this.selectedQuestion?.topicId,
+        question: this.modQuestion,
+      }
+    }).then((response) => {
+      console.log(response.data);
+      this.initializeQuestionData(); // Refresh the list of questions
+    })
+  }
+
+  // Not truely implemented yet
+  removeSelectedQuestion() {
+    this.$axios.post('/Questions/RemoveQuestion', {},
+    {
+      params: {
+        questionId: question.questionId,
+      }
+    }).then((response) => {
+      console.log(response.data);
+      this.initializeQuestionData(); // Refresh the list of questions
+    })
+  }
+
+  getAnsweredQuestions() {
+    this.$axios.get('/Questions/GetAnsweredQuestions', {
+      params: {
+        studentUsername: this.studentName
+      }
+    }).then((response) => {
+      console.log(response.data);
+      this.answeredQuestions = response.data
+    })
+  }
+
   selectQuestion(index: number) {
     this.selectedQuestion = this.studentQuestions[index];
+    this.selectedQuestionIndex = index;
   }
   
-
 
 }
 </script>
