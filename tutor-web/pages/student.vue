@@ -34,15 +34,7 @@
               <v-header style="font-size: 16pt; color: black">Question:</v-header>
               <br />
                 <textarea 
-                  v-model="question" 
-                  name="questionBox" 
-                  style="
-                    border: 2px solid gray;
-                    border-radius: 4px;
-                    resize: none;
-                    height: 200px;
-                    width: 100%;
-                    font-size: 14pt;">
+                  v-model="question" name="questionBox"  style="border: 2px solid gray; border-radius: 4px; resize: none; height: 200px; width: 100%; font-size: 14pt;">
                 </textarea>
               </div>
             </v-card-text>
@@ -128,8 +120,12 @@ export default class Student extends Vue {
         topic: this.selectedTopic,
         question: this.question,
       }
+    }).then((response) => {
+      console.log(response.data);
+      this.initializeQuestionData(); // Refresh the list of questions
+    }).catch((error) => {
+      console.log(error);
     })
-    console.log(this.studentName, this.selectedClass, this.selectedTopic, this.question)
   }
 
   // Get previous questions asked by student
