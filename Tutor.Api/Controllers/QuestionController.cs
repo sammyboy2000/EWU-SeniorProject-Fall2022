@@ -52,6 +52,18 @@ namespace Tutor.Api.Controllers
             return _database.GetAnsweredQuestions(studentId);
         }
 
+        //Added to get answers displayed for tutor --Jesse 2/28/2023
+        [HttpGet("GetTutorAnsweredQuestions")]
+        [Authorize(Roles = Roles.Tutor)]
+        public IEnumerable<AnsweredQuestion>? GetTutorAnsweredQuestions(String? tutorUsername)
+        {
+            if (string.IsNullOrWhiteSpace(tutorUsername)) { 
+                return null; 
+            }
+            int tutorId = _database.GetTutorId(tutorUsername);
+            return _database.GetTutorAnsweredQuestions(tutorId);
+        }
+
         //Added by Jesse: 2/28/2023 to remove selected question from unanswered questions
         [HttpPost("StudentRemoveQuestion")]
         [Authorize(Roles = Roles.Student)]

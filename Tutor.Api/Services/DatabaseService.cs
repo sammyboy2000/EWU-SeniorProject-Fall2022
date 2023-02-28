@@ -93,15 +93,26 @@ namespace Tutor.api.Services
             return _context.Questions.Where(x => x.StudentId == studentId);
         }
 
-        //Added to get questions to populate dropdown --Jesse 2/27/2023
+        //Added to get questions to populate student answers --Jesse 2/27/2023
         internal IEnumerable<AnsweredQuestion> GetAnsweredQuestions(int studentId)
         { 
             if(studentId == null) 
             {
-                return _context.AnsweredQuestions;
+                return null;
                     
             }
             return _context.AnsweredQuestions.Where(x => x.StudentId == studentId);
+        }
+
+        //Added to get questions to populate tutor answers --Jesse 2/28/2023
+        internal IEnumerable<AnsweredQuestion> GetTutorAnsweredQuestions(int tutorId)
+        { 
+            if(tutorId == null) 
+            {
+                return null;
+                    
+            }
+            return _context.AnsweredQuestions.Where(x => x.TutorId == tutorId);
         }
 
         //Added to remove selected question from unanswered questions --Jesse 2/28/2023
