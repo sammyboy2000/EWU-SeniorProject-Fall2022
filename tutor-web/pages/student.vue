@@ -16,6 +16,7 @@
             <br/>
             <div v-show="Number(selectedClass) != 0">
               <v-select
+                v-on:click="initializeTopicData()"
                 v-model="selectedTopic"
                 :items="topicData"
                 label="Topic"
@@ -122,7 +123,6 @@ export default class Student extends Vue {
 
   mounted() {
     this.initializeClassData();
-    this.initializeTopicData();
     this.initializeQuestionData();
     this.getAnsweredQuestionData();
   }
@@ -134,7 +134,11 @@ export default class Student extends Vue {
   }
 
   initializeTopicData() {
-    this.$axios.get('/database/getTopics').then((response) => {
+    this.$axios.get('/database/getTopics', {
+      params: {
+        classCode: this.selectedClass
+      }
+    }).then((response) => {
       this.topicData = response.data
     })
   }

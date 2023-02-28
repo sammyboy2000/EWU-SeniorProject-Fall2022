@@ -24,7 +24,17 @@ namespace Tutor.api.Services
                 .Where(x => x.Contains(searchString));
         }
 
-        //Added to get topics to populate dropdown --Jesse 2/17/2023
+        //Added to get topics to populate dropdown --Jesse 2/28/2023
+        internal IEnumerable<String> getClassTopics(int? classId)
+        {
+            if (classId == null)
+            {
+                return _context.Topics.Select(x => x.Topic1);
+            }
+            return _context.Topics.Where(x => x.ClassId == classId).Select(x => x.Topic1);
+        }
+
+        //Added to get topics to populate dropdown --Jesse 2/17/2023 %% No longer needed in student %%
         internal IEnumerable<String> getTopics(string? searchString)
         { 
             if(searchString == null) 

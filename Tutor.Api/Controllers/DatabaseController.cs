@@ -30,9 +30,17 @@ namespace Tutor.Api.Controllers
         //Added to get topics to populate dropdown --Jesse 2/17/2023
         [HttpGet("getTopics")]
         [Authorize]
-        public IEnumerable<String> getTopics(String? searchString)
+        public IEnumerable<String> getTopics(String? classCode)
         {
-            return _service.getTopics(searchString);
+            if(classCode == null)
+            {
+                return null;
+            }
+            else {
+                int? checkId = _service.GetClassId(classCode);
+                int classId = (int)checkId;
+                return _service.getClassTopics(classId);
+            }
         }
 
         //Added to get questions to populate dropdown --Jesse 2/17/2023
