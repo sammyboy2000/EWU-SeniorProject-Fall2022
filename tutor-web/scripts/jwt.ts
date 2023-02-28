@@ -25,6 +25,11 @@ export class JWT {
     this._tokenData = Object.assign(new TutorToken(), payload)
   }
 
+  // Added by Jesse: 2/28/2023
+  public static getUserName(): string {
+    return this.tokenData.sub
+  }
+
   public static getToken(): string {
     return this.tokenInstance
   }

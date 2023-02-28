@@ -94,6 +94,21 @@ namespace Tutor.api.Services
             return _context.AnsweredQuestions.Where(x => x.StudentId == studentId);
         }
 
+        //Added to remove selected question from unanswered questions --Jesse 2/28/2023
+        internal void StudentRemoveQuestion(Guid questionId)
+        {
+            Question q = _context.Questions.Where(x => x.QuestionId.Equals(questionId)).First();
+            _context.Questions.Remove(q);
+            _context.SaveChanges();
+        }
+
+        //Added to modify an existing question --Jesse 2/28/2023
+        internal void StudentModifyQuestion(Question q)
+        {
+            _context.Questions.Update(q);
+            _context.SaveChanges();
+        }
+
         internal int GetStudentId(string studentUsername)
         {
             return _context.Students.Where(x => x.Email.Contains(studentUsername)).Select(x => x.Id).First();

@@ -33,12 +33,6 @@
         </v-list-item>
 
         <v-list-item>
-          <v-btn text block nuxt to="/about">
-            About <v-icon>mdi-help-circle</v-icon></v-btn
-          >
-        </v-list-item>
-
-        <v-list-item>
           <v-btn text block>
             <login-dialog />
           </v-btn>
@@ -55,6 +49,13 @@
             <SettingsDialog />
           </v-btn>
         </v-list-item>
+
+        <v-list-item>
+          <v-btn text block nuxt to="/about">
+            About <v-icon>mdi-help-circle</v-icon></v-btn
+          >
+        </v-list-item>
+
       </v-list>
     </v-navigation-drawer>
     <v-footer app>
@@ -64,7 +65,11 @@
 </template>
 
 <script>
+import { JWT } from '~/scripts/jwt'
+
 export default {
+  isLoggedIn: false,
+
   name: 'DefaultLayout',
   data() {
     return {
@@ -72,6 +77,11 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'EWU Tutoring',
+    }
+  },
+  mounted() {
+    if(JWT.getToken() != null) {
+      this.isLoggedIn = true
     }
   },
 }

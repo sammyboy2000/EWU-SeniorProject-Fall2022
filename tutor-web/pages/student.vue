@@ -2,9 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-btn @click="userOption = 1">Ask a Question</v-btn>
-      <v-btn @click="userOption = 2">Edit a Question</v-btn>
-      <v-btn @click="userOption = 3">Delete a Question</v-btn>
-      <v-btn @click="userOption = 4, getAnsweredQuestionData()">View Answered Questions</v-btn>
+      <v-btn @click="userOption = 2, getAnsweredQuestionData()">View Answered Questions</v-btn>
     </v-row>
     <v-row>
       <v-col cols="8" >
@@ -51,12 +49,6 @@
             </v-row>
           </v-card>
           <v-card v-show="userOption == 2">
-            <v-card-title>Edit Previous Question</v-card-title>
-          </v-card>
-          <v-card v-show="userOption == 3">
-            <v-card-title>Remove Previous Question</v-card-title>
-          </v-card>
-          <v-card v-show="userOption == 4">
             <v-card-title>View Answered Questions</v-card-title>
             <v-card v-for="answer in answeredQuestions" :key="answer">
               <v-card-title>{{ answer.question }}</v-card-title>
@@ -74,9 +66,10 @@
               {{ question.question1 }}
             </v-card-text>
             <div v-if="selectedQuestionIndex === index">
-              <v-textarea v-if="selectedQuestionIndex === index" v-model="question.question1" auto-grow></v-textarea>
-              <v-btn color="primary" @click="editSelectedQuestion()">Edit</v-btn>
-              <v-btn color="secondary" @click="removeSelectedQuestion()">Remove</v-btn>
+              <v-textarea v-if="selectedQuestionIndex === index && editOption == true" v-model="modQuestion" auto-grow></v-textarea>
+              <v-btn v-if="editOption == false" color="primary" @click="editOption = true">Edit</v-btn>
+              <v-btn v-if="editOption == true" color="primary" @click="editSelectedQuestion(), editOption = false">Save Changes</v-btn>
+              <v-btn v-if="editOption == false" color="secondary" @click="removeSelectedQuestion()">Remove</v-btn>
             </div>
           </v-card>
           <br />
@@ -87,6 +80,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { JWT } from '~/scripts/jwt'
 
 interface Question {
   questionId: string;
@@ -108,27 +102,29 @@ interface AnsweredQuestion {
 
 @Component({})
 export default class Student extends Vue {
-  userOption: number = 1  
-  classData: string = ''
-  selectedClass: string = ''
-  topicData: string = ''
-  selectedTopic: string = ''
-  selectClass: string = ''
-  selectTopic: string = ''
-  other: string = ''
-  question: string = ''
-  modQuestion: string = ''
-  studentName: string = 'sshaw16@ewu.edu'
-  studentQuestions: Question[] = []
-  answeredQuestions: AnsweredQuestion[] = []
-  selectedQuestion: Question | null = null;
-  selectedQuestionIndex: number = -1;
+  userOption: number = 1                        // 1 = ask question, 2 = view answered questions
+  classData: string = ''                        // class data from database
+  selectedClass: string = ''                    // selected class from dropdown
+  topicData: string = ''                        // topic data from database
+  selectedTopic: string = ''                    // selected topic from dropdown
+  selectClass: string = ''                      // selected class from dropdown
+  selectTopic: string = ''                      // selected topic from dropdown
+  other: string = ''                            // other topic
+  question: string = ''                         // question
+  modQuestion: string = ''                      // modified question
+  studentName: string = JWT.getUserName()       // student username
+  studentQuestions: Question[] = []             // student questions
+  answeredQuestions: AnsweredQuestion[] = []    // answered questions
+  selectedQuestion: Question | null = null;     // selected question
+  selectedQuestionIndex: number = -1;           // selected question index
+  editOption: boolean = false                   // edit option
+
 
   mounted() {
-    this.initializeClassData()
-    this.initializeTopicData()
-    this.initializeQuestionData()
-    this.getAnsweredQuestionData()
+    this.initializeClassData();
+    this.initializeTopicData();
+    this.initializeQuestionData();
+    this.getAnsweredQuestionData();
   }
 
   initializeClassData() {
@@ -182,15 +178,11 @@ export default class Student extends Vue {
     })
   }
 
-  // Not truely implemented yet
   editSelectedQuestion() {
-    this.$axios.post('/Questions/EditQuestion', {},
+    this.$axios.post('/Questions/StudentModifyQuestion', {},
     {
       params: {
         questionId: this.selectedQuestion?.questionId,
-        studentUsername: this.selectedQuestion?.studentId,
-        classCode: this.selectedQuestion?.classId,
-        topic: this.selectedQuestion?.topicId,
         question: this.modQuestion,
       }
     }).then((response) => {
@@ -199,12 +191,12 @@ export default class Student extends Vue {
     })
   }
 
-  // Not truely implemented yet
   removeSelectedQuestion() {
-    this.$axios.post('/Questions/RemoveQuestion', {},
+    this.$axios.post('/Questions/StudentRemoveQuestion', {},
     {
       params: {
-        questionId: question.questionId,
+        questionId: this.selectedQuestion?.questionId,
+        studentUsername: this.studentName,
       }
     }).then((response) => {
       console.log(response.data);

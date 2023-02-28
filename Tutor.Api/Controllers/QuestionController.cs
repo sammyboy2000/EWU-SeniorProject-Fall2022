@@ -52,6 +52,54 @@ namespace Tutor.Api.Controllers
             return _database.GetAnsweredQuestions(studentId);
         }
 
+        //Added by Jesse: 2/28/2023 to remove selected question from unanswered questions
+        [HttpPost("StudentRemoveQuestion")]
+        [Authorize(Roles = Roles.Student)]
+        public String StudentRemoveQuestion(Guid questionID, String studentUsername)
+        {
+            if (string.IsNullOrWhiteSpace(studentUsername)) { 
+                return "Error, studentUsername cannot be blank."; 
+            }
+            int studentId = _database.GetStudentId(studentUsername);
+            Question q = _database.GetQuestion(questionID);
+            if(q == null) { return "Error, question does not exist."; }
+            if(q.StudentId != studentId) { return "Error, question does not belong to student."; }
+            try
+            {
+                _database.StudentRemoveQuestion(questionID);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.ToString());
+                return "Error, failed to remove question.";
+            }
+            return "Question " + q.QuestionId + " has successfully been removed.";
+        }
+
+        //Added to modify an existing question --Jesse 2/28/2023
+        [HttpPost("StudentModifyQuestion")]
+        [Authorize(Roles = Roles.Student)]
+        public String StudentModifyQuestion(Guid questionID, String question)
+        {
+            if (string.IsNullOrWhiteSpace(question)) { 
+                return "Error, question cannot be blank."; 
+            }
+            Question q = _database.GetQuestion(questionID);
+            if(q == null) { return "Error, question does not exist."; }
+            q.Question1 = question;
+            try
+            {
+                _database.StudentModifyQuestion(q);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.ToString());
+                return "Error, failed to modify question.";
+            }
+            return "Question " + q.QuestionId + " has successfully been modified.";
+        }
+
+
         [HttpPost("AskQuestion")]
         [Authorize(Roles = Roles.Student)]
         public String AddQuestion(String studentUsername, String classCode, String topic, String question) 
