@@ -181,8 +181,18 @@ namespace Tutor.Api.Controllers
             };
 
             Boolean result = _database.AnswerQuestion(a);
-            if(result) { return "Successfully answered question."; }
-            else { return "Error, could not save answer."; }
+            if(!result) {
+                return "Error, could not save answer.";
+            }
+
+            String studentUsername = _database.getStudentUsername(q.StudentId);
+           
+            result = _service.SendQuestionAnswered(q.QuestionId, studentUsername);
+
+            if (!result) { return "Successfully answered question, confirmation email not sent."; }
+
+            return "Successfully answered question.";
+
         }
 
     }

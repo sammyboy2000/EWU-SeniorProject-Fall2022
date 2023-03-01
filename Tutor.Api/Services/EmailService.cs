@@ -62,5 +62,18 @@ namespace Tutor.Api.Services
             }
             return true;
         }
+        internal Boolean SendQuestionAnswered(Guid questionId, string studentUsername)
+        {
+            var message = new Message(new string[] { studentUsername }, "Question Answered", "Your question has been answered.\nQuestion ID: " + questionId);
+            try
+            {
+                SendEmail(message);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

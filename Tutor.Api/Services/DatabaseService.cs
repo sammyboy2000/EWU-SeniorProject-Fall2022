@@ -291,5 +291,11 @@ namespace Tutor.api.Services
             }
             return topicAggregate;
         }
+
+        internal string getStudentUsername(int studentId)
+        {
+            Student s = _context.Students.Where(x => x.Id == studentId).First();
+            return s.Email;
+        }
     }
 }   
