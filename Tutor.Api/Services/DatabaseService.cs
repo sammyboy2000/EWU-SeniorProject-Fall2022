@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using Microsoft.IdentityModel.Tokens;
 using Tutor.Api.Models;
 
 namespace Tutor.api.Services
@@ -14,11 +12,11 @@ namespace Tutor.api.Services
             _context = context;
         }
         internal IEnumerable<String> getClasses(string? searchString)
-        { 
-            if(searchString == null) 
+        {
+            if (searchString == null)
             {
                 return _context.Classes.Select(x => x.ClassCode);
-                    
+
             }
             return _context.Classes.Select(x => x.ClassCode)
                 .Where(x => x.Contains(searchString));
@@ -36,8 +34,8 @@ namespace Tutor.api.Services
 
         //Added to get topics to populate dropdown --Jesse 2/17/2023 %% No longer needed in student %%
         internal IEnumerable<String> getTopics(string? searchString)
-        { 
-            if(searchString == null) 
+        {
+            if (searchString == null)
             {
                 //return _context.Classes.Select(x => x.ClassCode);
                 return _context.Topics.Select(x => x.Topic1);
@@ -50,11 +48,11 @@ namespace Tutor.api.Services
         {
             var classes = _context.Classes.ToDictionary(f => f.ClassCode);
 
-                if (!classes.ContainsKey(classCode))
-                {
-                    _context.Classes.Add(new Class { ClassCode = classCode });
-                }
-            
+            if (!classes.ContainsKey(classCode))
+            {
+                _context.Classes.Add(new Class { ClassCode = classCode });
+            }
+
             _context.SaveChanges();
 
         }
@@ -72,11 +70,11 @@ namespace Tutor.api.Services
 
         //Added to get questions to populate dropdown --Jesse 2/17/2023
         internal IEnumerable<String> GetAllQuestions(string searchString)
-        { 
-            if(searchString == null) 
+        {
+            if (searchString == null)
             {
                 return _context.Questions.Select(x => x.Question1);
-                    
+
             }
             return _context.Questions.Select(x => x.Question1)
                 .Where(x => x.Contains(searchString));
@@ -84,33 +82,33 @@ namespace Tutor.api.Services
 
         //Added to get questions to populate dropdown --Jesse 2/24/2023
         internal IEnumerable<Question> GetStudentsQuestions(int studentId)
-        { 
-            if(studentId == null) 
+        {
+            if (studentId == null)
             {
                 return _context.Questions;
-                    
+
             }
             return _context.Questions.Where(x => x.StudentId == studentId);
         }
 
         //Added to get questions to populate student answers --Jesse 2/27/2023
         internal IEnumerable<AnsweredQuestion> GetAnsweredQuestions(int studentId)
-        { 
-            if(studentId == null) 
+        {
+            if (studentId == null)
             {
                 return null;
-                    
+
             }
             return _context.AnsweredQuestions.Where(x => x.StudentId == studentId);
         }
 
         //Added to get questions to populate tutor answers --Jesse 2/28/2023
         internal IEnumerable<AnsweredQuestion> GetTutorAnsweredQuestions(int tutorId)
-        { 
-            if(tutorId == null) 
+        {
+            if (tutorId == null)
             {
                 return null;
-                    
+
             }
             return _context.AnsweredQuestions.Where(x => x.TutorId == tutorId);
         }
@@ -162,17 +160,17 @@ namespace Tutor.api.Services
 
         internal IEnumerable<Question>? GetQuestions(String? classCode, String? topic)
         {
-            if (classCode.IsNullOrEmpty() && topic.IsNullOrEmpty()) 
+            if (classCode.IsNullOrEmpty() && topic.IsNullOrEmpty())
             {
                 return _context.Questions;
 
             }
-            else if (!classCode.IsNullOrEmpty() && topic.IsNullOrEmpty()) 
+            else if (!classCode.IsNullOrEmpty() && topic.IsNullOrEmpty())
             {
                 int? checkId = GetClassId(classCode);
                 if (!checkId.HasValue) { return null; }
                 int classId = checkId.Value;
-                return _context.Questions.Where(x => x.ClassId == classId); 
+                return _context.Questions.Where(x => x.ClassId == classId);
             }
             else
             {
@@ -181,7 +179,7 @@ namespace Tutor.api.Services
                 int classId = (int)checkId;
                 int topicId = GetTopicId(topic);
 
-               return _context.Questions.Where(x => x.ClassId == classId && x.TopicId == topicId);
+                return _context.Questions.Where(x => x.ClassId == classId && x.TopicId == topicId);
             }
 
 
@@ -200,7 +198,7 @@ namespace Tutor.api.Services
                 _context.AnsweredQuestions.Add(a);
                 _context.SaveChanges();
                 return RemoveQuestion(questionId);
-            } 
+            }
             catch { return false; }
         }
 
@@ -220,7 +218,7 @@ namespace Tutor.api.Services
             catch { return false; }
             return true;
         }
-       
+
         internal IEnumerable<TopicAggregate>? GetQuestionStatistics(string className, string topic)
         {
             List<TopicAggregate> topicAggregate = new();
@@ -254,21 +252,21 @@ namespace Tutor.api.Services
             {
                 int classId = _context.Classes.Where(x => x.ClassCode == className).First().Id;
                 var questions = _context.Questions.Where(x => x.ClassId == classId);
-            foreach (var q in questions)
-            {
-                if (!topicAggregate.Exists(x => x.TopicId == q.TopicId))
+                foreach (var q in questions)
                 {
-                    topicAggregate.Add(new TopicAggregate
+                    if (!topicAggregate.Exists(x => x.TopicId == q.TopicId))
                     {
-                        ClassCode = className,
-                        ClassId = classId,
-                        Topic = _context.Topics.Where(x => x.Id == q.TopicId).First().Topic1,
-                        TopicId = q.TopicId,
-                        Occurences = _context.Questions.Where(x => x.TopicId == q.TopicId).Count(),
-                    });
+                        topicAggregate.Add(new TopicAggregate
+                        {
+                            ClassCode = className,
+                            ClassId = classId,
+                            Topic = _context.Topics.Where(x => x.Id == q.TopicId).First().Topic1,
+                            TopicId = q.TopicId,
+                            Occurences = _context.Questions.Where(x => x.TopicId == q.TopicId).Count(),
+                        });
+                    }
                 }
-            }
-            return topicAggregate;
+                return topicAggregate;
             }
             catch { return null; }
         }
@@ -276,16 +274,17 @@ namespace Tutor.api.Services
         {
             List<TopicAggregate> topicAggregate = new();
             var questions = _context.Questions;
-            foreach (var q in questions) 
+            foreach (var q in questions)
             {
-                if(!topicAggregate.Exists(x => x.TopicId==q.TopicId)){
+                if (!topicAggregate.Exists(x => x.TopicId == q.TopicId))
+                {
                     topicAggregate.Add(new TopicAggregate
                     {
-                        ClassCode = _context.Classes.Where(x => x.Id==q.ClassId).First().ClassCode,
+                        ClassCode = _context.Classes.Where(x => x.Id == q.ClassId).First().ClassCode,
                         ClassId = q.ClassId,
                         Topic = _context.Topics.Where(x => x.Id == q.TopicId).First().Topic1,
                         TopicId = q.TopicId,
-                        Occurences = _context.Questions.Where(x => x.TopicId==q.TopicId).Count(),
+                        Occurences = _context.Questions.Where(x => x.TopicId == q.TopicId).Count(),
                     });
                 }
             }
@@ -298,4 +297,4 @@ namespace Tutor.api.Services
             return s.Email;
         }
     }
-}   
+}

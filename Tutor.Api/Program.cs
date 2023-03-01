@@ -1,13 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using NETCore.MailKit.Core;
-using System;
 using System.Text;
-using System.Text.Json.Serialization;
 using Tutor.api.Services;
 using Tutor.Api.Identity;
 using Tutor.Api.Models;
@@ -18,7 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 string allowance = "AllowAll";
 
-var allowAll = builder.Services.AddCors(options => {
+var allowAll = builder.Services.AddCors(options =>
+{
     options.AddPolicy(allowance, builder =>
         builder.AllowAnyOrigin()
         .AllowAnyMethod()
@@ -119,7 +116,7 @@ using (var scope = app.Services.CreateScope())
     Topic.Seed(context);
     Console.WriteLine("Begin question seeding");
     Question.Seed(context);
-    
+
 }
 Console.WriteLine("End database build");
 
@@ -128,8 +125,8 @@ Console.WriteLine("Begin HTTP configuration");
 app.UseSwagger();
 //if (app.Environment.IsDevelopment())
 //{
-    Console.WriteLine("Enable Swagger UI");
-    app.UseSwaggerUI();
+Console.WriteLine("Enable Swagger UI");
+app.UseSwaggerUI();
 //}
 Console.WriteLine("End HTTP configuration");
 

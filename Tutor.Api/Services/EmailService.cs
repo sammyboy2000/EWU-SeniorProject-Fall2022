@@ -57,8 +57,8 @@ namespace Tutor.Api.Services
                 SendEmail(message);
             }
             catch
-            { 
-                return false; 
+            {
+                return false;
             }
             return true;
         }

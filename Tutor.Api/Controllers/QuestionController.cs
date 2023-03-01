@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NETCore.MailKit.Core;
 using Tutor.api.Services;
 using Tutor.Api.Identity;
 using Tutor.Api.Models;
@@ -18,7 +17,7 @@ namespace Tutor.Api.Controllers
         {
             _logger = logger;
             _service = service;
-            _database = database;   
+            _database = database;
         }
         [HttpGet("GetQuestions")]
         [Authorize(Roles = "Tutor, Admin")]
@@ -33,8 +32,9 @@ namespace Tutor.Api.Controllers
         [Authorize(Roles = Roles.Student)]
         public IEnumerable<Question>? GetStudentsQuestions(String? studentUsername)
         {
-            if (string.IsNullOrWhiteSpace(studentUsername)) { 
-                return null; 
+            if (string.IsNullOrWhiteSpace(studentUsername))
+            {
+                return null;
             }
             int studentId = _database.GetStudentId(studentUsername);
             return _database.GetStudentsQuestions(studentId);
@@ -45,8 +45,9 @@ namespace Tutor.Api.Controllers
         [Authorize(Roles = Roles.Student)]
         public IEnumerable<AnsweredQuestion>? GetAnsweredQuestions(String? studentUsername)
         {
-            if (string.IsNullOrWhiteSpace(studentUsername)) { 
-                return null; 
+            if (string.IsNullOrWhiteSpace(studentUsername))
+            {
+                return null;
             }
             int studentId = _database.GetStudentId(studentUsername);
             return _database.GetAnsweredQuestions(studentId);
@@ -57,8 +58,9 @@ namespace Tutor.Api.Controllers
         [Authorize(Roles = Roles.Tutor)]
         public IEnumerable<AnsweredQuestion>? GetTutorAnsweredQuestions(String? tutorUsername)
         {
-            if (string.IsNullOrWhiteSpace(tutorUsername)) { 
-                return null; 
+            if (string.IsNullOrWhiteSpace(tutorUsername))
+            {
+                return null;
             }
             int tutorId = _database.GetTutorId(tutorUsername);
             return _database.GetTutorAnsweredQuestions(tutorId);
@@ -69,13 +71,14 @@ namespace Tutor.Api.Controllers
         [Authorize(Roles = Roles.Student)]
         public String StudentRemoveQuestion(Guid questionID, String studentUsername)
         {
-            if (string.IsNullOrWhiteSpace(studentUsername)) { 
-                return "Error, studentUsername cannot be blank."; 
+            if (string.IsNullOrWhiteSpace(studentUsername))
+            {
+                return "Error, studentUsername cannot be blank.";
             }
             int studentId = _database.GetStudentId(studentUsername);
             Question q = _database.GetQuestion(questionID);
-            if(q == null) { return "Error, question does not exist."; }
-            if(q.StudentId != studentId) { return "Error, question does not belong to student."; }
+            if (q == null) { return "Error, question does not exist."; }
+            if (q.StudentId != studentId) { return "Error, question does not belong to student."; }
             try
             {
                 _database.StudentRemoveQuestion(questionID);
@@ -93,11 +96,12 @@ namespace Tutor.Api.Controllers
         [Authorize(Roles = Roles.Student)]
         public String StudentModifyQuestion(Guid questionID, String question)
         {
-            if (string.IsNullOrWhiteSpace(question)) { 
-                return "Error, question cannot be blank."; 
+            if (string.IsNullOrWhiteSpace(question))
+            {
+                return "Error, question cannot be blank.";
             }
             Question q = _database.GetQuestion(questionID);
-            if(q == null) { return "Error, question does not exist."; }
+            if (q == null) { return "Error, question does not exist."; }
             q.Question1 = question;
             try
             {
@@ -114,10 +118,10 @@ namespace Tutor.Api.Controllers
 
         [HttpPost("AskQuestion")]
         [Authorize(Roles = Roles.Student)]
-        public String AddQuestion(String studentUsername, String classCode, String topic, String question) 
-        { 
-            if (string.IsNullOrWhiteSpace(studentUsername)) 
-            if (string.IsNullOrWhiteSpace(classCode)) { return "Error, classCode cannot be blank."; }
+        public String AddQuestion(String studentUsername, String classCode, String topic, String question)
+        {
+            if (string.IsNullOrWhiteSpace(studentUsername))
+                if (string.IsNullOrWhiteSpace(classCode)) { return "Error, classCode cannot be blank."; }
             if (string.IsNullOrWhiteSpace(topic)) { return "Error, topic cannot be blank."; }
             if (string.IsNullOrWhiteSpace(question)) { return "Error, question cannot be blank."; }
 
@@ -146,7 +150,7 @@ namespace Tutor.Api.Controllers
                 return "Error, failed to save question.";
             }
 
-            if(_service.SendQuestionConfirmation(q.QuestionId, studentUsername))
+            if (_service.SendQuestionConfirmation(q.QuestionId, studentUsername))
             {
                 return "Question " + q.QuestionId + " has successfully beem submitted.";
             }
@@ -160,12 +164,12 @@ namespace Tutor.Api.Controllers
         [Authorize(Roles = Roles.Tutor)]
         public String AnswerQuestion(Guid questionID, String tutorUsername, String answer)
         {
-            if(tutorUsername == null) { return "Error, tutorUsername cannot be blank."; }
-            if(answer == null) { return "Error, answer cannot be blank."; }
+            if (tutorUsername == null) { return "Error, tutorUsername cannot be blank."; }
+            if (answer == null) { return "Error, answer cannot be blank."; }
 
             Question q = _database.GetQuestion(questionID);
 
-            if(q == null) { return "Error, Question not found."; }
+            if (q == null) { return "Error, Question not found."; }
 
             int tutorId = _database.GetTutorId(tutorUsername);
 
@@ -181,12 +185,13 @@ namespace Tutor.Api.Controllers
             };
 
             Boolean result = _database.AnswerQuestion(a);
-            if(!result) {
+            if (!result)
+            {
                 return "Error, could not save answer.";
             }
 
             String studentUsername = _database.getStudentUsername(q.StudentId);
-           
+
             result = _service.SendQuestionAnswered(q.QuestionId, studentUsername);
 
             if (!result) { return "Successfully answered question, confirmation email not sent."; }

@@ -17,8 +17,8 @@ namespace Tutor.Api.Controllers
            DatabaseService databaseService)
         {
             _logger = logger;
-            _service= databaseService;
-         }
+            _service = databaseService;
+        }
 
         [HttpGet("getClasses")]
         [Authorize]
@@ -32,11 +32,12 @@ namespace Tutor.Api.Controllers
         [Authorize]
         public IEnumerable<String> getTopics(String? classCode)
         {
-            if(classCode == null)
+            if (classCode == null)
             {
                 return null;
             }
-            else {
+            else
+            {
                 int? checkId = _service.GetClassId(classCode);
                 int classId = (int)checkId;
                 return _service.getClassTopics(classId);
@@ -53,13 +54,13 @@ namespace Tutor.Api.Controllers
 
         [HttpGet("GetQuestionData")]
         [Authorize(Roles = Roles.Admin)]
-        public IEnumerable<TopicAggregate>? GetQuestionData(String? className, String? topicName) 
-        { 
-            if(className == null && topicName == null) 
+        public IEnumerable<TopicAggregate>? GetQuestionData(String? className, String? topicName)
+        {
+            if (className == null && topicName == null)
             {
                 return _service.GetQuestionStatistics();
             }
-            if(className != null && topicName == null)
+            if (className != null && topicName == null)
             {
                 return _service.GetQuestionStatistics(className);
             }
