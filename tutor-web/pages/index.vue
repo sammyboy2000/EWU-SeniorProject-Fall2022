@@ -82,9 +82,7 @@
           >
             Change Text
           </v-btn>
-          <v-btn color="primary" nuxt to="/test_pages">
-            Test Pages
-          </v-btn>
+          <v-btn color="primary" nuxt to="/test_pages"> Test Pages </v-btn>
         </v-card-actions>
       </v-card>
     </v-col>

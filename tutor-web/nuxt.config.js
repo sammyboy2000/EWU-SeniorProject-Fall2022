@@ -85,6 +85,5 @@ export default {
     devtools: true,
     minimize: true,
     optimizeCSS: true,
-    
   },
 }
