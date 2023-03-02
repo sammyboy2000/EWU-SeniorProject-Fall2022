@@ -2,5 +2,11 @@
     "emmet.includeLanguages": {
         "vue-html": "html",
         "vue": "html"
-    }
+    },
+    "cSpell.words": [
+        "axios",
+        "nuxt",
+        "nuxtjs",
+        "vuetify"
+    ]
 }

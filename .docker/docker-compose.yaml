@@ -27,7 +27,7 @@ services:
       dockerfile: web.dockerfile
     environment:
       PORT: 3000
-      PROXY_API: http://tutor-api:7125/
+      PROXY_API: https://tutor-api:7125/
     ports:
       - 3000:3000
 volumes:

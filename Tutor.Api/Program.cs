@@ -123,14 +123,14 @@ Console.WriteLine("End database build");
 Console.WriteLine("Begin HTTP configuration");
 // Configure the HTTP request pipeline.
 app.UseSwagger();
-//if (app.Environment.IsDevelopment())
-//{
+if (app.Environment.IsDevelopment())
+{
 Console.WriteLine("Enable Swagger UI");
 app.UseSwaggerUI();
-//}
+}
 Console.WriteLine("End HTTP configuration");
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseCors(allowance);
 
