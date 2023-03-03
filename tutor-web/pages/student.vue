@@ -83,6 +83,8 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { JWT } from '~/scripts/jwt'
 
+// Interfaces
+// Question interface
 interface Question {
   questionId: string;
   studentId: number;
@@ -91,6 +93,7 @@ interface Question {
   question1: string;
 }
 
+// AnsweredQuestion interface
 interface AnsweredQuestion {
   questionId: string;
   studentId: number;
@@ -103,6 +106,7 @@ interface AnsweredQuestion {
 
 @Component({})
 export default class Student extends Vue {
+  // Data variables
   userOption: number = 1                        // 1 = ask question, 2 = view answered questions
   classData: string = ''                        // class data from database
   selectedClass: string = ''                    // selected class from dropdown
@@ -120,12 +124,14 @@ export default class Student extends Vue {
   selectedQuestionIndex: number = -1;           // selected question index
   editOption: boolean = false                   // edit option
 
-
+  // Mounted functions
   mounted() {
     this.initializeClassData();
     this.initializeQuestionData();
     this.getAnsweredQuestionData();
   }
+
+  // Methods
 
   initializeClassData() {
     this.$axios.get('/database/getClasses').then((response) => {
