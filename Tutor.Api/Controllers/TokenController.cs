@@ -1,5 +1,4 @@
-﻿using Azure.Identity;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -152,13 +151,13 @@ public class TokenController : Controller
         {
             fname = s.FirstName; lname = s.LastName;
         }
-        else if(a!= null) 
-        { 
+        else if (a != null)
+        {
             fname = a.FirstName; lname = a.LastName;
         }
-        else 
-        { 
-            return "Error, failed find existing Student or Admin"; 
+        else
+        {
+            return "Error, failed find existing Student or Admin";
         }
         Models.Tutor t = new()
         {
@@ -172,7 +171,7 @@ public class TokenController : Controller
         return "Success, added tutor privliges to user.";
     }
 
-        [HttpGet("test")]
+    [HttpGet("test")]
     [Authorize]
     public string Test()
     {

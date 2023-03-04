@@ -3,7 +3,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 EXPOSE 7125
-ENV DOTNET_URLS=http://+:7125
+ENV DOTNET_URLS=https://+:7125
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
@@ -20,9 +20,9 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-ENV ASPNETCORE_URLS=http://+:7125
+ENV ASPNETCORE_URLS=https://+:7125
 
-ENV ASPNETCORE_HTTP_PORT=7125
+ENV ASPNETCORE_HTTPS_PORT=7125
 ENV ASPNETCORE_ENVIRONMENT=Development
 
 ENTRYPOINT ["dotnet", "Tutor.Api.dll"]

@@ -55,7 +55,6 @@
             About <v-icon>mdi-help-circle</v-icon></v-btn
           >
         </v-list-item>
-
       </v-list>
     </v-navigation-drawer>
     <v-footer app>
@@ -80,7 +79,7 @@ export default {
     }
   },
   mounted() {
-    if(JWT.getToken() != null) {
+    if (JWT.getToken() != null) {
       this.isLoggedIn = true
     }
   },

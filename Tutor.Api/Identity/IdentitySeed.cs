@@ -11,7 +11,7 @@ namespace Tutor.Api.Identity
             await SeedRolesAsync(roleManager);
 
             // Seed Super User
-            await SeedSuperUserAsync(userManager,  context);
+            await SeedSuperUserAsync(userManager, context);
 
             // Seed Admin User
             await SeedAdminUsersAsync(userManager, context);
@@ -63,7 +63,7 @@ namespace Tutor.Api.Identity
                         IsStudent = true
                     };
                     context.ApiUsers.Add(appUser);
-                    
+
                     await userManager.AddToRoleAsync(user, Roles.Admin);
 
                     Admin a = new Admin

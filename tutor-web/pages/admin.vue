@@ -14,7 +14,7 @@
           </v-card-title>
         </v-card>
       </v-col>
-    </v-row>  
+    </v-row>
   </v-container>
 </template>
 
@@ -22,30 +22,25 @@
 import { Component, Vue } from 'vue-property-decorator'
 
 interface Question {
-  questionId: string;
-  studentId: number;
-  classId: number;
-  topicId: number;
-  question1: string;
+  questionId: string
+  studentId: number
+  classId: number
+  topicId: number
+  question1: string
 }
 
 @Component({})
 export default class Student extends Vue {
   userOption: number = 1
-  selectedQuestion: Question | null = null;
-  listQuestions: Question[] = [];
-  selectedQuestionIndex: number = -1;
+  selectedQuestion: Question | null = null
+  listQuestions: Question[] = []
+  selectedQuestionIndex: number = -1
 
-  mounted() {
-    
-  }
+  mounted() {}
 
   selectQuestion(index: number) {
-    this.selectedQuestion = this.listQuestions[index];
-    this.selectedQuestionIndex = index;
+    this.selectedQuestion = this.listQuestions[index]
+    this.selectedQuestionIndex = index
   }
-  
-
-
 }
 </script>
