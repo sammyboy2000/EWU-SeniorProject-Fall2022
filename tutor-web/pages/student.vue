@@ -187,7 +187,7 @@ export default class Student extends Vue {
     this.$axios
       .get('/Questions/GetAnsweredQuestions', {
         params: {
-          // Need to make it so admin can see all answered questions
+          studentUsername: this.studentName,
         },
       })
       .then((response) => {
