@@ -12,11 +12,12 @@
           <br /><br />
           <v-btn color="primary" nuxt to="/tutor_test"> Test Tutor </v-btn>
           <br /><br />
-          <v-btn color="primary" nuxt to="/test-sql"> Test SQL </v-btn>
+          <v-btn color="primary" nuxt to="/tutor"> Real Tutor Page </v-btn>
           <br /><br />
-          <v-btn color="primary" nuxt to="/test-sqladdclass">
-            Test SQL Add Class
-          </v-btn>
+          <v-btn color="primary" nuxt to="/homepage"> Test HomePage (WIP) </v-btn>
+          <br /><br />
+          <v-btn color="primary" nuxt to="/admin"> Admin Page </v-btn>
+          <br /><br />
         </v-text-card>
       </v-col>
     </v-row>

@@ -2,36 +2,55 @@
   <v-container fluid>
     <v-row>
       <v-btn @click="userOption = 1">Ask a Question</v-btn>
-      <v-btn @click="userOption = 2, getAnsweredQuestionData()">View Answered Questions</v-btn>
-    </v-row>
+      <v-btn @click=";(userOption = 2), getAnsweredQuestionData()"
+        >View Answered Questions</v-btn
+      >    </v-row>
     <v-row>
-      <v-col cols="8" >
+      <v-col cols="8">
         <v-card v-show="userOption == 1">
           <v-card-title>
             <p>Welcome to the Student Question Page.</p>
             <p>This page will be allow the students to ask questions!</p>
           </v-card-title>
           <v-card-text>
-            <v-select v-model="selectedClass" :items="classData" label="Class" style="width: 25%; padding: 5px;"></v-select>
-            <br/>
+            <v-select
+              v-model="selectedClass"
+              :items="classData"
+              label="Class"
+              style="width: 25%; padding: 5px"
+            ></v-select>
+            <br />
             <div v-show="Number(selectedClass) != 0">
               <v-select
-                v-on:click="initializeTopicData()"
                 v-model="selectedTopic"
                 :items="topicData"
                 label="Topic"
-                style="width: 25%; padding: 5px;"
+                style="width: 25%; padding: 5px"
+                @click="initializeTopicData()"
               ></v-select>
             </div>
-            <br/>
+            <br />
             <div v-show="selectedTopic == 'other'">
-              <textarea v-model="other" name="otherBox" style=" border: 2px solid gray; border-radius: 4px; resize: none; height: 50px; width: 40%; font-size: 14pt;">
+              <textarea
+                v-model="other"
+                name="otherBox"
+                style="
+                  border: 2px solid gray;
+                  border-radius: 4px;
+                  resize: none;
+                  height: 50px;
+                  width: 40%;
+                  font-size: 14pt;
+                "
+              >
                 Please enter a topic...
               </textarea>
             </div>
             <br />
             <div>
-              <v-header style="font-size: 16pt; color: black">Question:</v-header>
+              <v-header style="font-size: 16pt; color: black"
+                >Question:</v-header
+              >              
               <br />
                 <textarea 
                   v-model="question" name="questionBox"  style="border: 2px solid gray; border-radius: 4px; resize: none; height: 200px; width: 100%; font-size: 14pt;">
@@ -51,7 +70,7 @@
           </v-card>
           <v-card v-show="userOption == 2">
             <v-card-title>View Answered Questions</v-card-title>
-            <v-card v-for="answer in answeredQuestions" :key="answer">
+            <v-card v-for="answer in answeredQuestions" :key="answer.questionId">
               <v-card-title>{{ answer.question }}</v-card-title>
               <v-card-text>{{ answer.response }}</v-card-text>
             </v-card>
@@ -86,49 +105,47 @@ import { JWT } from '~/scripts/jwt'
 // Interfaces
 // Question interface
 interface Question {
-  questionId: string;
-  studentId: number;
-  classId: number;
-  topicId: number;
-  question1: string;
+  questionId: string
+  studentId: number
+  classId: number
+  topicId: number
+  question1: string
 }
 
 // AnsweredQuestion interface
 interface AnsweredQuestion {
-  questionId: string;
-  studentId: number;
-  tutorId: number;
-  classId: number;
-  topicId: number;
-  question: string;
-  response: string;
+  questionId: string
+  studentId: number
+  tutorId: number
+  classId: number
+  topicId: number
+  question: string
+  response: string
 }
 
 @Component({})
 export default class Student extends Vue {
-  // Data variables
-  userOption: number = 1                        // 1 = ask question, 2 = view answered questions
-  classData: string = ''                        // class data from database
-  selectedClass: string = ''                    // selected class from dropdown
-  topicData: string = ''                        // topic data from database
-  selectedTopic: string = ''                    // selected topic from dropdown
-  selectClass: string = ''                      // selected class from dropdown
-  selectTopic: string = ''                      // selected topic from dropdown
-  other: string = ''                            // other topic
-  question: string = ''                         // question
-  modQuestion: string = ''                      // modified question
-  studentName: string = JWT.getUserName()       // student username
-  studentQuestions: Question[] = []             // student questions
-  answeredQuestions: AnsweredQuestion[] = []    // answered questions
-  selectedQuestion: Question | null = null;     // selected question
-  selectedQuestionIndex: number = -1;           // selected question index
-  editOption: boolean = false                   // edit option
+  name: string = 'Student'
+  userOption: number = 1 // 1 = ask question, 2 = view answered questions
+  classData: [] = [] // class data from database
+  selectedClass: string = '' // selected class from dropdown
+  topicData: [] = [] // topic data from database
+  selectedTopic: string = '' // selected topic from dropdown
+  other: string = '' // other topic
+  question: string = '' // question
+  modQuestion: string = '' // modified question
+  studentName: string = JWT.getUserName() // student username
+  studentQuestions: Question[] = [] // student questions
+  answeredQuestions: AnsweredQuestion[] = [] // answered questions
+  selectedQuestion: Question | null = null // selected question
+  selectedQuestionIndex: number = -1 // selected question index
+  editOption: boolean = false // edit option
 
   // Mounted functions
   mounted() {
-    this.initializeClassData();
-    this.initializeQuestionData();
-    this.getAnsweredQuestionData();
+    this.initializeClassData()
+    this.initializeQuestionData()
+    this.getAnsweredQuestionData()
   }
 
   // Methods
@@ -140,94 +157,133 @@ export default class Student extends Vue {
   }
 
   initializeTopicData() {
-    this.$axios.get('/database/getTopics', {
-      params: {
-        classCode: this.selectedClass
-      }
-    }).then((response) => {
-      this.topicData = response.data
-    })
+    this.$axios
+      .get('/database/getTopics', {
+        params: {
+          classCode: this.selectedClass,
+        },
+      })
+      .then((response) => {
+        this.topicData = response.data
+      })
   }
 
   // Get previous questions asked by student
   initializeQuestionData() {
-    this.$axios.get('/Questions/GetStudentsQuestions', {
-      params: {
-        studentUsername: this.studentName
-      }
-    }).then((response) => {
-      console.log(response.data);
-      this.studentQuestions = response.data
-    })
-  };
+    this.$axios
+      .get('/Questions/GetStudentsQuestions', {
+        params: {
+          studentUsername: this.studentName,
+        },
+      })
+      .then((response) => {
+        console.log(response.data)
+        this.studentQuestions = response.data
+      })
+  }
 
   // Get Answered Questions for Student
   getAnsweredQuestionData() {
-    this.$axios.get('/Questions/GetAnsweredQuestions', {
-      params: {
-        studentUsername: this.studentName
-      }
-    }).then((response) => {
-      console.log(response.data);
-      this.answeredQuestions = response.data
-    })
-  };
+    this.$axios
+      .get('/Questions/GetAnsweredQuestions', {
+        params: {
+          // Need to make it so admin can see all answered questions
+        },
+      })
+      .then((response) => {
+        console.log(response.data)
+        this.answeredQuestions = response.data
+      })
+  }
 
   submitQuestion() {
-    this.$axios.post('/Questions/AskQuestion', {},
-    {
-      params: {
-        studentUsername: this.studentName,
-        classCode: this.selectedClass,
-        topic: this.selectedTopic,
-        question: this.question,
-      }
-    }).then((response) => {
-      console.log(response.data);
-      this.initializeQuestionData(); // Refresh the list of questions
-    })
+    if(this.selectedClass === '') {
+      alert('Please select a class')
+      return
+    }
+    if(this.selectedTopic === '') {
+      alert('Please select a topic')
+      return
+    }
+    if(this.selectedTopic === 'Other' && this.other === '') {
+      alert('Please enter an other topic')
+      return
+    }
+    if(this.question === '') {
+      alert('Question field cannot be empty')
+      return
+    }
+    this.$axios
+      .post(
+        '/Questions/AskQuestion',
+        {},
+        {
+          params: {
+            studentUsername: this.studentName,
+            classCode: this.selectedClass,
+            topic: this.selectedTopic,
+            question: this.question,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data)
+        this.initializeQuestionData() // Refresh the list of questions
+      })
   }
 
   editSelectedQuestion() {
-    this.$axios.post('/Questions/StudentModifyQuestion', {},
-    {
-      params: {
-        questionId: this.selectedQuestion?.questionId,
-        question: this.modQuestion,
-      }
-    }).then((response) => {
-      console.log(response.data);
-      this.initializeQuestionData(); // Refresh the list of questions
-    })
+    this.$axios
+      .post(
+        '/Questions/StudentModifyQuestion',
+        {},
+        {
+          params: {
+            questionId: this.selectedQuestion?.questionId,
+            question: this.modQuestion,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data)
+        this.initializeQuestionData() // Refresh the list of questions
+      })
   }
 
   removeSelectedQuestion() {
-    this.$axios.post('/Questions/StudentRemoveQuestion', {},
-    {
-      params: {
-        questionId: this.selectedQuestion?.questionId,
-        studentUsername: this.studentName,
-      }
-    }).then((response) => {
-      console.log(response.data);
-      this.initializeQuestionData(); // Refresh the list of questions
-    })
+    this.$axios
+      .post(
+        '/Questions/StudentRemoveQuestion',
+        {},
+        {
+          params: {
+            questionId: this.selectedQuestion?.questionId,
+            studentUsername: this.studentName,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data)
+        this.initializeQuestionData() // Refresh the list of questions
+      })
   }
 
   getAnsweredQuestions() {
-    this.$axios.get('/Questions/GetAnsweredQuestions', {
-      params: {
-        studentUsername: this.studentName
-      }
-    }).then((response) => {
-      console.log(response.data);
-      this.answeredQuestions = response.data
-    })
+    this.$axios
+      .get('/Questions/GetAnsweredQuestions', {
+        params: {
+          studentUsername: this.studentName,
+        },
+      })
+      .then((response) => {
+        console.log(response.data)
+        this.answeredQuestions = response.data
+      })
   }
 
   selectQuestion(index: number) {
-    this.selectedQuestion = this.studentQuestions[index];
-    this.selectedQuestionIndex = index;
+    this.selectedQuestion = this.studentQuestions[index]
+    this.selectedQuestionIndex = index
   }
   
 

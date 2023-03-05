@@ -18,8 +18,8 @@
               style="width: 25%; padding: 5px"
               @change="initializeQuestionData(selectedClass)"
             ></v-select>
+            Selected Question on right to answer:
             <v-card-title v-if="selectedQuestion !== null">
-              Selected Question on right to answer:
               {{ selectedQuestion.question1 }}
             </v-card-title>
             <v-textarea
@@ -33,7 +33,7 @@
         </v-card>
         <v-card v-show="userOption == 2">
           <v-card-title>View Answered Questions</v-card-title>
-          <v-card v-for="answer in answeredQuestions" :key="answer">
+          <v-card v-for="answer in answeredQuestions" :key="answer.questionId">
             <v-card-title>{{ answer.question }}</v-card-title>
             <v-card-text>{{ answer.response }}</v-card-text>
           </v-card>
@@ -93,7 +93,7 @@ export default class Tutor extends Vue {
   topic: string = ''
   selectedQuestion: Question | null = null
   tutorUsername: string = JWT.getUserName()
-  classData: string = ''
+  classData: [] = []
   selectedClass: string = ''
 
   mounted() {
@@ -122,6 +122,18 @@ export default class Tutor extends Vue {
   }
 
   answerQuestion() {
+    if(this.selectedClass === '') {
+      alert('Select a class')
+      return
+    }
+    if(this.selectedQuestion === null) {
+      alert('A question must be selected from the list')
+      return
+    }
+    if(this.answer === '') {
+      alert('Answer field cannot be empty')
+      return
+    }
     this.$axios.post(
       '/Questions/AnswerQuestion',
       {},
@@ -132,8 +144,11 @@ export default class Tutor extends Vue {
           answer: this.answer,
         },
       }
-    )
-  }
+    ).then((response) => {
+      console.log(response.data)
+      this.initializeQuestionData()
+    }
+  )}
 
   getAnsweredQuestionData() {
     this.$axios
