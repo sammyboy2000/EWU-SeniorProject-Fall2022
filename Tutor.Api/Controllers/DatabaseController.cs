@@ -67,7 +67,7 @@ namespace Tutor.Api.Controllers
             }
             else
             {
-                return _service.GetQuestionStatistics(className, topicName);
+                return _service.GetQuestionStatistics(className!, topicName!);
             }
         }
 
