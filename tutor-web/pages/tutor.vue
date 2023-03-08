@@ -122,33 +122,35 @@ export default class Tutor extends Vue {
   }
 
   answerQuestion() {
-    if(this.selectedClass === '') {
+    if (this.selectedClass === '') {
       alert('Select a class')
       return
     }
-    if(this.selectedQuestion === null) {
+    if (this.selectedQuestion === null) {
       alert('A question must be selected from the list')
       return
     }
-    if(this.answer === '') {
+    if (this.answer === '') {
       alert('Answer field cannot be empty')
       return
     }
-    this.$axios.post(
-      '/Questions/AnswerQuestion',
-      {},
-      {
-        params: {
-          questionId: this.selectedQuestion?.questionId,
-          tutorUsername: this.tutorUsername,
-          answer: this.answer,
-        },
-      }
-    ).then((response) => {
-      console.log(response.data)
-      this.initializeQuestionData()
-    }
-  )}
+    this.$axios
+      .post(
+        '/Questions/AnswerQuestion',
+        {},
+        {
+          params: {
+            questionId: this.selectedQuestion?.questionId,
+            tutorUsername: this.tutorUsername,
+            answer: this.answer,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data)
+        this.initializeQuestionData()
+      })
+  }
 
   getAnsweredQuestionData() {
     this.$axios

@@ -76,9 +76,11 @@
           <v-btn color="primary"> <login-dialog /> </v-btn>
           <v-btn color="primary"> <signup-dialog /> </v-btn>
           <v-btn color="primary" nuxt to="/inspire"> {{ buttonText }} </v-btn>
-          <v-btn color="secondary"
-                 :loading="isLoading"
-                 @click="changeButtonText">
+          <v-btn
+            color="secondary"
+            :loading="isLoading"
+            @click="changeButtonText"
+          >
             Change Text
           </v-btn>
           <v-btn color="primary" nuxt to="/test_pages"> Test Pages </v-btn>

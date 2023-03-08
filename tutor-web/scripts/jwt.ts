@@ -1,4 +1,5 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios'
+
 class TutorToken {
   Random: string = ''
   UserId: string = ''
@@ -23,6 +24,7 @@ export class JWT {
     const parts = token.split('.')
     const payload = JSON.parse(atob(parts[1]))
     this._tokenData = Object.assign(new TutorToken(), payload)
+    this.storeToken()
   }
 
   // Added by Jesse: 2/28/2023
@@ -36,5 +38,30 @@ export class JWT {
 
   public static get tokenData(): TutorToken {
     return this._tokenData
+  }
+
+  public static storeToken(): void {
+    const token = this.tokenInstance
+    localStorage.setItem('TutorToken', JSON.stringify(token))
+  }
+
+  public static loadToken(axios: NuxtAxiosInstance): TutorToken {
+    if (this._tokenData !== null) {
+      return this._tokenData
+    }
+
+    const storageToken = localStorage.getItem('TutorToken')
+
+    if (storageToken !== null) {
+      this.setToken(storageToken, axios)
+    }
+    return this._tokenData
+  }
+
+  public static deleteToken(axios: NuxtAxiosInstance): void {
+    localStorage.removeItem('TutorToken')
+    axios.setHeader('Authorization', 'Bearer ')
+    ;(this.tokenInstance = ' '),
+      (this._tokenData = Object.assign(new TutorToken(), ' '))
   }
 }

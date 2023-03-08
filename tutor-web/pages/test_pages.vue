@@ -14,7 +14,9 @@
           <br /><br />
           <v-btn color="primary" nuxt to="/tutor"> Real Tutor Page </v-btn>
           <br /><br />
-          <v-btn color="primary" nuxt to="/homepage"> Test HomePage (WIP) </v-btn>
+          <v-btn color="primary" nuxt to="/homepage">
+            Test HomePage (WIP)
+          </v-btn>
           <br /><br />
           <v-btn color="primary" nuxt to="/admin"> Admin Page </v-btn>
           <br /><br />

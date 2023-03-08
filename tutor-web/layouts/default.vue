@@ -79,7 +79,7 @@ export default {
     }
   },
   mounted() {
-    if (JWT.getToken() != null) {
+    if (JWT.loadToken(this.$axios) != null) {
       this.isLoggedIn = true
     }
   },
