@@ -125,8 +125,8 @@ Console.WriteLine("Begin HTTP configuration");
 app.UseSwagger();
 if (app.Environment.IsDevelopment())
 {
-Console.WriteLine("Enable Swagger UI");
-app.UseSwaggerUI();
+    Console.WriteLine("Enable Swagger UI");
+    app.UseSwaggerUI();
 }
 Console.WriteLine("End HTTP configuration");
 

@@ -11,7 +11,7 @@ namespace Tutor.api.Services
         {
             _context = context;
         }
-        internal IEnumerable<String> getClasses(string? searchString)
+        public IEnumerable<String> GetClasses(string? searchString)
         {
             if (searchString == null)
             {
@@ -23,7 +23,7 @@ namespace Tutor.api.Services
         }
 
         //Added to get topics to populate dropdown --Jesse 2/28/2023
-        internal IEnumerable<String> getClassTopics(int? classId)
+        public IEnumerable<String> GetClassTopics(int? classId)
         {
             if (classId == null)
             {
@@ -33,18 +33,17 @@ namespace Tutor.api.Services
         }
 
         //Added to get topics to populate dropdown --Jesse 2/17/2023 %% No longer needed in student %%
-        internal IEnumerable<String> getTopics(string? searchString)
+        public IEnumerable<String> GetTopics(string? searchString)
         {
-            if (searchString == null)
+            if (searchString.IsNullOrEmpty())
             {
                 //return _context.Classes.Select(x => x.ClassCode);
                 return _context.Topics.Select(x => x.Topic1);
             }
-            return _context.Topics.Select(x => x.Topic1)
-                .Where(x => x.Contains(searchString));
+            return _context.Topics.Select(x => x.Topic1).Where(x => x.Contains(searchString!));
         }
 
-        internal void AddClass(string classCode)
+        public void AddClass(string classCode)
         {
             var classes = _context.Classes.ToDictionary(f => f.ClassCode);
 
@@ -57,64 +56,64 @@ namespace Tutor.api.Services
 
         }
 
-        internal IEnumerable<Question> GetQuestions(string searchString)
+        //Checks via question's GUID
+        public IEnumerable<Question> GetQuestions(string searchString)
         {
-            if (searchString == null)
+            if (searchString.IsNullOrEmpty())
             {
                 return _context.Questions;
-
             }
             return _context.Questions
                 .Where(x => x.QuestionId.ToString().Contains(searchString));
         }
 
         //Added to get questions to populate dropdown --Jesse 2/17/2023
-        internal IEnumerable<String> GetAllQuestions(string searchString)
+        public IEnumerable<String> GetAllQuestions(string searchString)
         {
             if (searchString == null)
             {
                 return _context.Questions.Select(x => x.Question1);
-
             }
             return _context.Questions.Select(x => x.Question1)
                 .Where(x => x.Contains(searchString));
         }
 
         //Added to get questions to populate dropdown --Jesse 2/24/2023
-        internal IEnumerable<Question> GetStudentsQuestions(int studentId)
+        //Tutor side --Samuel
+        public IEnumerable<Question> GetStudentsQuestions(int? studentId)
         {
             if (studentId == null)
             {
                 return _context.Questions;
-
             }
             return _context.Questions.Where(x => x.StudentId == studentId);
         }
 
         //Added to get questions to populate student answers --Jesse 2/27/2023
-        internal IEnumerable<AnsweredQuestion> GetAnsweredQuestions(int studentId)
+        //Student side --Samuel
+        public IEnumerable<AnsweredQuestion> GetAnsweredQuestions(int? studentId)
         {
             if (studentId == null)
             {
-                return null;
+                return null!;
 
             }
             return _context.AnsweredQuestions.Where(x => x.StudentId == studentId);
         }
 
         //Added to get questions to populate tutor answers --Jesse 2/28/2023
-        internal IEnumerable<AnsweredQuestion> GetTutorAnsweredQuestions(int tutorId)
+        public IEnumerable<AnsweredQuestion> GetTutorAnsweredQuestions(int? tutorId)
         {
             if (tutorId == null)
             {
-                return null;
+                return null!;
 
             }
             return _context.AnsweredQuestions.Where(x => x.TutorId == tutorId);
         }
 
         //Added to remove selected question from unanswered questions --Jesse 2/28/2023
-        internal void StudentRemoveQuestion(Guid questionId)
+        public void StudentRemoveQuestion(Guid questionId)
         {
             Question q = _context.Questions.Where(x => x.QuestionId.Equals(questionId)).First();
             _context.Questions.Remove(q);
@@ -122,18 +121,22 @@ namespace Tutor.api.Services
         }
 
         //Added to modify an existing question --Jesse 2/28/2023
-        internal void StudentModifyQuestion(Question q)
+        public void StudentModifyQuestion(Question q)
         {
             _context.Questions.Update(q);
             _context.SaveChanges();
         }
 
-        internal int GetStudentId(string studentUsername)
+        public int? GetStudentId(string studentUsername)
         {
+            if (studentUsername.IsNullOrEmpty())
+            {
+                return null;
+            }
             return _context.Students.Where(x => x.Email.Contains(studentUsername)).Select(x => x.Id).First();
         }
 
-        internal int? GetClassId(string classCode)
+        public int? GetClassId(string classCode)
         {
             try
             {
@@ -142,23 +145,27 @@ namespace Tutor.api.Services
             catch { return null; }
         }
 
-        internal int GetTopicId(string topic)
+        public int? GetTopicId(string topic)
         {
-            return _context.Topics.Where(x => x.Topic1.Contains(topic)).Select(x => x.Id).First();
+            try
+            {
+                return _context.Topics.Where(x => x.Topic1.Contains(topic)).Select(x => x.Id).First();
+            }
+            catch { return null; }
         }
 
-        internal void AddQuestion(Question q)
+        public void AddQuestion(Question q)
         {
             _context.Questions.Add(q);
             _context.SaveChanges();
         }
 
-        internal Question GetQuestion(Guid questionId)
+        public Question GetQuestion(Guid questionId)
         {
             return _context.Questions.Where(x => x.QuestionId == questionId).First();
         }
 
-        internal IEnumerable<Question>? GetQuestions(String? classCode, String? topic)
+        public IEnumerable<Question>? GetQuestions(String? classCode, String? topic)
         {
             if (classCode.IsNullOrEmpty() && topic.IsNullOrEmpty())
             {
@@ -167,30 +174,30 @@ namespace Tutor.api.Services
             }
             else if (!classCode.IsNullOrEmpty() && topic.IsNullOrEmpty())
             {
-                int? checkId = GetClassId(classCode);
+                int? checkId = GetClassId(classCode!);
                 if (!checkId.HasValue) { return null; }
                 int classId = checkId.Value;
                 return _context.Questions.Where(x => x.ClassId == classId);
             }
             else
             {
-                int? checkId = GetClassId(classCode);
+                int? checkId = GetClassId(classCode!);
                 if (!checkId.HasValue) { return null; }
                 int classId = (int)checkId;
-                int topicId = GetTopicId(topic);
+                int topicId = (int)GetTopicId(topic!)!;
 
                 return _context.Questions.Where(x => x.ClassId == classId && x.TopicId == topicId);
             }
 
 
         }
-        internal int GetTutorId(string tutorUsername)
+        public int GetTutorId(string tutorUsername)
         {
             int internalId = _context.ApiUsers.Where(x => x.ExternalId.Contains(tutorUsername)).Select(x => x.UserId).First();
             return _context.Tutors.Where(x => x.UserId == internalId).Select(x => x.Id).First();
         }
 
-        internal Boolean AnswerQuestion(AnsweredQuestion a)
+        public Boolean AnswerQuestion(AnsweredQuestion a)
         {
             Guid questionId = a.QuestionId;
             try
@@ -202,13 +209,13 @@ namespace Tutor.api.Services
             catch { return false; }
         }
 
-        private bool RemoveQuestion(Guid questionId)
+        public bool RemoveQuestion(Guid questionId)
         {
             Question q = _context.Questions.Where(x => x.QuestionId.Equals(questionId)).First();
             if (q == null) { return false; }
             return RemoveQuestion(q);
         }
-        private bool RemoveQuestion(Question q)
+        public bool RemoveQuestion(Question q)
         {
             try
             {
@@ -219,12 +226,12 @@ namespace Tutor.api.Services
             return true;
         }
 
-        internal IEnumerable<TopicAggregate>? GetQuestionStatistics(string className, string topic)
+        public IEnumerable<TopicAggregate>? GetQuestionStatistics(string classCode, string topic)
         {
             List<TopicAggregate> topicAggregate = new();
             try
             {
-                int classId = _context.Classes.Where(x => x.ClassCode == className).First().Id;
+                int classId = _context.Classes.Where(x => x.ClassCode == classCode).First().Id;
                 int topicId = _context.Topics.Where(x => x.Topic1 == topic).First().Id;
                 var questions = _context.Questions.Where(x => x.ClassId == classId && x.TopicId == topicId);
                 foreach (var q in questions)
@@ -233,7 +240,7 @@ namespace Tutor.api.Services
                     {
                         topicAggregate.Add(new TopicAggregate
                         {
-                            ClassCode = className,
+                            ClassCode = classCode,
                             ClassId = classId,
                             Topic = topic,
                             TopicId = topicId,
@@ -245,7 +252,7 @@ namespace Tutor.api.Services
             }
             catch { return null; }
         }
-        internal IEnumerable<TopicAggregate>? GetQuestionStatistics(string className)
+        public IEnumerable<TopicAggregate>? GetQuestionStatistics(string className)
         {
             List<TopicAggregate> topicAggregate = new();
             try
@@ -270,7 +277,7 @@ namespace Tutor.api.Services
             }
             catch { return null; }
         }
-        internal IEnumerable<TopicAggregate> GetQuestionStatistics()
+        public IEnumerable<TopicAggregate> GetQuestionStatistics()
         {
             List<TopicAggregate> topicAggregate = new();
             var questions = _context.Questions;
@@ -291,10 +298,22 @@ namespace Tutor.api.Services
             return topicAggregate;
         }
 
-        internal string getStudentUsername(int studentId)
+        public string GetStudentUsername(int studentId)
         {
             Student s = _context.Students.Where(x => x.Id == studentId).First();
             return s.Email;
         }
+
+        public bool AddTopic(string classCode, string topic)
+        {
+            Topic t = new Topic();
+            t.ClassId = _context.Classes.Where(x => x.ClassCode == classCode).First().Id;
+            t.Topic1 = topic;
+            try
+            {
+                _context.Topics.Add(t);
+            }
+            catch { return false; }
+            return true;
+        }
     }
-}

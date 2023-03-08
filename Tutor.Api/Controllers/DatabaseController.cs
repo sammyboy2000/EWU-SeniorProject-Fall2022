@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Tutor.api.Services;
 using Tutor.Api.Identity;
 using Tutor.Api.Models;
@@ -24,7 +25,7 @@ namespace Tutor.Api.Controllers
         [Authorize]
         public IEnumerable<String> getClasses(String? searchString)
         {
-            return _service.getClasses(searchString);
+            return _service.GetClasses(searchString);
         }
 
         //Added to get topics to populate dropdown --Jesse 2/17/2023
@@ -40,7 +41,7 @@ namespace Tutor.Api.Controllers
             {
                 int? checkId = _service.GetClassId(classCode);
                 int classId = (int)checkId;
-                return _service.getClassTopics(classId);
+                return _service.GetClassTopics(classId);
             }
         }
 
@@ -68,6 +69,17 @@ namespace Tutor.Api.Controllers
             {
                 return _service.GetQuestionStatistics(className, topicName);
             }
+        }
+
+        [HttpGet("AddTopic")]
+        [Authorize]
+        public String AddTopic(string? classCode, string? topic)
+        {
+            if (classCode.IsNullOrEmpty()) { return "Class Code cannot be empty"; }
+            if (topic.IsNullOrEmpty()) { return "Topic cannot be empty."; }
+            bool result = _service.AddTopic(classCode!, topic!);
+            if (result) { return "Success"; }
+            else { return "Failed to add topic."; }
         }
 
     }

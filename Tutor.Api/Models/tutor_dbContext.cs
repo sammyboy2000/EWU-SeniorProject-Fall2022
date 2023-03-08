@@ -32,8 +32,6 @@ namespace Tutor.Api.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //Should only happen when in dev mode on windows and local engine isn't running. Will not work in Docker.
-                optionsBuilder.UseSqlServer("Server=tutor-db; Database=tutor_db; User ID=sa; Password=S3cur3P@ssW0rd!; MultipleActiveResultSets=true");
             }
         }
 

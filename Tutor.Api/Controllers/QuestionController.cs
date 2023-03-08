@@ -36,7 +36,7 @@ namespace Tutor.Api.Controllers
             {
                 return null;
             }
-            int studentId = _database.GetStudentId(studentUsername);
+            int studentId = (int)_database.GetStudentId(studentUsername)!;
             return _database.GetStudentsQuestions(studentId);
         }
 
@@ -49,7 +49,7 @@ namespace Tutor.Api.Controllers
             {
                 return null;
             }
-            int studentId = _database.GetStudentId(studentUsername);
+            int studentId = (int)_database.GetStudentId(studentUsername)!;
             return _database.GetAnsweredQuestions(studentId);
         }
 
@@ -75,7 +75,7 @@ namespace Tutor.Api.Controllers
             {
                 return "Error, studentUsername cannot be blank.";
             }
-            int studentId = _database.GetStudentId(studentUsername);
+            int studentId = (int)_database.GetStudentId(studentUsername)!;
             Question q = _database.GetQuestion(questionID);
             if (q == null) { return "Error, question does not exist."; }
             if (q.StudentId != studentId) { return "Error, question does not belong to student."; }
@@ -125,11 +125,11 @@ namespace Tutor.Api.Controllers
             if (string.IsNullOrWhiteSpace(topic)) { return "Error, topic cannot be blank."; }
             if (string.IsNullOrWhiteSpace(question)) { return "Error, question cannot be blank."; }
 
-            int studentId = _database.GetStudentId(studentUsername);
+            int studentId = (int)_database.GetStudentId(studentUsername)!;
             int? checkId = _database.GetClassId(classCode);
             if (!checkId.HasValue) { return "Error, class does not exist."; }
             int classId = (int)checkId;
-            int topicId = _database.GetTopicId(topic);
+            int topicId = (int)_database.GetTopicId(topic)!;
 
             Question q = new()
             {
@@ -190,7 +190,7 @@ namespace Tutor.Api.Controllers
                 return "Error, could not save answer.";
             }
 
-            String studentUsername = _database.getStudentUsername(q.StudentId);
+            String studentUsername = _database.GetStudentUsername(q.StudentId);
 
             result = _service.SendQuestionAnswered(q.QuestionId, studentUsername);
 
