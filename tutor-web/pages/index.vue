@@ -93,7 +93,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { JWT } from '~/scripts/jwt'
+
 @Component
 export default class IndexPage extends Vue {
   name: string = 'IndexPage'
