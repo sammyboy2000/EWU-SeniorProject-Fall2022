@@ -30,7 +30,7 @@
               ></v-select>
             </div>
             <br />
-            <div v-show="selectedTopic == 'other'">
+            <div v-show="selectedTopic == 'Other'">
               <textarea
                 v-model="other"
                 name="otherBox"
@@ -72,6 +72,7 @@
             <v-card-title>View Answered Questions</v-card-title>
             <v-card v-for="answer in answeredQuestions" :key="answer.questionId">
               <v-card-title>{{ answer.question }}</v-card-title>
+              <v-card-text>{{ answer.topicId }}</v-card-text>
               <v-card-text>{{ answer.response }}</v-card-text>
             </v-card>
           </v-card>
@@ -149,7 +150,7 @@ export default class Student extends Vue {
   }
 
   // Methods
-
+  
   initializeClassData() {
     this.$axios.get('/database/getClasses').then((response) => {
       this.classData = response.data
@@ -164,7 +165,7 @@ export default class Student extends Vue {
         },
       })
       .then((response) => {
-        this.topicData = response.data
+        this.topicData = response.data.concat([ "Other" ])
       })
   }
 
@@ -212,6 +213,9 @@ export default class Student extends Vue {
     if(this.question === '') {
       alert('Question field cannot be empty')
       return
+    }
+    if(this.selectedTopic === 'Other') {
+      this.selectedTopic = this.other
     }
     this.$axios
       .post(
@@ -285,7 +289,23 @@ export default class Student extends Vue {
     this.selectedQuestion = this.studentQuestions[index]
     this.selectedQuestionIndex = index
   }
-  
+
+  addTopicToClass() {
+    this.$axios
+      .post(
+        '/database/AddTopic',
+        {},
+        {
+          params: {
+            classCode: this.selectedClass,
+            topic: this.other,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data)
+      })
+  }
 
 }
 </script>
