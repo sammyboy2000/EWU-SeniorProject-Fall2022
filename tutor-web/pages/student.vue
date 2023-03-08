@@ -102,27 +102,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { JWT } from '~/scripts/jwt'
-
-// Interfaces
-// Question interface
-interface Question {
-  questionId: string
-  studentId: number
-  classId: number
-  topicId: number
-  question1: string
-}
-
-// AnsweredQuestion interface
-interface AnsweredQuestion {
-  questionId: string
-  studentId: number
-  tutorId: number
-  classId: number
-  topicId: number
-  question: string
-  response: string
-}
+import { Question, AnsweredQuestion } from '~/scripts/interfaces'
 
 @Component({})
 export default class Student extends Vue {
@@ -150,7 +130,7 @@ export default class Student extends Vue {
   }
 
   // Methods
-  
+
   initializeClassData() {
     this.$axios.get('/database/getClasses').then((response) => {
       this.classData = response.data

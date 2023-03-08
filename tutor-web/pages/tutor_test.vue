@@ -63,30 +63,13 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { JWT } from '~/scripts/jwt'
-
-interface Question {
-  questionId: string
-  studentId: number
-  classId: number
-  topicId: number
-  question1: string
-}
-
-interface AnsweredQuestions {
-  questionId: string
-  studentId: number
-  tutorId: number
-  classId: number
-  topicId: number
-  question: string
-  response: string
-}
+import { Question, AnsweredQuestion } from '~/scripts/interfaces'
 
 @Component({})
 export default class Tutor extends Vue {
   userOption: number = 1
   questionData: Question[] = []
-  answeredQuestions: AnsweredQuestions[] = []
+  answeredQuestions: AnsweredQuestion[] = []
   question: string = ''
   answer: string = ''
   classCode: string = ''
