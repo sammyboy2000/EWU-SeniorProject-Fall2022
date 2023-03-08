@@ -8,8 +8,6 @@
         </v-title>
         <v-text-card>
           <br />
-          <v-btn color="primary" nuxt to="/testLogin"> Test Login </v-btn>
-          <br /><br />
           <v-btn color="primary" nuxt to="/tutor_test"> Test Tutor </v-btn>
           <br /><br />
           <v-btn color="primary" nuxt to="/tutor"> Real Tutor Page </v-btn>

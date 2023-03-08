@@ -41,27 +41,24 @@ export class JWT {
   }
 
   public static storeToken(): void {
+    localStorage.removeItem('TutorToken')
     const token = this.tokenInstance
     localStorage.setItem('TutorToken', JSON.stringify(token))
   }
 
-  public static loadToken(axios: NuxtAxiosInstance): TutorToken {
-    if (this._tokenData !== null) {
-      return this._tokenData
-    }
+  public static loadToken(axios: NuxtAxiosInstance): string {
 
     const storageToken = localStorage.getItem('TutorToken')
 
     if (storageToken !== null) {
       this.setToken(storageToken, axios)
     }
-    return this._tokenData
+    return this.tokenInstance
   }
 
   public static deleteToken(axios: NuxtAxiosInstance): void {
     localStorage.removeItem('TutorToken')
-    axios.setHeader('Authorization', 'Bearer ')
-    ;(this.tokenInstance = ' '),
-      (this._tokenData = Object.assign(new TutorToken(), ' '))
+    this.tokenInstance=null!
+    location.reload()
   }
 }

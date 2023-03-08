@@ -32,15 +32,15 @@
           >
         </v-list-item>
 
-        <v-list-item>
-          <v-btn text block>
-            <login-dialog />
+        <v-list-item v-if="isLoggedIn">
+          <v-btn text block @click="deleteToken()">
+            Log Out <v-icon>mdi-equalizer</v-icon>
           </v-btn>
         </v-list-item>
 
-        <v-list-item>
-          <v-btn text block nuxt to="/logout">
-            Log Out <v-icon>mdi-equalizer</v-icon>
+        <v-list-item v-if="!isLoggedIn">
+          <v-btn text block>
+            <login-dialog />
           </v-btn>
         </v-list-item>
 
@@ -67,7 +67,6 @@
 import { JWT } from '~/scripts/jwt'
 
 export default {
-  isLoggedIn: false,
 
   name: 'DefaultLayout',
   data() {
@@ -76,6 +75,8 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'EWU Tutoring',
+      isLoggedIn : false,
+      jwt : JWT._getData
     }
   },
   mounted() {
@@ -83,5 +84,10 @@ export default {
       this.isLoggedIn = true
     }
   },
+  methods:{
+  deleteToken(){
+    JWT.deleteToken(this.$axios)
+  }
+}
 }
 </script>

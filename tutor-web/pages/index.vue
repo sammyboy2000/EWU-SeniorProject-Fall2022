@@ -73,17 +73,17 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary"> <login-dialog /> </v-btn>
-          <v-btn color="primary"> <signup-dialog /> </v-btn>
-          <v-btn color="primary" nuxt to="/inspire"> {{ buttonText }} </v-btn>
+          <v-btn color="primary" v-if="!isLoggedIn"> <login-dialog /> </v-btn>
+          <v-btn color="primary" v-if="!isLoggedIn"> <signup-dialog /> </v-btn>
+          <v-btn color="primary" nuxt to="/inspire" v-if="isAdmin"> {{ buttonText }} </v-btn>
           <v-btn
             color="secondary"
             :loading="isLoading"
             @click="changeButtonText"
-          >
+          v-if="isAdmin">
             Change Text
           </v-btn>
-          <v-btn color="primary" nuxt to="/test_pages"> Test Pages </v-btn>
+          <v-btn color="primary" nuxt to="/test_pages" v-if="isAdmin"> Test Pages </v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
@@ -93,13 +93,22 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-
+import { JWT } from '~/scripts/jwt'
 @Component
 export default class IndexPage extends Vue {
   name: string = 'IndexPage'
   buttonText: string = 'Inspire me!'
+  isLoggedIn: boolean = false
   isLoading: boolean = false
+  isAdmin: boolean = false
+  isTutor: boolean = false
+  isStudent: boolean = false
 
+  mounted() {
+      this.checkAdmin()
+      this.checkTutor()
+      this.checkStudent()
+  }
   changeButtonText() {
     this.buttonText =
       this.buttonText === 'Inspire me!' ? 'Inspire me again!' : 'Inspire me!'
@@ -107,6 +116,30 @@ export default class IndexPage extends Vue {
     setTimeout(() => {
       this.isLoading = false
     }, 1000)
+  }
+
+  checkAdmin(){
+    this.$axios.get('Token/TestAdmin').then((result) => {
+          if(result.data === "Authorized as Admin")
+          this.isAdmin = true
+          this.isLoggedIn = true
+        })
+  }
+
+  checkTutor(){
+    this.$axios.get('Token/TestTutor').then((result) => {
+          if(result.data === "Authorized as Tutor")
+          this.isTutor = true
+          this.isLoggedIn = true
+        })
+  }
+
+  checkStudent(){
+    this.$axios.get('Token/TestStudent').then((result) => {
+          if(result.data === "Authorized as Student")
+          this.isStudent = true
+          this.isLoggedIn = true
+        })
   }
 }
 </script>
