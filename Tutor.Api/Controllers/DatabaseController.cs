@@ -35,12 +35,12 @@ namespace Tutor.Api.Controllers
         {
             if (classCode == null)
             {
-                return null;
+                return null!;
             }
             else
             {
                 int? checkId = _service.GetClassId(classCode);
-                int classId = (int)checkId;
+                int classId = (int)checkId!;
                 return _service.GetClassTopics(classId);
             }
         }
@@ -50,7 +50,7 @@ namespace Tutor.Api.Controllers
         [Authorize(Roles = Roles.Tutor)]
         public IEnumerable<String> GetAllQuestions(String? searchString)
         {
-            return _service.GetAllQuestions(searchString);
+            return _service.GetAllQuestions(searchString!);
         }
 
         [HttpGet("GetQuestionData")]
@@ -67,7 +67,7 @@ namespace Tutor.Api.Controllers
             }
             else
             {
-                return _service.GetQuestionStatistics(className, topicName);
+                return _service.GetQuestionStatistics(className!, topicName!);
             }
         }
 

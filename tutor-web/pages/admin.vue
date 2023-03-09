@@ -17,13 +17,19 @@
         </v-card>
         <v-card v-show="userOption == 1">
           <v-card-title>Questions</v-card-title>
-            <v-card v-for="question in unansweredQuestions" :key="question.questionId">
-              <v-card-text>{{ question.question1 }}</v-card-text>
-            </v-card>
-            <v-card-title>Answered Questions</v-card-title>
-            <v-card v-for="question in answeredQuestions" :key="question.questionId">
-              <v-card-text>{{ question.question1 }}</v-card-text>
-            </v-card>
+          <v-card
+            v-for="question in unansweredQuestions"
+            :key="question.questionId"
+          >
+            <v-card-text>{{ question.question1 }}</v-card-text>
+          </v-card>
+          <v-card-title>Answered Questions</v-card-title>
+          <v-card
+            v-for="question in answeredQuestions"
+            :key="question.questionId"
+          >
+            <v-card-text>{{ question.question1 }}</v-card-text>
+          </v-card>
         </v-card>
         <v-card v-show="userOption == 2">
           <v-card-title>Statistics (WIP)</v-card-title>

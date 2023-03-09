@@ -4,7 +4,8 @@
       <v-btn @click="userOption = 1">Ask a Question</v-btn>
       <v-btn @click=";(userOption = 2), getAnsweredQuestionData()"
         >View Answered Questions</v-btn
-      >    </v-row>
+      >
+    </v-row>
     <v-row>
       <v-col cols="8">
         <v-card v-show="userOption == 1">
@@ -50,52 +51,84 @@
             <div>
               <v-header style="font-size: 16pt; color: black"
                 >Question:</v-header
-              >              
+              >
               <br />
-                <textarea 
-                  v-model="question" name="questionBox"  style="border: 2px solid gray; border-radius: 4px; resize: none; height: 200px; width: 100%; font-size: 14pt;">
-                </textarea>
-              </div>
-            </v-card-text>
-            <v-row class="px-2">
-              <v-col cols="12">
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="primary" @click="submitQuestion">
-                    Submit
-                  </v-btn>
-                </v-card-actions>
-              </v-col>
-            </v-row>
-          </v-card>
-          <v-card v-show="userOption == 2">
-            <v-card-title>View Answered Questions</v-card-title>
-            <v-card v-for="answer in answeredQuestions" :key="answer.questionId">
-              <v-card-title>{{ answer.question }}</v-card-title>
-              <v-card-text>{{ answer.topicId }}</v-card-text>
-              <v-card-text>{{ answer.response }}</v-card-text>
-            </v-card>
-          </v-card>
-        </v-col>
-        <v-col cols="4">
-          <v-card style="margin-bottom: 5px;">
-            <v-card-title>Previously Asked Questions</v-card-title>
-          </v-card>
-          <v-card v-for="(question, index) in studentQuestions" :key="index"  style="margin-bottom: 10px;" @click="selectQuestion(index)">
-            <v-card-title>Question {{ index + 1 }}</v-card-title>
-            <v-card-text>
-              {{ question.question1 }}
-            </v-card-text>
-            <div v-if="selectedQuestionIndex === index">
-              <v-textarea v-if="selectedQuestionIndex === index && editOption == true" v-model="modQuestion" auto-grow></v-textarea>
-              <v-btn v-if="editOption == false" color="primary" @click="editOption = true">Edit</v-btn>
-              <v-btn v-if="editOption == true" color="primary" @click="editSelectedQuestion(), editOption = false">Save Changes</v-btn>
-              <v-btn v-if="editOption == false" color="secondary" @click="removeSelectedQuestion()">Remove</v-btn>
+              <textarea
+                v-model="question"
+                name="questionBox"
+                style="
+                  border: 2px solid gray;
+                  border-radius: 4px;
+                  resize: none;
+                  height: 200px;
+                  width: 100%;
+                  font-size: 14pt;
+                "
+              >
+              </textarea>
             </div>
+          </v-card-text>
+          <v-row class="px-2">
+            <v-col cols="12">
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" @click="submitQuestion"> Submit </v-btn>
+              </v-card-actions>
+            </v-col>
+          </v-row>
+        </v-card>
+        <v-card v-show="userOption == 2">
+          <v-card-title>View Answered Questions</v-card-title>
+          <v-card v-for="answer in answeredQuestions" :key="answer.questionId">
+            <v-card-title>{{ answer.question }}</v-card-title>
+            <v-card-text>{{ answer.topicId }}</v-card-text>
+            <v-card-text>{{ answer.response }}</v-card-text>
           </v-card>
-          <br />
-        </v-col>
-      </v-row>
+        </v-card>
+      </v-col>
+      <v-col cols="4">
+        <v-card style="margin-bottom: 5px">
+          <v-card-title>Previously Asked Questions</v-card-title>
+        </v-card>
+        <v-card
+          v-for="(question, index) in studentQuestions"
+          :key="index"
+          style="margin-bottom: 10px"
+          @click="selectQuestion(index)"
+        >
+          <v-card-title>Question {{ index + 1 }}</v-card-title>
+          <v-card-text>
+            {{ question.question1 }}
+          </v-card-text>
+          <div v-if="selectedQuestionIndex === index">
+            <v-textarea
+              v-if="selectedQuestionIndex === index && editOption == true"
+              v-model="modQuestion"
+              auto-grow
+            ></v-textarea>
+            <v-btn
+              v-if="editOption == false"
+              color="primary"
+              @click="editOption = true"
+              >Edit</v-btn
+            >
+            <v-btn
+              v-if="editOption == true"
+              color="primary"
+              @click="editSelectedQuestion(), (editOption = false)"
+              >Save Changes</v-btn
+            >
+            <v-btn
+              v-if="editOption == false"
+              color="secondary"
+              @click="removeSelectedQuestion()"
+              >Remove</v-btn
+            >
+          </div>
+        </v-card>
+        <br />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -145,7 +178,7 @@ export default class Student extends Vue {
         },
       })
       .then((response) => {
-        this.topicData = response.data.concat([ "Other" ])
+        this.topicData = response.data.concat(['Other'])
       })
   }
 
@@ -178,23 +211,23 @@ export default class Student extends Vue {
   }
 
   submitQuestion() {
-    if(this.selectedClass === '') {
+    if (this.selectedClass === '') {
       alert('Please select a class')
       return
     }
-    if(this.selectedTopic === '') {
+    if (this.selectedTopic === '') {
       alert('Please select a topic')
       return
     }
-    if(this.selectedTopic === 'Other' && this.other === '') {
+    if (this.selectedTopic === 'Other' && this.other === '') {
       alert('Please enter an other topic')
       return
     }
-    if(this.question === '') {
+    if (this.question === '') {
       alert('Question field cannot be empty')
       return
     }
-    if(this.selectedTopic === 'Other') {
+    if (this.selectedTopic === 'Other') {
       this.selectedTopic = this.other
       this.addTopicToClass()
     }
@@ -287,6 +320,5 @@ export default class Student extends Vue {
         console.log(response.data)
       })
   }
-
 }
 </script>
