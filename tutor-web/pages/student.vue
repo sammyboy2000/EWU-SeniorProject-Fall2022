@@ -196,6 +196,7 @@ export default class Student extends Vue {
     }
     if(this.selectedTopic === 'Other') {
       this.selectedTopic = this.other
+      this.addTopicToClass()
     }
     this.$axios
       .post(
