@@ -19,7 +19,7 @@
       <v-list>
         <v-list-item>
           <v-list-item-title class="d-flex justify-center">
-            <v-img src="/EWULogo.png" width="150" contain></v-img>
+            <v-img src="/EWUlogo.png" width="150" contain></v-img>
           </v-list-item-title>
         </v-list-item>
         <v-list-item>

@@ -119,7 +119,7 @@ export default class IndexPage extends Vue {
   }
 
   checkAdmin(){
-    this.$axios.get('Token/TestAdmin').then((result) => {
+    this.$axios.get('Token/testadmin').then((result) => {
           if(result.data === "Authorized as Admin")
           this.isAdmin = true
           this.isLoggedIn = true
@@ -127,7 +127,7 @@ export default class IndexPage extends Vue {
   }
 
   checkTutor(){
-    this.$axios.get('Token/TestTutor').then((result) => {
+    this.$axios.get('Token/testtutor').then((result) => {
           if(result.data === "Authorized as Tutor")
           this.isTutor = true
           this.isLoggedIn = true
@@ -135,7 +135,7 @@ export default class IndexPage extends Vue {
   }
 
   checkStudent(){
-    this.$axios.get('Token/TestStudent').then((result) => {
+    this.$axios.get('Token/teststudent').then((result) => {
           if(result.data === "Authorized as Student")
           this.isStudent = true
           this.isLoggedIn = true

@@ -41,7 +41,7 @@ export class JWT {
   }
 
   public static storeToken(): void {
-    localStorage.removeItem('TutorToken')
+    localStorage.clear()
     const token = this.tokenInstance
     localStorage.setItem('TutorToken', JSON.stringify(token))
   }
