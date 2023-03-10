@@ -137,7 +137,8 @@ namespace Tutor.Api.Controllers
                 StudentId = studentId,
                 ClassId = classId,
                 TopicId = topicId,
-                Question1 = question
+                Question1 = question,
+                CreatedTime = DateTime.Now,
             };
 
             try
@@ -181,7 +182,9 @@ namespace Tutor.Api.Controllers
                 ClassId = q.ClassId,
                 TopicId = q.TopicId,
                 Question = q.Question1,
-                Response = answer
+                Response = answer,
+                CreatedTime = q.CreatedTime,
+                AnsweredTime = DateTime.Now,
             };
 
             Boolean result = _database.AnswerQuestion(a);

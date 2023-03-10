@@ -61,10 +61,10 @@ namespace Tutor.api.Services
         {
             if (searchString.IsNullOrEmpty())
             {
-                return _context.Questions;
+                return _context.Questions.OrderBy(x => x.CreatedTime);
             }
             return _context.Questions
-                .Where(x => x.QuestionId.ToString().Contains(searchString));
+                .Where(x => x.QuestionId.ToString().Contains(searchString)).OrderBy(x => x.CreatedTime);
         }
 
         //Added to get questions to populate dropdown --Jesse 2/17/2023
@@ -72,9 +72,9 @@ namespace Tutor.api.Services
         {
             if (searchString == null)
             {
-                return _context.Questions.Select(x => x.Question1);
+                return _context.Questions.OrderBy(x => x.CreatedTime).Select(x => x.Question1);
             }
-            return _context.Questions.Select(x => x.Question1)
+            return _context.Questions.OrderBy(x => x.CreatedTime).Select(x => x.Question1)
                 .Where(x => x.Contains(searchString));
         }
 
@@ -84,9 +84,9 @@ namespace Tutor.api.Services
         {
             if (studentId == null)
             {
-                return _context.Questions;
+                return _context.Questions.OrderBy(x => x.CreatedTime);
             }
-            return _context.Questions.Where(x => x.StudentId == studentId);
+            return _context.Questions.Where(x => x.StudentId == studentId).OrderBy(x => x.CreatedTime);
         }
 
         //Added to get questions to populate student answers --Jesse 2/27/2023
@@ -98,7 +98,7 @@ namespace Tutor.api.Services
                 return null!;
 
             }
-            return _context.AnsweredQuestions.Where(x => x.StudentId == studentId);
+            return _context.AnsweredQuestions.Where(x => x.StudentId == studentId).OrderBy(x => x.CreatedTime);
         }
 
         //Added to get questions to populate tutor answers --Jesse 2/28/2023
@@ -109,7 +109,7 @@ namespace Tutor.api.Services
                 return null!;
 
             }
-            return _context.AnsweredQuestions.Where(x => x.TutorId == tutorId);
+            return _context.AnsweredQuestions.Where(x => x.TutorId == tutorId).OrderBy(x => x.CreatedTime);
         }
 
         //Added to remove selected question from unanswered questions --Jesse 2/28/2023
@@ -169,7 +169,7 @@ namespace Tutor.api.Services
         {
             if (classCode.IsNullOrEmpty() && topic.IsNullOrEmpty())
             {
-                return _context.Questions;
+                return _context.Questions.OrderBy(x => x.CreatedTime);
 
             }
             else if (!classCode.IsNullOrEmpty() && topic.IsNullOrEmpty())
@@ -177,7 +177,7 @@ namespace Tutor.api.Services
                 int? checkId = GetClassId(classCode!);
                 if (!checkId.HasValue) { return null; }
                 int classId = checkId.Value;
-                return _context.Questions.Where(x => x.ClassId == classId);
+                return _context.Questions.Where(x => x.ClassId == classId).OrderBy(x => x.CreatedTime);
             }
             else
             {
@@ -186,7 +186,7 @@ namespace Tutor.api.Services
                 int classId = (int)checkId;
                 int topicId = (int)GetTopicId(topic!)!;
 
-                return _context.Questions.Where(x => x.ClassId == classId && x.TopicId == topicId);
+                return _context.Questions.Where(x => x.ClassId == classId && x.TopicId == topicId).OrderBy(x => x.CreatedTime);
             }
 
 
