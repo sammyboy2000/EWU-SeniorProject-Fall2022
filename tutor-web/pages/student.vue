@@ -19,6 +19,7 @@
               :items="classData"
               label="Class"
               style="width: 25%; padding: 5px"
+              @change="selectedTopic = ''"
             ></v-select>
             <br />
             <div v-show="Number(selectedClass) != 0">

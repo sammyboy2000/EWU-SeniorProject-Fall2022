@@ -317,5 +317,24 @@ namespace Tutor.api.Services
             catch { return false; }
             return true;
         }
+
+        public bool RemoveTopic(string classCode, string topic)
+        {
+            int topicId = (int)GetTopicId(topic!)!;
+            var questions = _context.Questions.Where(x => x.TopicId == topicId);
+            foreach (var question in questions)
+            {
+                RemoveQuestion(question);
+            }
+
+            Topic t = _context.Topics.Where(x => x.Topic1 == topic).First();
+            try
+            {
+                _context.Topics.Remove(t);
+                _context.SaveChanges();
+            }
+            catch { return false; }
+            return true;
+        }
     }
 }

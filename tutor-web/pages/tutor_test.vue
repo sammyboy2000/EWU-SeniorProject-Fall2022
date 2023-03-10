@@ -5,6 +5,7 @@
       <v-btn @click=";(userOption = 2), getAnsweredQuestionData()"
         >View Answered Questions</v-btn
       >
+      <v-btn @click="userOption = 3">Super Magic Button</v-btn>
     </v-row>
     <v-row>
       <v-col cols="8">
@@ -38,6 +39,29 @@
             <v-card-text>{{ answer.response }}</v-card-text>
           </v-card>
         </v-card>
+
+        <v-card v-show="userOption == 3">
+          <v-card-title>Modify/Remove Topics</v-card-title>
+          <v-card-text>
+            <v-select
+              v-model="selectedClass"
+              :items="classData"
+              label="Class"
+              style="width: 25%; padding: 5px"
+              @change="initializeQuestionData(selectedClass), selectedTopic = ''"
+            ></v-select>
+            <v-select
+                v-model="selectedTopic"
+                :items="topicData"
+                label="Topic"
+                style="width: 25%; padding: 5px"
+                @click="initializeTopicData()"
+            ></v-select>
+            <v-btn color="primary" @click="modifyTopic()">Modify Topic</v-btn>
+            <v-btn color="primary" @click="removeTopic()">Remove Topic</v-btn>
+          </v-card-text>
+        </v-card>
+
       </v-col>
       <v-col cols="4">
         <v-card style="margin-bottom: 5px">
@@ -75,13 +99,34 @@ export default class Tutor extends Vue {
   classCode: string = ''
   topic: string = ''
   selectedQuestion: Question | null = null
-  tutorUsername: string = JWT.getUserName()
+  tutorUsername: string = ''
   classData: [] = []
   selectedClass: string = ''
+  topicData: [] = []
+  selectedTopic: string = ''
+  isLoading: boolean = true
+  areYouSure: boolean = false
 
-  mounted() {
+  isTutor: boolean = false
+  isLoggedIn: boolean = false
+
+  async mounted() {
+    await this.checkTutor()
     this.initializeQuestionData()
     this.initializeClassData()
+    this.isLoading = false
+  }
+
+  setTutorUsername() {
+    this.tutorUsername = JWT.getUserName()
+  }
+
+  async checkTutor(){
+    await this.$axios.get('Token/testtutor').then((result) => {
+          if(result.data === "Authorized as Tutor")
+          this.isTutor = true
+          this.isLoggedIn = true
+        })
   }
 
   initializeClassData() {
@@ -101,6 +146,18 @@ export default class Tutor extends Vue {
       .then((response) => {
         console.log(response.data)
         this.questionData = response.data.slice(0, 4)
+      })
+  }
+
+  initializeTopicData() {
+    this.$axios
+      .get('/database/getTopics', {
+        params: {
+          classCode: this.selectedClass,
+        },
+      })
+      .then((response) => {
+        this.topicData = response.data
       })
   }
 
@@ -150,6 +207,38 @@ export default class Tutor extends Vue {
 
   selectQuestion(index: number) {
     this.selectedQuestion = this.questionData[index]
+  }
+
+  removeTopic() {
+    if (this.selectedClass === '') {
+      alert('Select a class')
+      return
+    }
+    if (this.selectedTopic === '') {
+      alert('Select a topic')
+      return
+    }
+    this.areYouSure = confirm('Are you sure you want to remove this topic?' + '\n' +
+          'Doing so will also remove all questions associated with this topic.')
+    if (!this.areYouSure) {
+      return
+    }
+    this.$axios
+      .post(
+        '/database/RemoveTopic',
+        {},
+        {
+          params: {
+            classCode: this.selectedClass,
+            topic: this.selectedTopic,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data)
+        this.initializeTopicData()
+        this.initializeQuestionData()
+      })
   }
 }
 </script>
