@@ -71,7 +71,7 @@ namespace Tutor.Api.Controllers
             }
         }
 
-        [HttpGet("AddTopic")]
+        [HttpPost("AddTopic")]
         [Authorize]
         public String AddTopic(string? classCode, string? topic)
         {
@@ -81,6 +81,5 @@ namespace Tutor.Api.Controllers
             if (result) { return "Success"; }
             else { return "Failed to add topic."; }
         }
-
     }
 }

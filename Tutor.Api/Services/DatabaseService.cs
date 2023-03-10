@@ -312,6 +312,7 @@ namespace Tutor.api.Services
             try
             {
                 _context.Topics.Add(t);
+                _context.SaveChanges();
             }
             catch { return false; }
             return true;

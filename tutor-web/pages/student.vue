@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container v-if="isLoading == false" fluid>
     <v-row>
       <v-btn @click="userOption = 1">Ask a Question</v-btn>
       <v-btn @click=";(userOption = 2), getAnsweredQuestionData()"
@@ -148,21 +148,40 @@ export default class Student extends Vue {
   other: string = '' // other topic
   question: string = '' // question
   modQuestion: string = '' // modified question
-  studentName: string = JWT.getUserName() // student username
+  studentName: string = '' // student username
   studentQuestions: Question[] = [] // student questions
   answeredQuestions: AnsweredQuestion[] = [] // answered questions
   selectedQuestion: Question | null = null // selected question
   selectedQuestionIndex: number = -1 // selected question index
   editOption: boolean = false // edit option
 
+  isStudent: boolean = false // is student
+  isLoggedIn: boolean = false // is logged in
+  isLoading: boolean = true // is loading
+
   // Mounted functions
-  mounted() {
+  async mounted() {
+    await this.checkStudent()
+    this.setStudentUsername()
     this.initializeClassData()
     this.initializeQuestionData()
     this.getAnsweredQuestionData()
+    this.isLoading = false
+  }
+
+  // Test Methods
+  async checkStudent(){
+    await this.$axios.get('Token/teststudent').then((result) => {
+      if(result.data === "Authorized as Student")
+      this.isStudent = true
+      this.isLoggedIn = true
+    })
   }
 
   // Methods
+  setStudentUsername() {
+    this.studentName = JWT.getUserName()
+  }
 
   initializeClassData() {
     this.$axios.get('/database/getClasses').then((response) => {
@@ -305,6 +324,7 @@ export default class Student extends Vue {
   }
 
   addTopicToClass() {
+    console.log("Class: ", this.selectedClass, "Topic: ", this.other)
     this.$axios
       .post(
         '/database/AddTopic',
