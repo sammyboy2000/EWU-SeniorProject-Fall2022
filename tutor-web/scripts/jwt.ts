@@ -47,11 +47,10 @@ export class JWT {
   }
 
   public static loadToken(axios: NuxtAxiosInstance): string {
-
     const storageToken = localStorage.getItem('TutorToken')
-
     if (storageToken !== null) {
-      this.setToken(storageToken, axios)
+      const cleanToken = storageToken.replace(/"/g, '')
+      this.setToken(cleanToken, axios)
     }
     return this.tokenInstance
   }
