@@ -8,12 +8,6 @@ namespace Tutor.Api.Models
 {
     public partial class ApiUser
     {
-        public ApiUser()
-        {
-            Admins = new HashSet<Admin>();
-            Students = new HashSet<Student>();
-            Tutors = new HashSet<Tutor>();
-        }
         [Key]
         public int UserId { get; set; }
         public string ExternalId { get; set; }
@@ -21,8 +15,5 @@ namespace Tutor.Api.Models
         public bool IsTutor { get; set; }
         public bool IsAdmin { get; set; }
 
-        public virtual ICollection<Admin> Admins { get; set; }
-        public virtual ICollection<Student> Students { get; set; }
-        public virtual ICollection<Tutor> Tutors { get; set; }
     }
 }

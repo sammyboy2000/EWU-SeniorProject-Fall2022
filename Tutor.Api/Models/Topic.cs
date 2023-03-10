@@ -13,9 +13,6 @@ namespace Tutor.Api.Models
         public int ClassId { get; set; }
         public string Topic1 { get; set; }
 
-        public virtual Class Class { get; set; }
-        public virtual ICollection<AnsweredQuestion> AnsweredQuestions { get; set; }
-        public virtual ICollection<Question> Questions { get; set; }
 
         internal static void Seed(tutor_dbContext context)
         {

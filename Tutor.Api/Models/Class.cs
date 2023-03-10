@@ -8,19 +8,11 @@ namespace Tutor.Api.Models
 {
     public partial class Class
     {
-        public Class()
-        {
-            Topics = new HashSet<Topic>();
-        }
         [Key]
         public int Id { get; set; }
         public string ClassCode { get; set; }
         public string ClassName { get; set; }
         public string ClassDesc { get; set; }
-
-        public virtual ICollection<AnsweredQuestion> AnsweredQuestions { get; set; }
-        public virtual ICollection<Question> Questions { get; set; }
-        public virtual ICollection<Topic> Topics { get; set; }
 
         internal static void Seed(tutor_dbContext context, string filename = "Classes.csv")
         {

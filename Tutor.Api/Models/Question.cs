@@ -15,9 +15,7 @@ namespace Tutor.Api.Models
         public int TopicId { get; set; }
         public string Question1 { get; set; }
 
-        public virtual Class Class { get; set; }
-        public virtual Student Student { get; set; }
-        public virtual Topic Topic { get; set; }
+        public DateTime CreatedTime { get; set; }
 
         internal static void Seed(tutor_dbContext context)
         {

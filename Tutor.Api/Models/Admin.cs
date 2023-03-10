@@ -14,6 +14,5 @@ namespace Tutor.Api.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        public virtual ApiUser User { get; set; }
     }
 }

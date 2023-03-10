@@ -60,12 +60,6 @@ namespace Tutor.Api.Models
                     .HasColumnName("last_name");
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Admins)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Admin_Users");
             });
 
             modelBuilder.Entity<AnsweredQuestion>(entity =>
@@ -95,30 +89,6 @@ namespace Tutor.Api.Models
                 entity.Property(e => e.TopicId).HasColumnName("topic_id");
 
                 entity.Property(e => e.TutorId).HasColumnName("tutor_id");
-
-                entity.HasOne(d => d.Class)
-                    .WithMany(p => p.AnsweredQuestions)
-                    .HasForeignKey(d => d.ClassId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Answered_Questions_Class");
-
-                entity.HasOne(d => d.Student)
-                    .WithMany(p => p.AnsweredQuestions)
-                    .HasForeignKey(d => d.StudentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Answered_Questions_Student");
-
-                entity.HasOne(d => d.Topic)
-                    .WithMany(p => p.AnsweredQuestions)
-                    .HasForeignKey(d => d.TopicId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Answered_Questions_Topic");
-
-                entity.HasOne(d => d.Tutor)
-                    .WithMany(p => p.AnsweredQuestions)
-                    .HasForeignKey(d => d.TutorId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Answered_Questions_Tutor");
             });
 
             modelBuilder.Entity<Class>(entity =>
@@ -163,24 +133,6 @@ namespace Tutor.Api.Models
                 entity.Property(e => e.StudentId).HasColumnName("student_id");
 
                 entity.Property(e => e.TopicId).HasColumnName("topic_id");
-
-                entity.HasOne(d => d.Class)
-                    .WithMany(p => p.Questions)
-                    .HasForeignKey(d => d.ClassId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Questions_Class");
-
-                entity.HasOne(d => d.Student)
-                    .WithMany(p => p.Questions)
-                    .HasForeignKey(d => d.StudentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Questions_Student");
-
-                entity.HasOne(d => d.Topic)
-                    .WithMany(p => p.Questions)
-                    .HasForeignKey(d => d.TopicId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Questions_Topic");
             });
 
             modelBuilder.Entity<Student>(entity =>
@@ -210,12 +162,6 @@ namespace Tutor.Api.Models
                     .HasColumnName("last_name");
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Students)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Student_Users");
             });
 
             modelBuilder.Entity<Topic>(entity =>
@@ -231,12 +177,6 @@ namespace Tutor.Api.Models
                     .HasMaxLength(255)
                     .IsUnicode(false)
                     .HasColumnName("topic");
-
-                entity.HasOne(d => d.Class)
-                    .WithMany(p => p.Topics)
-                    .HasForeignKey(d => d.ClassId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Topic_Class");
             });
 
             modelBuilder.Entity<Tutor>(entity =>
@@ -260,12 +200,6 @@ namespace Tutor.Api.Models
                     .HasColumnName("last_name");
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Tutors)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Tutor_Users");
             });
 
             modelBuilder.Entity<ApiUser>(entity =>

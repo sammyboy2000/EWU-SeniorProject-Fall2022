@@ -8,20 +8,11 @@ namespace Tutor.Api.Models
 {
     public partial class Student
     {
-        public Student()
-        {
-            AnsweredQuestions = new HashSet<AnsweredQuestion>();
-            Questions = new HashSet<Question>();
-        }
         [Key]
         public int Id { get; set; }
         public int UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-
-        public virtual ApiUser User { get; set; }
-        public virtual ICollection<AnsweredQuestion> AnsweredQuestions { get; set; }
-        public virtual ICollection<Question> Questions { get; set; }
     }
 }

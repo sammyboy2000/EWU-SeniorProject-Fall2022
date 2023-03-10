@@ -15,9 +15,7 @@ namespace Tutor.Api.Models
         public string Question { get; set; }
         public string Response { get; set; }
 
-        public virtual Class Class { get; set; }
-        public virtual Student Student { get; set; }
-        public virtual Topic Topic { get; set; }
-        public virtual Tutor Tutor { get; set; }
+        public DateTime CreatedTime { get; set; }
+        public DateTime AnsweredTime { get; set; }
     }
 }
