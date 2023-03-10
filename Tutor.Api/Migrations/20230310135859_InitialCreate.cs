@@ -11,6 +11,39 @@ namespace Tutor.Api.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Admin",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false),
+                    userid = table.Column<int>(name: "user_id", type: "int", nullable: false),
+                    firstname = table.Column<string>(name: "first_name", type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
+                    lastname = table.Column<string>(name: "last_name", type: "varchar(50)", unicode: false, maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Admin", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Answered_Questions",
+                columns: table => new
+                {
+                    questionid = table.Column<Guid>(name: "question_id", type: "uniqueidentifier", nullable: false),
+                    studentid = table.Column<int>(name: "student_id", type: "int", nullable: false),
+                    tutorid = table.Column<int>(name: "tutor_id", type: "int", nullable: false),
+                    classid = table.Column<int>(name: "class_id", type: "int", nullable: false),
+                    topicid = table.Column<int>(name: "topic_id", type: "int", nullable: false),
+                    question = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false),
+                    response = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false),
+                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AnsweredTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Answered_Questions", x => x.questionid);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ApiUsers",
                 columns: table => new
                 {
@@ -80,22 +113,19 @@ namespace Tutor.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Admin",
+                name: "Questions",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false),
-                    userid = table.Column<int>(name: "user_id", type: "int", nullable: false),
-                    firstname = table.Column<string>(name: "first_name", type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    lastname = table.Column<string>(name: "last_name", type: "varchar(50)", unicode: false, maxLength: 50, nullable: false)
+                    questionid = table.Column<Guid>(name: "question_id", type: "uniqueidentifier", nullable: false),
+                    studentid = table.Column<int>(name: "student_id", type: "int", nullable: false),
+                    classid = table.Column<int>(name: "class_id", type: "int", nullable: false),
+                    topicid = table.Column<int>(name: "topic_id", type: "int", nullable: false),
+                    question = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false),
+                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Admin", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_Admin_Users",
-                        column: x => x.userid,
-                        principalTable: "ApiUsers",
-                        principalColumn: "user_id");
+                    table.PrimaryKey("PK_Questions", x => x.questionid);
                 });
 
             migrationBuilder.CreateTable(
@@ -111,11 +141,20 @@ namespace Tutor.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Student", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_Student_Users",
-                        column: x => x.userid,
-                        principalTable: "ApiUsers",
-                        principalColumn: "user_id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Topic",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    classid = table.Column<int>(name: "class_id", type: "int", nullable: false),
+                    topic = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Topic", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -130,11 +169,6 @@ namespace Tutor.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tutor", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_Tutor_Users",
-                        column: x => x.userid,
-                        principalTable: "ApiUsers",
-                        principalColumn: "user_id");
                 });
 
             migrationBuilder.CreateTable(
@@ -243,117 +277,6 @@ namespace Tutor.Api.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Topic",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    classid = table.Column<int>(name: "class_id", type: "int", nullable: false),
-                    topic = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Topic", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_Topic_Class",
-                        column: x => x.classid,
-                        principalTable: "Class",
-                        principalColumn: "id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Answered_Questions",
-                columns: table => new
-                {
-                    questionid = table.Column<Guid>(name: "question_id", type: "uniqueidentifier", nullable: false),
-                    studentid = table.Column<int>(name: "student_id", type: "int", nullable: false),
-                    tutorid = table.Column<int>(name: "tutor_id", type: "int", nullable: false),
-                    classid = table.Column<int>(name: "class_id", type: "int", nullable: false),
-                    topicid = table.Column<int>(name: "topic_id", type: "int", nullable: false),
-                    question = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false),
-                    response = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Answered_Questions", x => x.questionid);
-                    table.ForeignKey(
-                        name: "FK_Answered_Questions_Class",
-                        column: x => x.classid,
-                        principalTable: "Class",
-                        principalColumn: "id");
-                    table.ForeignKey(
-                        name: "FK_Answered_Questions_Student",
-                        column: x => x.studentid,
-                        principalTable: "Student",
-                        principalColumn: "id");
-                    table.ForeignKey(
-                        name: "FK_Answered_Questions_Topic",
-                        column: x => x.topicid,
-                        principalTable: "Topic",
-                        principalColumn: "id");
-                    table.ForeignKey(
-                        name: "FK_Answered_Questions_Tutor",
-                        column: x => x.tutorid,
-                        principalTable: "Tutor",
-                        principalColumn: "id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Questions",
-                columns: table => new
-                {
-                    questionid = table.Column<Guid>(name: "question_id", type: "uniqueidentifier", nullable: false),
-                    studentid = table.Column<int>(name: "student_id", type: "int", nullable: false),
-                    classid = table.Column<int>(name: "class_id", type: "int", nullable: false),
-                    topicid = table.Column<int>(name: "topic_id", type: "int", nullable: false),
-                    question = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Questions", x => x.questionid);
-                    table.ForeignKey(
-                        name: "FK_Questions_Class",
-                        column: x => x.classid,
-                        principalTable: "Class",
-                        principalColumn: "id");
-                    table.ForeignKey(
-                        name: "FK_Questions_Student",
-                        column: x => x.studentid,
-                        principalTable: "Student",
-                        principalColumn: "id");
-                    table.ForeignKey(
-                        name: "FK_Questions_Topic",
-                        column: x => x.topicid,
-                        principalTable: "Topic",
-                        principalColumn: "id");
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Admin_user_id",
-                table: "Admin",
-                column: "user_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Answered_Questions_class_id",
-                table: "Answered_Questions",
-                column: "class_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Answered_Questions_student_id",
-                table: "Answered_Questions",
-                column: "student_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Answered_Questions_topic_id",
-                table: "Answered_Questions",
-                column: "topic_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Answered_Questions_tutor_id",
-                table: "Answered_Questions",
-                column: "tutor_id");
-
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -398,36 +321,6 @@ namespace Tutor.Api.Migrations
                 table: "Class",
                 column: "class_code",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Questions_class_id",
-                table: "Questions",
-                column: "class_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Questions_student_id",
-                table: "Questions",
-                column: "student_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Questions_topic_id",
-                table: "Questions",
-                column: "topic_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Student_user_id",
-                table: "Student",
-                column: "user_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Topic_class_id",
-                table: "Topic",
-                column: "class_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tutor_user_id",
-                table: "Tutor",
-                column: "user_id");
         }
 
         /// <inheritdoc />
@@ -438,6 +331,9 @@ namespace Tutor.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Answered_Questions");
+
+            migrationBuilder.DropTable(
+                name: "ApiUsers");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -455,7 +351,16 @@ namespace Tutor.Api.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Class");
+
+            migrationBuilder.DropTable(
                 name: "Questions");
+
+            migrationBuilder.DropTable(
+                name: "Student");
+
+            migrationBuilder.DropTable(
+                name: "Topic");
 
             migrationBuilder.DropTable(
                 name: "Tutor");
@@ -465,18 +370,6 @@ namespace Tutor.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Student");
-
-            migrationBuilder.DropTable(
-                name: "Topic");
-
-            migrationBuilder.DropTable(
-                name: "ApiUsers");
-
-            migrationBuilder.DropTable(
-                name: "Class");
         }
     }
 }

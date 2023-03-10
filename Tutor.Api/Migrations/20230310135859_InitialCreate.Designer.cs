@@ -12,7 +12,7 @@ using Tutor.Api.Models;
 namespace Tutor.Api.Migrations
 {
     [DbContext(typeof(tutor_dbContext))]
-    [Migration("20230224060939_InitialCreate")]
+    [Migration("20230310135859_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -184,8 +184,6 @@ namespace Tutor.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Admin", (string)null);
                 });
 
@@ -195,9 +193,15 @@ namespace Tutor.Api.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("question_id");
 
+                    b.Property<DateTime>("AnsweredTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("ClassId")
                         .HasColumnType("int")
                         .HasColumnName("class_id");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Question")
                         .IsRequired()
@@ -224,14 +228,6 @@ namespace Tutor.Api.Migrations
                         .HasColumnName("tutor_id");
 
                     b.HasKey("QuestionId");
-
-                    b.HasIndex("ClassId");
-
-                    b.HasIndex("StudentId");
-
-                    b.HasIndex("TopicId");
-
-                    b.HasIndex("TutorId");
 
                     b.ToTable("Answered_Questions", (string)null);
                 });
@@ -377,6 +373,9 @@ namespace Tutor.Api.Migrations
                         .HasColumnType("int")
                         .HasColumnName("class_id");
 
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Question1")
                         .IsRequired()
                         .IsUnicode(false)
@@ -392,12 +391,6 @@ namespace Tutor.Api.Migrations
                         .HasColumnName("topic_id");
 
                     b.HasKey("QuestionId");
-
-                    b.HasIndex("ClassId");
-
-                    b.HasIndex("StudentId");
-
-                    b.HasIndex("TopicId");
 
                     b.ToTable("Questions");
                 });
@@ -435,8 +428,6 @@ namespace Tutor.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Student", (string)null);
                 });
 
@@ -461,8 +452,6 @@ namespace Tutor.Api.Migrations
                         .HasColumnName("topic");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClassId");
 
                     b.ToTable("Topic", (string)null);
                 });
@@ -492,8 +481,6 @@ namespace Tutor.Api.Migrations
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Tutor", (string)null);
                 });
@@ -547,149 +534,6 @@ namespace Tutor.Api.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Tutor.Api.Models.Admin", b =>
-                {
-                    b.HasOne("Tutor.Api.Models.ApiUser", "User")
-                        .WithMany("Admins")
-                        .HasForeignKey("UserId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Admin_Users");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Tutor.Api.Models.AnsweredQuestion", b =>
-                {
-                    b.HasOne("Tutor.Api.Models.Class", "Class")
-                        .WithMany("AnsweredQuestions")
-                        .HasForeignKey("ClassId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Answered_Questions_Class");
-
-                    b.HasOne("Tutor.Api.Models.Student", "Student")
-                        .WithMany("AnsweredQuestions")
-                        .HasForeignKey("StudentId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Answered_Questions_Student");
-
-                    b.HasOne("Tutor.Api.Models.Topic", "Topic")
-                        .WithMany("AnsweredQuestions")
-                        .HasForeignKey("TopicId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Answered_Questions_Topic");
-
-                    b.HasOne("Tutor.Api.Models.Tutor", "Tutor")
-                        .WithMany("AnsweredQuestions")
-                        .HasForeignKey("TutorId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Answered_Questions_Tutor");
-
-                    b.Navigation("Class");
-
-                    b.Navigation("Student");
-
-                    b.Navigation("Topic");
-
-                    b.Navigation("Tutor");
-                });
-
-            modelBuilder.Entity("Tutor.Api.Models.Question", b =>
-                {
-                    b.HasOne("Tutor.Api.Models.Class", "Class")
-                        .WithMany("Questions")
-                        .HasForeignKey("ClassId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Questions_Class");
-
-                    b.HasOne("Tutor.Api.Models.Student", "Student")
-                        .WithMany("Questions")
-                        .HasForeignKey("StudentId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Questions_Student");
-
-                    b.HasOne("Tutor.Api.Models.Topic", "Topic")
-                        .WithMany("Questions")
-                        .HasForeignKey("TopicId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Questions_Topic");
-
-                    b.Navigation("Class");
-
-                    b.Navigation("Student");
-
-                    b.Navigation("Topic");
-                });
-
-            modelBuilder.Entity("Tutor.Api.Models.Student", b =>
-                {
-                    b.HasOne("Tutor.Api.Models.ApiUser", "User")
-                        .WithMany("Students")
-                        .HasForeignKey("UserId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Student_Users");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Tutor.Api.Models.Topic", b =>
-                {
-                    b.HasOne("Tutor.Api.Models.Class", "Class")
-                        .WithMany("Topics")
-                        .HasForeignKey("ClassId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Topic_Class");
-
-                    b.Navigation("Class");
-                });
-
-            modelBuilder.Entity("Tutor.Api.Models.Tutor", b =>
-                {
-                    b.HasOne("Tutor.Api.Models.ApiUser", "User")
-                        .WithMany("Tutors")
-                        .HasForeignKey("UserId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Tutor_Users");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Tutor.Api.Models.ApiUser", b =>
-                {
-                    b.Navigation("Admins");
-
-                    b.Navigation("Students");
-
-                    b.Navigation("Tutors");
-                });
-
-            modelBuilder.Entity("Tutor.Api.Models.Class", b =>
-                {
-                    b.Navigation("AnsweredQuestions");
-
-                    b.Navigation("Questions");
-
-                    b.Navigation("Topics");
-                });
-
-            modelBuilder.Entity("Tutor.Api.Models.Student", b =>
-                {
-                    b.Navigation("AnsweredQuestions");
-
-                    b.Navigation("Questions");
-                });
-
-            modelBuilder.Entity("Tutor.Api.Models.Topic", b =>
-                {
-                    b.Navigation("AnsweredQuestions");
-
-                    b.Navigation("Questions");
-                });
-
-            modelBuilder.Entity("Tutor.Api.Models.Tutor", b =>
-                {
-                    b.Navigation("AnsweredQuestions");
                 });
 #pragma warning restore 612, 618
         }
