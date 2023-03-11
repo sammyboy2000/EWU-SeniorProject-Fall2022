@@ -55,9 +55,9 @@ export class JWT {
     return this.tokenInstance
   }
 
-  public static deleteToken(axios: NuxtAxiosInstance): void {
+  public static deleteToken(): void {
     localStorage.removeItem('TutorToken')
-    this.tokenInstance=null!
+    this.tokenInstance = null!
     location.reload()
   }
 }

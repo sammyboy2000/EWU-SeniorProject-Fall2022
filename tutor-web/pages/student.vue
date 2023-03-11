@@ -171,12 +171,14 @@ export default class Student extends Vue {
   }
 
   // Test Methods
-  async checkStudent(){
-    await this.$axios.get('Token/teststudent').then((result) => {
-      if(result.data === "Authorized as Student")
-      this.isStudent = true
-      this.isLoggedIn = true
-    })
+  async checkStudent() {
+    await this.$axios
+      .get('Token/teststudent')
+      .then((result) => {
+        if (result.data === 'Authorized as Student') this.isStudent = true
+        this.isLoggedIn = true
+      })
+      .catch(function (error) {})
   }
 
   // Methods
@@ -325,7 +327,7 @@ export default class Student extends Vue {
   }
 
   addTopicToClass() {
-    console.log("Class: ", this.selectedClass, "Topic: ", this.other)
+    console.log('Class: ', this.selectedClass, 'Topic: ', this.other)
     this.$axios
       .post(
         '/database/AddTopic',

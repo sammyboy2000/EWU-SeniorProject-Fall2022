@@ -67,7 +67,6 @@
 import { JWT } from '~/scripts/jwt'
 
 export default {
-
   name: 'DefaultLayout',
   data() {
     return {
@@ -75,8 +74,8 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'EWU Tutoring',
-      isLoggedIn : false,
-      jwt : JWT._getData
+      isLoggedIn: false,
+      jwt: JWT._getData,
     }
   },
   mounted() {
@@ -84,11 +83,11 @@ export default {
       this.isLoggedIn = true
     }
   },
-  methods:{
-  deleteToken(){
-    JWT.deleteToken(this.$axios)
-    location.assign("/")
-  }
-}
+  methods: {
+    deleteToken() {
+      JWT.deleteToken(this.$axios)
+      location.assign('/')
+    },
+  },
 }
 </script>

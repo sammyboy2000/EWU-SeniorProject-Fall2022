@@ -53,6 +53,5 @@ export default class SettingsDialog extends Vue {
   turnOffTheLights() {
     this.$vuetify.theme.dark = true
   }
-
 }
 </script>

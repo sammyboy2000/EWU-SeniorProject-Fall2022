@@ -32,21 +32,20 @@ import { JWT } from '~/scripts/jwt'
 export default class Test_Pages extends Vue {
   isAdmin: boolean = false
 
-mounted(){
-  this.checkAdmin()
-  setTimeout(
-    () => {
-      if(!this.isAdmin)
-      location.assign("/")
-    }, 1000
-  )
-}
+  mounted() {
+    this.checkAdmin()
+    setTimeout(() => {
+      if (!this.isAdmin) location.assign('/')
+    }, 1000)
+  }
 
-checkAdmin(){
-  this.$axios.get('Token/testadmin').then((result) => {
-        if(result.data === "Authorized as Admin")
-        this.isAdmin = true
-      }).catch()
-}
+  checkAdmin() {
+    this.$axios
+      .get('Token/testadmin')
+      .then((result) => {
+        if (result.data === 'Authorized as Admin') this.isAdmin = true
+      })
+      .catch()
+  }
 }
 </script>

@@ -48,20 +48,21 @@
               :items="classData"
               label="Class"
               style="width: 25%; padding: 5px"
-              @change="initializeQuestionData(selectedClass), selectedTopic = ''"
+              @change="
+                initializeQuestionData(selectedClass), (selectedTopic = '')
+              "
             ></v-select>
             <v-select
-                v-model="selectedTopic"
-                :items="topicData"
-                label="Topic"
-                style="width: 25%; padding: 5px"
-                @click="initializeTopicData()"
+              v-model="selectedTopic"
+              :items="topicData"
+              label="Topic"
+              style="width: 25%; padding: 5px"
+              @click="initializeTopicData()"
             ></v-select>
             <v-btn color="primary" @click="modifyTopic()">Modify Topic</v-btn>
             <v-btn color="primary" @click="removeTopic()">Remove Topic</v-btn>
           </v-card-text>
         </v-card>
-
       </v-col>
       <v-col cols="4">
         <v-card style="margin-bottom: 5px">
@@ -121,12 +122,11 @@ export default class Tutor extends Vue {
     this.tutorUsername = JWT.getUserName()
   }
 
-  async checkTutor(){
+  async checkTutor() {
     await this.$axios.get('Token/testtutor').then((result) => {
-          if(result.data === "Authorized as Tutor")
-          this.isTutor = true
-          this.isLoggedIn = true
-        })
+      if (result.data === 'Authorized as Tutor') this.isTutor = true
+      this.isLoggedIn = true
+    })
   }
 
   initializeClassData() {
@@ -218,8 +218,11 @@ export default class Tutor extends Vue {
       alert('Select a topic')
       return
     }
-    this.areYouSure = confirm('Are you sure you want to remove this topic?' + '\n' +
-          'Doing so will also remove all questions associated with this topic.')
+    this.areYouSure = confirm(
+      'Are you sure you want to remove this topic?' +
+        '\n' +
+        'Doing so will also remove all questions associated with this topic.'
+    )
     if (!this.areYouSure) {
       return
     }
