@@ -199,6 +199,43 @@ public class TokenController : Controller
         return "Authorized as Student";
     }
 
+    [HttpPost("getName")]
+    [Authorize]
+    public string GetName(string username)
+    {
+        if (username == null) { return ""; }
+        else 
+        {
+            Student? s = null;
+            try
+            {
+                s = _context.Students.Where(x => x.Email == username).FirstOrDefault();
+            } catch { }
+            if (s != null) 
+            {
+                return s.FirstName; 
+            }
+            int i = _context.ApiUsers.Where(x => x.ExternalId == username).First().UserId;
+            Models.Tutor? t = null;
+                try { _context.Tutors.Where(x => x.UserId == i).First(); }
+            catch { }
+            if (t != null)
+            {
+                return t.FirstName;
+            }
+            Admin? a = null;
+            try
+            {
+                a = _context.Admins.Where(x => x.UserId == i).First();
+            }catch { }
+            if (a != null)
+            {
+                return a.FirstName;
+            }
+        }
+        return "";
+    }
+
 }
 
 public class UserCredentials

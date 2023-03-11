@@ -2,44 +2,29 @@
   <v-row justify="center" align="center">
     <v-col cols="12" sm="8" md="6">
       <v-card class="logo py-4 d-flex justify-center">
-        <NuxtLogo />
-        <VuetifyLogo />
+        <v-img src="\EWUlogoAlt.png" max-height="30%" v-bind:contain="true"> </v-img>
       </v-card>
       <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
+        <v-card-title class="headline" v-if="!isLoggedIn">
+          Welcome to EWU Tutoring.
+        </v-card-title>
+        <v-card-title class="headline" v-if="isLoggedIn">
+          Welcome to back to EWU Tutoring{{ userName }}.
         </v-card-title>
         <v-card-text>
-          <p>
-            Vuetify is a progressive Material Design component framework for
-            Vue.js. It was designed to empower developers to create amazing
-            applications.
+          <p v-if="isLoggedIn">
+            What would you like to do today?
+          </p>
+          <p v-if="!isLoggedIn">
+            Please log in to continue
           </p>
           <p>
-            For more information on Vuetify, check out the
-            <a
-              href="https://vuetifyjs.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              documentation </a
-            >.
+            If you have questions, please email sshaw16@ewu.edu.
           </p>
           <p>
-            If you have questions, please join the official
+            Find a bug? Report it on our github
             <a
-              href="https://chat.vuetifyjs.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="chat"
-            >
-              discord </a
-            >.
-          </p>
-          <p>
-            Find a bug? Report it on the github
-            <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
+              href="https://github.com/sammyboy2000/ewu-seniorproject-fall2022/issues"
               target="_blank"
               rel="noopener noreferrer"
               title="contribute"
@@ -47,42 +32,21 @@
               issue board </a
             >.
           </p>
-          <p>
-            Thank you for developing with Vuetify and I look forward to bringing
-            more exciting features in the future.
+          <p v-if="isLoggedIn && !isTutor && !isAdmin">
+            Want to become a tutor? Ask an existing tutor to add you to the list!
           </p>
           <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
+            <em><small>&mdash; A Fall 2022 Senior Project</small></em>
           </div>
           <hr class="my-3" />
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt Documentation
-          </a>
-          <br />
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt GitHub
-          </a>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn color="primary" v-if="!isLoggedIn"> <login-dialog /> </v-btn>
           <v-btn color="primary" v-if="!isLoggedIn"> <signup-dialog /> </v-btn>
-          <v-btn color="primary" nuxt to="/inspire" v-if="isAdmin"> {{ buttonText }} </v-btn>
-          <v-btn
-            color="secondary"
-            :loading="isLoading"
-            @click="changeButtonText"
-          v-if="isAdmin">
-            Change Text
-          </v-btn>
+          <v-btn color="primary" nuxt to="/student" v-if="isStudent"> Ask A Question</v-btn>
+          <v-btn color="primary" nuxt to="/tutor" v-if="isTutor"> Answer A Question</v-btn>
+          <v-btn color="primary" nuxt to="/admin" v-if="isAdmin"> Admin Tools </v-btn>
           <v-btn color="primary" nuxt to="/test_pages" v-if="isAdmin"> Test Pages </v-btn>
         </v-card-actions>
       </v-card>
@@ -93,29 +57,30 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { JWT } from '~/scripts/jwt'
 
 @Component
 export default class IndexPage extends Vue {
   name: string = 'IndexPage'
-  buttonText: string = 'Inspire me!'
+  userName: string = ""
   isLoggedIn: boolean = false
   isLoading: boolean = false
   isAdmin: boolean = false
   isTutor: boolean = false
   isStudent: boolean = false
+  
 
   mounted() {
       this.checkAdmin()
       this.checkTutor()
       this.checkStudent()
-  }
-  changeButtonText() {
-    this.buttonText =
-      this.buttonText === 'Inspire me!' ? 'Inspire me again!' : 'Inspire me!'
-    this.isLoading = true
-    setTimeout(() => {
-      this.isLoading = false
-    }, 1000)
+      setTimeout(() => {
+      if(this.isLoggedIn){
+        this.checkName()
+      }
+    }, 200
+      )
+      
   }
 
   checkAdmin(){
@@ -123,6 +88,7 @@ export default class IndexPage extends Vue {
           if(result.data === "Authorized as Admin")
           this.isAdmin = true
           this.isLoggedIn = true
+        }).catch(function (error){
         })
   }
 
@@ -131,6 +97,7 @@ export default class IndexPage extends Vue {
           if(result.data === "Authorized as Tutor")
           this.isTutor = true
           this.isLoggedIn = true
+        }).catch(function (error){
         })
   }
 
@@ -139,6 +106,20 @@ export default class IndexPage extends Vue {
           if(result.data === "Authorized as Student")
           this.isStudent = true
           this.isLoggedIn = true
+        }).catch(function (error){
+        })
+  }
+  checkName(){
+    this.$axios.post('/Token/getName', 
+    {},
+    {
+      params:{
+        username: JWT.getUserName()
+      },
+    }
+    ).then((result) => {
+          this.userName = ", " + result.data
+        }).catch(function (error){
         })
   }
 }
