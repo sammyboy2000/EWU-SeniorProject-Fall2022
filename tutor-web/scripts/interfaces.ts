@@ -4,7 +4,7 @@ export interface Question {
   classId: number
   topicId: number
   question1: string
-  createdDate: string
+  createdTime: string
 }
 
 export interface AnsweredQuestion {

@@ -37,6 +37,8 @@
           <v-card v-for="answer in answeredQuestions" :key="answer.questionId">
             <v-card-title>{{ answer.question }}</v-card-title>
             <v-card-text>{{ answer.response }}</v-card-text>
+            <v-card-test>Created at: {{ answer.createdTime }}</v-card-test>
+            <v-card-test>Answered at: {{ answer.answeredTime }}</v-card-test>
           </v-card>
         </v-card>
 
@@ -77,6 +79,10 @@
           <v-card-title>Question {{ index + 1 }}</v-card-title>
           <v-card-text>
             {{ question.question1 }}
+            <br />
+            Created on: 
+            <br />
+            {{ question.createdTime }}
           </v-card-text>
         </v-card>
         <br />
@@ -144,7 +150,6 @@ export default class Tutor extends Vue {
         },
       })
       .then((response) => {
-        console.log(response.data)
         this.questionData = response.data.slice(0, 4)
       })
   }
@@ -174,6 +179,7 @@ export default class Tutor extends Vue {
       alert('Answer field cannot be empty')
       return
     }
+    console.log(this.tutorUsername)
     this.$axios
       .post(
         '/Questions/AnswerQuestion',
@@ -181,7 +187,7 @@ export default class Tutor extends Vue {
         {
           params: {
             questionId: this.selectedQuestion?.questionId,
-            tutorUsername: this.tutorUsername,
+            tutorUsername: "tutor@ewu.edu", // Error here. Does not seem to be getting the tutor username
             answer: this.answer,
           },
         }
