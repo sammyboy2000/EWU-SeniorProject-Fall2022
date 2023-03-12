@@ -4,6 +4,7 @@ export interface Question {
   classId: number
   topicId: number
   question1: string
+  createdDate: string
 }
 
 export interface AnsweredQuestion {
@@ -14,4 +15,6 @@ export interface AnsweredQuestion {
   topicId: number
   question: string
   response: string
+  createdTime: string
+  answeredTime: string
 }
