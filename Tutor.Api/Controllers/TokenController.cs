@@ -211,7 +211,7 @@ public class TokenController : Controller
             {
                 s = _context.Students.Where(x => x.Email == username).FirstOrDefault();
             }
-            catch { }
+            catch { InvalidOperationException e; }
             if (s != null)
             {
                 return s.FirstName;
@@ -219,7 +219,7 @@ public class TokenController : Controller
             int i = _context.ApiUsers.Where(x => x.ExternalId == username).First().UserId;
             Models.Tutor? t = null;
             try { t = _context.Tutors.Where(x => x.UserId == i).First(); }
-            catch { }
+            catch { InvalidOperationException e; }
             if (t != null)
             {
                 return t.FirstName;
@@ -229,7 +229,7 @@ public class TokenController : Controller
             {
                 a = _context.Admins.Where(x => x.UserId == i).First();
             }
-            catch { }
+            catch { InvalidOperationException e; }
             if (a != null)
             {
                 return a.FirstName;
