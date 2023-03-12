@@ -218,7 +218,7 @@ public class TokenController : Controller
             }
             int i = _context.ApiUsers.Where(x => x.ExternalId == username).First().UserId;
             Models.Tutor? t = null;
-            try { _context.Tutors.Where(x => x.UserId == i).First(); }
+            try { t = _context.Tutors.Where(x => x.UserId == i).First(); }
             catch { }
             if (t != null)
             {
