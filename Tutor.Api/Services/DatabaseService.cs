@@ -22,6 +22,11 @@ namespace Tutor.api.Services
                 .Where(x => x.Contains(searchString));
         }
 
+        public IEnumerable<Class> GetClassesAdmin()
+        {
+            return _context.Classes;
+        }
+
         //Added to get topics to populate dropdown --Jesse 2/28/2023
         public IEnumerable<String> GetClassTopics(int? classId)
         {
@@ -41,6 +46,20 @@ namespace Tutor.api.Services
                 return _context.Topics.Select(x => x.Topic1);
             }
             return _context.Topics.Select(x => x.Topic1).Where(x => x.Contains(searchString!));
+        }
+
+        public String GetTopicName(int? searchString)
+        {
+            if (searchString == null)
+            {
+                return "";
+            }
+            return _context.Topics.Where(x => x.Id == searchString).First().Topic1;
+        }
+
+        public IEnumerable<Topic> GetTopicNames()
+        {
+            return _context.Topics;
         }
 
         public void AddClass(string classCode)

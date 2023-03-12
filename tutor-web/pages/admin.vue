@@ -28,20 +28,43 @@
             v-for="question in answeredQuestions"
             :key="question.questionId"
           >
-            <v-card-text>{{ question.question1 }}</v-card-text>
+            <v-card-text>
+              {{ question.question }}
+              <br />
+              {{ question.response }}
+            </v-card-text>
           </v-card>
         </v-card>
         <v-card v-show="userOption == 2">
-          <v-card-title>Statistics (WIP)</v-card-title>
+          <v-card-title>Statistics</v-card-title>
+          <v-card v-for="stat in topicStatistics" :key="stat.topicId">
+            <v-card-text>
+              Class: {{ stat.classCode }} <br />
+              Topic: {{ stat.topic }} <br />
+              Occurrences: {{ stat.occurences }}
+            </v-card-text>
+          </v-card>
         </v-card>
         <v-card v-show="userOption == 3">
           <v-card-title>Add/Modify Classes</v-card-title>
+          <v-card v-for="c in classList" :key="c.id">
+            <v-card-text>
+              {{ c.classCode }}
+            </v-card-text>
+          </v-card>
         </v-card>
         <v-card v-show="userOption == 4">
           <v-card-title>Add/Modify Topics</v-card-title>
+          <v-card v-for="topic in topics" :key="topic.id">
+            <v-card-text>
+              {{ classNameFromId(topic.classId) }}
+              <br />
+              {{ topic.topic1 }}
+            </v-card-text>
+          </v-card>
         </v-card>
         <v-card v-show="userOption == 5">
-          <v-card-title>Add/Modify Associated Classes? (WIP)</v-card-title>
+          <v-card-title>Check Reqs (WIP)</v-card-title>
         </v-card>
       </v-col>
     </v-row>
@@ -50,25 +73,30 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-
-interface Question {
-  questionId: string
-  studentId: number
-  classId: number
-  topicId: number
-  question1: string
-}
+import {
+  Question,
+  AnsweredQuestion,
+  Topic,
+  AppClass,
+  TopicAggregate,
+} from '~/scripts/interfaces'
 
 @Component({})
 export default class Student extends Vue {
   userOption: number = 1
   selectedQuestion: Question | null = null
   unansweredQuestions: Question[] = []
-  answeredQuestions: Question[] = []
+  answeredQuestions: AnsweredQuestion[] = []
+  topicStatistics: TopicAggregate[] = []
+  classList: AppClass[] = []
+  topics: Topic[] = []
   selectedQuestionIndex: number = -1
 
-  mounted() {
+  async mounted() {
     this.getQuestions()
+    this.getStatistics()
+    await this.getClasses()
+    this.getTopics()
   }
 
   getQuestions() {
@@ -80,6 +108,58 @@ export default class Student extends Vue {
       .catch((error) => {
         console.log(error)
       })
+    this.$axios
+      .get('Questions/GetAnsweredQuestions')
+      .then((response) => {
+        this.answeredQuestions = response.data
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+  getStatistics() {
+    this.$axios
+      .get('Database/GetQuestionData')
+      .then((response) => {
+        this.topicStatistics = response.data
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+  async getClasses() {
+    this.$axios
+      .get('Database/getClassesAdmin')
+      .then((response) => {
+        this.classList = response.data
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+  getTopics() {
+    this.$axios
+      .get('Database/GetTopicNameAdmin')
+      .then((response) => {
+        this.topics = response.data
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+  classNameFromId(i: number): string {
+    let s = 'error'
+    this.classList.forEach((c) => {
+      if (c.id == i) {
+        s = c.classCode
+        return s
+      }
+    })
+    return s
   }
 
   selectQuestion(index: number) {

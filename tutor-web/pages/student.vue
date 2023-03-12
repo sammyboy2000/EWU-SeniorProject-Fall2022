@@ -99,9 +99,9 @@
         >
           <v-card-title>Question {{ index + 1 }}</v-card-title>
           <v-card-text>
-            {{ question.question1}}
+            {{ question.question1 }}
             <br />
-            Created on: 
+            Created on:
             <br />
             {{ question.createdTime }}
           </v-card-text>

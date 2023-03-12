@@ -16,12 +16,17 @@ namespace Tutor.Api.Models
 
         internal static void Seed(tutor_dbContext context)
         {
-            Topic t = new();
-            t.ClassId = 1; 
-            t.Topic1 = "Lists";
+            var topics = context.Topics.ToDictionary(x => x.Topic1);
+            if (!topics.ContainsKey("Lists"))
+            {
+                Topic t = new();
+                t.ClassId = 1;
+                t.Topic1 = "Lists";
 
-            context.Topics.Add(t);
-            context.SaveChanges();
+
+                context.Topics.Add(t);
+                context.SaveChanges();
+            }
         }
     }
 }

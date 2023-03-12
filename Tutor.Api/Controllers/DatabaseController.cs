@@ -23,15 +23,22 @@ namespace Tutor.Api.Controllers
 
         [HttpGet("getClasses")]
         [Authorize]
-        public IEnumerable<String> getClasses(String? searchString)
+        public IEnumerable<String> GetClasses(String? searchString)
         {
             return _service.GetClasses(searchString);
+        }
+
+        [HttpGet("getClassesAdmin")]
+        [Authorize]
+        public IEnumerable<Class> GetClassesAdmin()
+        {
+            return _service.GetClassesAdmin();
         }
 
         //Added to get topics to populate dropdown --Jesse 2/17/2023
         [HttpGet("getTopics")]
         [Authorize]
-        public IEnumerable<String> getTopics(String? classCode)
+        public IEnumerable<String> GetTopics(String? classCode)
         {
             if (classCode == null)
             {
@@ -43,6 +50,20 @@ namespace Tutor.Api.Controllers
                 int classId = (int)checkId!;
                 return _service.GetClassTopics(classId);
             }
+        }
+
+        [HttpGet("getTopicName")]
+        [Authorize]
+        public String GetTopicName(int? i)
+        {
+            return _service.GetTopicName(i);
+        }
+
+        [HttpGet("getTopicNameAdmin")]
+        [Authorize(Roles = Roles.Admin)]
+        public IEnumerable<Topic> GetTopicNamesAdmin()
+        {
+            return _service.GetTopicNames();
         }
 
         //Added to get questions to populate dropdown --Jesse 2/17/2023

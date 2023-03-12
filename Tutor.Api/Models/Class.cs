@@ -19,7 +19,7 @@ namespace Tutor.Api.Models
                 // Read the file and update the database
                 var classLines = System.IO.File.ReadAllLines($"Content//{filename}");
 
-                // Load all current words
+                // Load all current classes
                 var classes = context.Classes.ToDictionary(f => f.ClassCode);
 
                 foreach (var classLine in classLines)

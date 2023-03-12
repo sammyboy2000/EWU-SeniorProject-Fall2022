@@ -18,3 +18,23 @@ export interface AnsweredQuestion {
   createdTime: string
   answeredTime: string
 }
+
+export interface Topic {
+  id: number
+  classId: number
+  topic1: string
+}
+
+export interface AppClass {
+  id: number
+  classCode: string
+  className: string
+  classDesc: string
+}
+export interface TopicAggregate {
+  classCode: string
+  classId: number
+  topic: string
+  topicId: number
+  occurences: number
+}
