@@ -27,6 +27,7 @@ namespace Tutor.Api.Models
                 q.StudentId = 0;
                 q.TopicId = 1;
                 q.Question1 = "This is a test question";
+                q.CreatedTime = DateTime.Now;
 
                 context.Questions.Add(q);
                 context.SaveChanges();
