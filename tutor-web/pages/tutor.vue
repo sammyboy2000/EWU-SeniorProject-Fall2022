@@ -34,9 +34,10 @@
         </v-card>
         <v-card v-show="userOption == 2">
           <v-card-title>View Answered Questions</v-card-title>
-          <v-card v-for="answer in answeredQuestions" :key="answer.questionId">
+          <v-card v-for="(answer, index) in answeredQuestions" :key="answer.questionId">
             <v-card-title>{{ answer.question }}</v-card-title>
-            <v-card-text>{{ answer.response }}</v-card-text>
+            <v-card-text>Topic: {{ topicList[index] }}</v-card-text>
+            <v-card-text>Response: {{ answer.response }}</v-card-text>
             <v-card-text>
               Created at: {{ answer.createdTime.split('T')[0] + " @ " + answer.createdTime.split('T')[1].split('.')[0] }} 
               <br /> 
@@ -81,8 +82,10 @@
         >
           <v-card-title>Question {{ index + 1 }}</v-card-title>
           <v-card-text>
+            Topic: {{ topicList[index] }}
+            <br /><br />
             {{ question.question1 }}
-            <br />
+            <br /><br />
             Created on: 
             <br />
             {{ question.createdTime.split('T')[0] + " @ " + question.createdTime.split('T')[1].split('.')[0] }}
@@ -98,7 +101,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { JWT } from '~/scripts/jwt'
 import { Question, AnsweredQuestion } from '~/scripts/interfaces'
-import { AuthenticationCheck } from '~/scripts/methods'
+import { AuthenticationCheck, getAskedQuestionTopicName, getAnsweredQuestionTopicName } from '~/scripts/methods'
 
 @Component({})
 export default class Tutor extends Vue {
@@ -114,6 +117,7 @@ export default class Tutor extends Vue {
   classData: [] = []
   selectedClass: string = ''
   topicData: [] = []
+  topicList: string[] = []
   selectedTopic: string = ''
   isLoading: boolean = true
   areYouSure: boolean = false
@@ -147,8 +151,9 @@ export default class Tutor extends Vue {
           classCode: options,
         },
       })
-      .then((response) => {
+      .then(async (response) => {
         this.questionData = response.data.slice(0, 4)
+        this.topicList = await getAskedQuestionTopicName(this.questionData, this.$axios)
       })
   }
 
@@ -203,9 +208,10 @@ export default class Tutor extends Vue {
           tutorUsername: this.tutorUsername,
         },
       })
-      .then((response) => {
+      .then(async (response) => {
         console.log(response.data)
         this.answeredQuestions = response.data
+        this.topicList = await getAnsweredQuestionTopicName(this.answeredQuestions, this.$axios)
       })
   }
 
