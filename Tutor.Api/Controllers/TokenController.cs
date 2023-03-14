@@ -199,6 +199,26 @@ public class TokenController : Controller
         return "Authorized as Student";
     }
 
+    // Maybe use this instead of individual methods for each role
+    [HttpGet("AuthCheck")]
+    [Authorize]
+    public string AuthCheck()
+    {
+        if (User.IsInRole(Roles.Admin))
+        {
+            return "Authorized as Admin";
+        }
+        else if (User.IsInRole(Roles.Tutor))
+        {
+            return "Authorized as Tutor";
+        }
+        else if (User.IsInRole(Roles.Student))
+        {
+            return "Authorized as Student";
+        }
+        return "Unauthorized";
+    }
+
     [HttpPost("getName")]
     [Authorize]
     public string GetName(string username)

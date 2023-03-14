@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container v-if="permLevel == 1" fluid>
     <v-row>
       <v-btn @click="userOption = 1">Answer Questions</v-btn>
       <v-btn @click=";(userOption = 2), getAnsweredQuestionData()"
@@ -95,6 +95,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { JWT } from '~/scripts/jwt'
 import { Question, AnsweredQuestion } from '~/scripts/interfaces'
+import { AuthenticationCheck } from '~/scripts/methods'
 
 @Component({})
 export default class Tutor extends Vue {
@@ -114,11 +115,11 @@ export default class Tutor extends Vue {
   isLoading: boolean = true
   areYouSure: boolean = false
 
-  isTutor: boolean = false
-  isLoggedIn: boolean = false
+  permLevel: number = -1
 
   async mounted() {
-    await this.checkTutor()
+    this.permLevel = await AuthenticationCheck(this.$axios) // Check authentication
+    if (this.permLevel !== 1) location.assign('/') // Redirect to home page if not a tutor
     this.initializeQuestionData()
     this.initializeClassData()
     this.isLoading = false
@@ -126,13 +127,6 @@ export default class Tutor extends Vue {
 
   setTutorUsername() {
     this.tutorUsername = JWT.getUserName()
-  }
-
-  async checkTutor() {
-    await this.$axios.get('Token/testtutor').then((result) => {
-      if (result.data === 'Authorized as Tutor') this.isTutor = true
-      this.isLoggedIn = true
-    })
   }
 
   initializeClassData() {

@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="isLoading == false" fluid>
+  <v-container v-if="isLoading == false && permLevel == 0" fluid>
     <v-row>
       <v-btn @click="userOption = 1">Ask a Question</v-btn>
       <v-btn @click=";(userOption = 2), getAnsweredQuestionData()"
@@ -141,6 +141,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { JWT } from '~/scripts/jwt'
 import { Question, AnsweredQuestion } from '~/scripts/interfaces'
+import { AuthenticationCheck } from '~/scripts/methods'
 
 @Component({})
 export default class Student extends Vue {
@@ -160,29 +161,18 @@ export default class Student extends Vue {
   selectedQuestionIndex: number = -1 // selected question index
   editOption: boolean = false // edit option
 
-  isStudent: boolean = false // is student
-  isLoggedIn: boolean = false // is logged in
+  permLevel: number = -1 // permission level
   isLoading: boolean = true // is loading
 
   // Mounted functions
   async mounted() {
-    await this.checkStudent()
+    this.permLevel = await AuthenticationCheck(this.$axios) // check authentication
+    if (this.permLevel !== 0) location.assign('/') // redirect to home page if not student
     this.setStudentUsername()
     this.initializeClassData()
     this.initializeQuestionData()
     this.getAnsweredQuestionData()
     this.isLoading = false
-  }
-
-  // Test Methods
-  async checkStudent() {
-    await this.$axios
-      .get('Token/teststudent')
-      .then((result) => {
-        if (result.data === 'Authorized as Student') this.isStudent = true
-        this.isLoggedIn = true
-      })
-      .catch(function (error) {})
   }
 
   // Methods

@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container v-if="permLevel == 2" fluid>
     <v-row>
       <v-btn @click="userOption = 1">View Questions</v-btn>
       <v-btn @click="userOption = 2">View Statistics</v-btn>
@@ -80,6 +80,7 @@ import {
   AppClass,
   TopicAggregate,
 } from '~/scripts/interfaces'
+import { AuthenticationCheck } from '~/scripts/methods'
 
 @Component({})
 export default class Student extends Vue {
@@ -91,8 +92,11 @@ export default class Student extends Vue {
   classList: AppClass[] = []
   topics: Topic[] = []
   selectedQuestionIndex: number = -1
+  permLevel: number = -1
 
   async mounted() {
+    this.permLevel = await AuthenticationCheck(this.$axios)
+    if (this.permLevel !== 2) location.assign('/') // Redirect to home page if not a tutor
     this.getQuestions()
     this.getStatistics()
     await this.getClasses()

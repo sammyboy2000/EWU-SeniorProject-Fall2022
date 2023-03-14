@@ -1,5 +1,5 @@
 <template>
-  <v-row justify="center" align="center">
+  <v-row justify="center" align="center" style="background-color: darkred;">
     <v-col cols="12" sm="8" md="6">
       <v-card class="logo py-4 d-flex justify-center">
         <v-img src="\EWUlogoAlt.png" max-height="30%" :contain="true"> </v-img>
@@ -61,6 +61,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { JWT } from '~/scripts/jwt'
+import { AuthenticationCheck } from '~/scripts/methods'
 
 @Component
 export default class IndexPage extends Vue {
@@ -68,14 +69,14 @@ export default class IndexPage extends Vue {
   userName: string = ''
   isLoggedIn: boolean = false
   isLoading: boolean = false
-  isAdmin: boolean = false
-  isTutor: boolean = false
+  permLevel: number = -1
   isStudent: boolean = false
+  isTutor: boolean = false
+  isAdmin: boolean = false
 
-  mounted() {
-    this.checkAdmin()
-    this.checkTutor()
-    this.checkStudent()
+  async mounted() {
+    this.permLevel = await AuthenticationCheck(this.$axios)
+    this.permAssignment()
     setTimeout(() => {
       if (this.isLoggedIn) {
         this.checkName()
@@ -83,34 +84,22 @@ export default class IndexPage extends Vue {
     }, 200)
   }
 
-  checkAdmin() {
-    this.$axios
-      .get('Token/testadmin')
-      .then((result) => {
-        if (result.data === 'Authorized as Admin') this.isAdmin = true
-        this.isLoggedIn = true
-      })
-      .catch(function (error) {})
-  }
-
-  checkTutor() {
-    this.$axios
-      .get('Token/testtutor')
-      .then((result) => {
-        if (result.data === 'Authorized as Tutor') this.isTutor = true
-        this.isLoggedIn = true
-      })
-      .catch(function (error) {})
-  }
-
-  checkStudent() {
-    this.$axios
-      .get('Token/teststudent')
-      .then((result) => {
-        if (result.data === 'Authorized as Student') this.isStudent = true
-        this.isLoggedIn = true
-      })
-      .catch(function (error) {})
+  permAssignment() {
+    if (this.permLevel === 0) {
+      this.isLoggedIn = true
+      this.isStudent = true
+    } else if (this.permLevel === 1) {
+      this.isLoggedIn = true
+      this.isTutor = true
+    } else if (this.permLevel === 2) {
+      this.isLoggedIn = true
+      this.isAdmin = true
+    } else {
+      this.isLoggedIn = false
+      this.isStudent = false
+      this.isTutor = false
+      this.isAdmin = false
+    }
   }
 
   checkName() {

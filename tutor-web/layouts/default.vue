@@ -26,9 +26,15 @@
           <v-btn text block nuxt to="/"> Home <v-icon>mdi-home</v-icon></v-btn>
         </v-list-item>
 
-        <v-list-item>
-          <v-btn text block nuxt to="/student">
+        <v-list-item v-show="permLevel != -1">
+          <v-btn v-if="permLevel == 0" text block nuxt to="/student">
             Ask A Question <v-icon>mdi-controller-classic</v-icon></v-btn
+          >
+          <v-btn v-if="permLevel == 1" text block nuxt to="/tutor">
+            Answer Questions <v-icon>mdi-controller-classic</v-icon></v-btn
+          >
+          <v-btn v-if="permLevel == 2" text block nuxt to="/admin">
+            View Statistics <v-icon>mdi-controller-classic</v-icon></v-btn
           >
         </v-list-item>
 
@@ -65,6 +71,7 @@
 
 <script>
 import { JWT } from '~/scripts/jwt'
+import { AuthenticationCheck } from '~/scripts/methods'
 
 export default {
   name: 'DefaultLayout',
@@ -76,12 +83,14 @@ export default {
       title: 'EWU Tutoring',
       isLoggedIn: false,
       jwt: JWT._getData,
+      permLevel: -1,
     }
   },
-  mounted() {
+  async mounted() {
     if (JWT.loadToken(this.$axios) != null) {
       this.isLoggedIn = true
     }
+    this.permLevel = await AuthenticationCheck(this.$axios)
   },
   methods: {
     deleteToken() {
