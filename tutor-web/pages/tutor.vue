@@ -34,14 +34,27 @@
         </v-card>
         <v-card v-show="userOption == 2">
           <v-card-title>View Answered Questions</v-card-title>
-          <v-card v-for="(answer, index) in answeredQuestions" :key="answer.questionId">
+          <v-card
+            v-for="(answer, index) in answeredQuestions"
+            :key="answer.questionId"
+          >
             <v-card-title>{{ answer.question }}</v-card-title>
             <v-card-text>Topic: {{ topicList[index] }}</v-card-text>
             <v-card-text>Response: {{ answer.response }}</v-card-text>
             <v-card-text>
-              Created at: {{ answer.createdTime.split('T')[0] + " @ " + answer.createdTime.split('T')[1].split('.')[0] }} 
-              <br /> 
-              Answered at: {{ answer.answeredTime.split('T')[0] + " @ " + answer.answeredTime.split('T')[1].split('.')[0] }}
+              Created at:
+              {{
+                answer.createdTime.split('T')[0] +
+                ' @ ' +
+                answer.createdTime.split('T')[1].split('.')[0]
+              }}
+              <br />
+              Answered at:
+              {{
+                answer.answeredTime.split('T')[0] +
+                ' @ ' +
+                answer.answeredTime.split('T')[1].split('.')[0]
+              }}
             </v-card-text>
           </v-card>
         </v-card>
@@ -82,13 +95,16 @@
         >
           <v-card-title>Question {{ index + 1 }}</v-card-title>
           <v-card-text>
-            Topic: {{ topicList[index] }}
-            <br /><br />
+            Topic: {{ topicList[index] }} <br /><br />
             {{ question.question1 }}
             <br /><br />
-            Created on: 
+            Created on:
             <br />
-            {{ question.createdTime.split('T')[0] + " @ " + question.createdTime.split('T')[1].split('.')[0] }}
+            {{
+              question.createdTime.split('T')[0] +
+              ' @ ' +
+              question.createdTime.split('T')[1].split('.')[0]
+            }}
           </v-card-text>
         </v-card>
         <br />
@@ -101,7 +117,11 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { JWT } from '~/scripts/jwt'
 import { Question, AnsweredQuestion } from '~/scripts/interfaces'
-import { AuthenticationCheck, getAskedQuestionTopicName, getAnsweredQuestionTopicName } from '~/scripts/methods'
+import {
+  AuthenticationCheck,
+  getAskedQuestionTopicName,
+  getAnsweredQuestionTopicName,
+} from '~/scripts/methods'
 
 @Component({})
 export default class Tutor extends Vue {
@@ -153,7 +173,10 @@ export default class Tutor extends Vue {
       })
       .then(async (response) => {
         this.questionData = response.data.slice(0, 4)
-        this.topicList = await getAskedQuestionTopicName(this.questionData, this.$axios)
+        this.topicList = await getAskedQuestionTopicName(
+          this.questionData,
+          this.$axios
+        )
       })
   }
 
@@ -211,7 +234,10 @@ export default class Tutor extends Vue {
       .then(async (response) => {
         console.log(response.data)
         this.answeredQuestions = response.data
-        this.topicList = await getAnsweredQuestionTopicName(this.answeredQuestions, this.$axios)
+        this.topicList = await getAnsweredQuestionTopicName(
+          this.answeredQuestions,
+          this.$axios
+        )
       })
   }
 

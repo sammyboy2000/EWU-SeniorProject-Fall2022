@@ -80,14 +80,27 @@
         </v-card>
         <v-card v-show="userOption == 2" v-if="isLoading == false">
           <v-card-title>View Answered Questions</v-card-title>
-          <v-card v-for="(answer, index) in answeredQuestions" :key="answer.questionId">
+          <v-card
+            v-for="(answer, index) in answeredQuestions"
+            :key="answer.questionId"
+          >
             <v-card-title>{{ answer.question }}</v-card-title>
             <v-card-text>Topic: {{ topicList[index] }}</v-card-text>
             <v-card-text>Reply: {{ answer.response }}</v-card-text>
             <v-card-text>
-              Created at: {{ answer.createdTime.split('T')[0] + " @ " + answer.createdTime.split('T')[1].split('.')[0] }} 
-              <br /> 
-              Answered at: {{ answer.answeredTime.split('T')[0] + " @ " + answer.answeredTime.split('T')[1].split('.')[0] }}
+              Created at:
+              {{
+                answer.createdTime.split('T')[0] +
+                ' @ ' +
+                answer.createdTime.split('T')[1].split('.')[0]
+              }}
+              <br />
+              Answered at:
+              {{
+                answer.answeredTime.split('T')[0] +
+                ' @ ' +
+                answer.answeredTime.split('T')[1].split('.')[0]
+              }}
             </v-card-text>
           </v-card>
         </v-card>
@@ -104,13 +117,15 @@
         >
           <v-card-title>Question {{ index + 1 }}</v-card-title>
           <v-card-text>
-            Topic: {{ topicList[index] }}
-            <br /><br />
-            Question:<br />{{ question.question1 }}
-            <br /><br />
+            Topic: {{ topicList[index] }} <br /><br />
+            Question:<br />{{ question.question1 }} <br /><br />
             Created on:
             <br />
-            {{ question.createdTime.split('T')[0] + " @ " + question.createdTime.split('T')[1].split('.')[0] }}
+            {{
+              question.createdTime.split('T')[0] +
+              ' @ ' +
+              question.createdTime.split('T')[1].split('.')[0]
+            }}
           </v-card-text>
           <div v-if="selectedQuestionIndex === index">
             <v-textarea
@@ -148,7 +163,11 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { JWT } from '~/scripts/jwt'
 import { Question, AnsweredQuestion } from '~/scripts/interfaces'
-import { AuthenticationCheck, getAskedQuestionTopicName, getAnsweredQuestionTopicName } from '~/scripts/methods'
+import {
+  AuthenticationCheck,
+  getAskedQuestionTopicName,
+  getAnsweredQuestionTopicName,
+} from '~/scripts/methods'
 
 @Component({})
 export default class Student extends Vue {
@@ -217,7 +236,10 @@ export default class Student extends Vue {
       .then(async (response) => {
         console.log(response.data)
         this.studentQuestions = response.data
-        this.topicList = await getAskedQuestionTopicName(this.studentQuestions, this.$axios)
+        this.topicList = await getAskedQuestionTopicName(
+          this.studentQuestions,
+          this.$axios
+        )
       })
   }
 
@@ -232,7 +254,10 @@ export default class Student extends Vue {
       .then(async (response) => {
         console.log(response.data)
         this.answeredQuestions = response.data
-        this.topicList = await getAnsweredQuestionTopicName(this.answeredQuestions, this.$axios)
+        this.topicList = await getAnsweredQuestionTopicName(
+          this.answeredQuestions,
+          this.$axios
+        )
       })
   }
 

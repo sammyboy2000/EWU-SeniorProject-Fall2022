@@ -94,7 +94,7 @@ export default {
   },
   methods: {
     deleteToken() {
-      JWT.deleteToken(this.$axios)
+      JWT.deleteToken()
       location.assign('/')
     },
   },
