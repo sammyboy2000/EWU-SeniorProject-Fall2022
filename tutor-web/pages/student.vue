@@ -84,6 +84,11 @@
             <v-card-title>{{ answer.question }}</v-card-title>
             <v-card-text>{{ answer.topicId }}</v-card-text>
             <v-card-text>{{ answer.response }}</v-card-text>
+            <v-card-text>
+              Created at: {{ answer.createdTime.split('T')[0] + " @ " + answer.createdTime.split('T')[1].split('.')[0] }} 
+              <br /> 
+              Answered at: {{ answer.answeredTime.split('T')[0] + " @ " + answer.answeredTime.split('T')[1].split('.')[0] }}
+            </v-card-text>
           </v-card>
         </v-card>
       </v-col>
@@ -103,7 +108,7 @@
             <br />
             Created on:
             <br />
-            {{ question.createdTime }}
+            {{ question.createdTime.split('T')[0] + " @ " + question.createdTime.split('T')[1].split('.')[0] }}
           </v-card-text>
           <div v-if="selectedQuestionIndex === index">
             <v-textarea

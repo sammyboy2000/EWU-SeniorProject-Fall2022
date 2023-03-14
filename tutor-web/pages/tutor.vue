@@ -37,8 +37,11 @@
           <v-card v-for="answer in answeredQuestions" :key="answer.questionId">
             <v-card-title>{{ answer.question }}</v-card-title>
             <v-card-text>{{ answer.response }}</v-card-text>
-            <v-card-test>Created at: {{ answer.createdTime }}</v-card-test>
-            <v-card-test>Answered at: {{ answer.answeredTime }}</v-card-test>
+            <v-card-text>
+              Created at: {{ answer.createdTime.split('T')[0] + " @ " + answer.createdTime.split('T')[1].split('.')[0] }} 
+              <br /> 
+              Answered at: {{ answer.answeredTime.split('T')[0] + " @ " + answer.answeredTime.split('T')[1].split('.')[0] }}
+            </v-card-text>
           </v-card>
         </v-card>
 
@@ -82,7 +85,7 @@
             <br />
             Created on: 
             <br />
-            {{ question.createdTime }}
+            {{ question.createdTime.split('T')[0] + " @ " + question.createdTime.split('T')[1].split('.')[0] }}
           </v-card-text>
         </v-card>
         <br />
@@ -120,6 +123,7 @@ export default class Tutor extends Vue {
   async mounted() {
     this.permLevel = await AuthenticationCheck(this.$axios) // Check authentication
     if (this.permLevel !== 1) location.assign('/') // Redirect to home page if not a tutor
+    this.setTutorUsername()
     this.initializeQuestionData()
     this.initializeClassData()
     this.isLoading = false
@@ -181,7 +185,7 @@ export default class Tutor extends Vue {
         {
           params: {
             questionId: this.selectedQuestion?.questionId,
-            tutorUsername: "tutor@ewu.edu", // Error here. Does not seem to be getting the tutor username
+            tutorUsername: this.tutorUsername,
             answer: this.answer,
           },
         }
