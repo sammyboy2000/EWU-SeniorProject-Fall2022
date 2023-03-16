@@ -1,6 +1,6 @@
 <template>
   <v-container
-    v-if="isLoading == false && permLevel == 0"
+    v-if="isLoading == false && isLoggedIn == true"
     align="center"
     width-max="50%"
   >
@@ -47,13 +47,15 @@ export default class User extends Vue {
   password: string = ''
 
   permLevel: number = -1 // permission level
+  isLoggedIn: boolean = false // is logged in
   isLoading: boolean = true // is loading
   status: string = ''
 
   // Mounted functions
   async mounted() {
     this.permLevel = await AuthenticationCheck(this.$axios) // check authentication
-    if (this.permLevel !== 0) location.assign('/') // redirect to home page if not student
+    this.setLoggedIn() // set logged in
+    if (!this.isLoggedIn) location.assign('/') // redirect to home page if not student
     this.setEmail()
     this.isLoading = false
   }
@@ -62,6 +64,13 @@ export default class User extends Vue {
   setEmail() {
     this.email = JWT.getUserName()
     this.initialEmail = this.email
+  }
+
+  setLoggedIn() {
+    if (this.permLevel === 0 || this.permLevel === 1 || this.permLevel === 2) {
+      this.isLoggedIn = true
+    }
+    else { this.isLoggedIn = false }
   }
 
   updateUser() {
