@@ -196,7 +196,7 @@ public class TokenController : Controller
             }
             else
             {
-                str += "Failed to change password. ";
+                str += "Failed to change password. " + result.Errors.First().Description;
             }
         }
 

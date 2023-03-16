@@ -280,4 +280,7 @@ export default class Tutor extends Vue {
       })
   }
 }
+
+// todo: implement modify topic
+
 </script>

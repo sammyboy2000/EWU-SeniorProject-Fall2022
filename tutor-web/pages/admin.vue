@@ -46,10 +46,24 @@
           </v-card>
         </v-card>
         <v-card v-show="userOption == 3">
-          <v-card-title>Add/Modify Classes</v-card-title>
-          <v-card v-for="c in classList" :key="c.id">
+          <v-card-title>Add/Modify Classes <v-spacer /><v-btn @click="toggleDialog" color="primary">Add</v-btn></v-card-title>
+          <v-card v-for="c in classList" :key="c.id" @click="selectClass(c)">
             <v-card-text>
               {{ c.classCode }}
+              <v-card-text v-if="selectedClass == c">
+                <v-text-field
+                  v-model="c.classCode"
+                  label="Class Code"
+                  required
+                ></v-text-field>
+                <v-text-field
+                  v-model="c.className"
+                  label="Class Name"
+                  required
+                ></v-text-field>
+                <v-btn @click="updateClass(c)" color="primary">Update</v-btn>
+                <v-btn @click="deleteClass(c)" color="secondary">Delete</v-btn>
+              </v-card-text>
             </v-card-text>
           </v-card>
         </v-card>
@@ -68,6 +82,36 @@
         </v-card>
       </v-col>
     </v-row>
+    <div>
+    <v-dialog v-model="dialog" max-width="500px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Add Class</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="classCode"
+                  label="Class Code"
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="className"
+                  label="Class Name"
+                  required
+                ></v-text-field>
+              </v-col>
+                <v-spacer /><v-btn @click="addClass" color="primary">Add</v-btn>
+            </v-row>
+          </v-container>
+          </v-card-text>
+          </v-card>
+          </v-dialog>
+  </div>
   </v-container>
 </template>
 
@@ -91,8 +135,13 @@ export default class Admin extends Vue {
   topicStatistics: TopicAggregate[] = []
   classList: AppClass[] = []
   topics: Topic[] = []
+  classCode: string = ''
+  className: string = ''
+  selectedClass: AppClass | null = null
   selectedQuestionIndex: number = -1
   permLevel: number = -1
+  dialog: boolean = false
+
 
   async mounted() {
     this.permLevel = await AuthenticationCheck(this.$axios)
@@ -101,6 +150,10 @@ export default class Admin extends Vue {
     this.getStatistics()
     await this.getClasses()
     this.getTopics()
+  }
+
+  toggleDialog() {
+    this.dialog = !this.dialog
   }
 
   getQuestions() {
@@ -169,6 +222,15 @@ export default class Admin extends Vue {
   selectQuestion(index: number) {
     this.selectedQuestion = this.unansweredQuestions[index]
     this.selectedQuestionIndex = index
+  }
+
+  selectClass(c: AppClass) {
+    this.selectedClass = c
+    console.log(this.selectedClass)
+  }
+
+  addClass() {
+
   }
 }
 </script>

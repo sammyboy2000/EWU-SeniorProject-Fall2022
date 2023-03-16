@@ -32,6 +32,10 @@ export class JWT {
     return this.tokenData.sub
   }
 
+  public static getName(): string {
+    return this.tokenData.UserName
+  }
+
   public static getToken(): string {
     return this.tokenInstance
   }

@@ -8,6 +8,7 @@
         </v-btn>
       </v-toolbar-title>
       <v-spacer />
+      <v-text v-if="username != null">Welcome {{ username }}!</v-text>
       <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>mdi-menu</v-icon>
       </v-btn>
@@ -90,10 +91,12 @@ export default {
       isLoggedIn: false,
       jwt: JWT._getData,
       permLevel: -1,
+      username: null,
     }
   },
   async mounted() {
     if (JWT.loadToken(this.$axios) != null) {
+      this.username = JWT.getName()
       this.isLoggedIn = true
     }
     this.permLevel = await AuthenticationCheck(this.$axios)

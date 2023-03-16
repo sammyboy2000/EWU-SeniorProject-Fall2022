@@ -67,7 +67,8 @@ Console.WriteLine("Begin Identity Generation");
 //Identity stuff
 builder.Services.AddIdentityCore<AppUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<tutor_dbContext>();
+    .AddEntityFrameworkStores<tutor_dbContext>()
+    .AddDefaultTokenProviders();
 Console.WriteLine("End Identity Generation");
 
 Console.WriteLine("Begin JWT configuration");
