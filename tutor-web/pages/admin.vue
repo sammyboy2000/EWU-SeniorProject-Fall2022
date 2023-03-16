@@ -62,7 +62,7 @@
                   required
                 ></v-text-field>
                 <v-btn @click="updateClass(c)" color="primary">Update</v-btn>
-                <v-btn @click="deleteClass(c)" color="secondary">Delete</v-btn>
+                <v-btn @click="deleteClass(c)" color="secondary">Remove</v-btn>
               </v-card-text>
             </v-card-text>
           </v-card>
@@ -230,7 +230,7 @@ export default class Admin extends Vue {
   }
 
   addClass() {
-
+    // Todo: Add class to database
   }
 }
 </script>

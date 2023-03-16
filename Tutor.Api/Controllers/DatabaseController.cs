@@ -113,5 +113,17 @@ namespace Tutor.Api.Controllers
             if (result) { return "Success"; }
             else { return "Failed to Remove topic."; }
         }
+
+        [HttpPost("ModifyTopic")]
+        [Authorize(Roles = "Admin, Tutor")]
+        public String ModifyTopic(string? classCode, string? topic, string? newTopic)
+        {
+            if (classCode.IsNullOrEmpty()) { return "Class Code cannot be empty"; }
+            if (topic.IsNullOrEmpty()) { return "Topic cannot be empty."; }
+            if (newTopic.IsNullOrEmpty()) { return "New Topic cannot be empty."; }
+            bool result = _service.ModifyTopic(classCode!, topic!, newTopic!);
+            if (result) { return "Success"; }
+            else { return "Failed to Modify topic."; }
+        }
     }
 }

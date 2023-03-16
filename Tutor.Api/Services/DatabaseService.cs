@@ -355,5 +355,19 @@ namespace Tutor.api.Services
             catch { return false; }
             return true;
         }
+
+        public bool ModifyTopic(string classCode, string topic, string newTopic)
+        {
+            Topic t = _context.Topics.Where(x => x.Topic1 == topic).First();
+            t.Topic1 = newTopic;
+            try
+            {
+                _context.Topics.Update(t);
+                _context.Questions.Where(x => x.TopicId == t.Id).ToList().ForEach(x => x.TopicId = t.Id);
+                _context.SaveChanges();
+            }
+            catch { return false; }
+            return true;
+        }
     }
 }

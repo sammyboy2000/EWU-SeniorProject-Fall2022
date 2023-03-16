@@ -78,6 +78,13 @@
               style="width: 25%; padding: 5px"
               @click="initializeTopicData()"
             ></v-select>
+            <v-textarea
+              v-if="selectedTopic !== ''"
+              v-model="newTopic"
+              label="New Topic"
+              rows="1"
+              auto-grow
+            ></v-textarea>
             <v-btn color="primary" @click="modifyTopic()">Modify Topic</v-btn>
             <v-btn color="primary" @click="removeTopic()">Remove Topic</v-btn>
           </v-card-text>
@@ -122,6 +129,8 @@ import {
   getAskedQuestionTopicName,
   getAnsweredQuestionTopicName,
 } from '~/scripts/methods'
+import { VEditDialog } from 'vuetify/lib'
+import { exit } from 'process'
 
 @Component({})
 export default class Tutor extends Vue {
@@ -139,6 +148,7 @@ export default class Tutor extends Vue {
   topicData: [] = []
   topicList: string[] = []
   selectedTopic: string = ''
+  newTopic: string = ''
   isLoading: boolean = true
   areYouSure: boolean = false
 
@@ -279,8 +289,43 @@ export default class Tutor extends Vue {
         this.initializeQuestionData()
       })
   }
+
+  modifyTopic() {
+    if (this.selectedClass === '') {
+      alert('Select a class')
+      return
+    }
+    if (this.selectedTopic === '') {
+      alert('Select a topic')
+      return
+    }
+    this.areYouSure = confirm(
+      'Are you sure you want to modify this topic?' +
+        '\n' +
+        'Doing so will also modify all question topics associated with this topic.'
+    )
+    if (!this.areYouSure) {
+      return
+    }
+    this.$axios
+      .post(
+        '/database/ModifyTopic',
+        {},
+        {
+          params: {
+            classCode: this.selectedClass,
+            topic: this.selectedTopic,
+            newTopic: this.newTopic,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data)
+        this.initializeTopicData()
+        this.initializeQuestionData()
+      })
+  }
 }
 
-// todo: implement modify topic
 
 </script>
