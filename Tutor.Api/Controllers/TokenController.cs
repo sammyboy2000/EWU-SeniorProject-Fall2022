@@ -171,6 +171,58 @@ public class TokenController : Controller
         return "Success, added tutor privliges to user.";
     }
 
+    [HttpPost("UpdateUser")]
+    [Authorize]
+    public async Task<string> UpdateUserAsync(string initialUsername, string? username, string? password)
+    {
+        string str = "";
+        var user = await _userManager.FindByNameAsync(initialUsername);
+
+        if(user == null || user.Email != initialUsername)
+        {
+            return "Invalid request";
+        }
+
+        if (!password.IsNullOrEmpty() && user != null)
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var result = await _userManager.ResetPasswordAsync(user, token, password);
+
+
+            if (result.Succeeded)
+            {
+                str += "Successfully changed password. ";
+            }
+            else
+            {
+                str += "Failed to change password. ";
+            }
+        }
+
+        if (!username.IsNullOrEmpty() && user != null)
+        {
+            var token = await _userManager.GenerateChangeEmailTokenAsync(user, username);
+
+            var result = await _userManager.ChangeEmailAsync(user, username, token);
+            if (result.Succeeded)
+            {
+                str += "Successfully changed email.";
+            }
+            else
+            {
+                str += "Failed to change email.";
+            }
+        }
+
+        if(string.IsNullOrEmpty(str))
+        {
+            return "Invalid Request";
+        }
+
+        return str;
+    }
+
     [HttpGet("test")]
     [Authorize]
     public string Test()

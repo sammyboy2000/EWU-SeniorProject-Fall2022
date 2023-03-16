@@ -83,7 +83,7 @@ import {
 import { AuthenticationCheck } from '~/scripts/methods'
 
 @Component({})
-export default class Student extends Vue {
+export default class Admin extends Vue {
   userOption: number = 1
   selectedQuestion: Question | null = null
   unansweredQuestions: Question[] = []

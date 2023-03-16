@@ -39,6 +39,12 @@
         </v-list-item>
 
         <v-list-item v-if="isLoggedIn">
+          <v-btn text block nuxt to="/user">
+            Account <v-icon>mdi-account</v-icon>
+          </v-btn>
+        </v-list-item>
+
+        <v-list-item v-if="isLoggedIn">
           <v-btn text block @click="deleteToken()">
             Log Out <v-icon>mdi-equalizer</v-icon>
           </v-btn>
