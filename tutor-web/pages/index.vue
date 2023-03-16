@@ -49,9 +49,6 @@
           <v-btn v-if="isAdmin" color="primary" nuxt to="/admin">
             Admin Tools
           </v-btn>
-          <v-btn v-if="isAdmin" color="primary" nuxt to="/test_pages">
-            Test Pages
-          </v-btn>
         </v-card-actions>
       </v-card>
     </v-col>

@@ -5,7 +5,6 @@
       <v-btn @click="userOption = 2">View Statistics</v-btn>
       <v-btn @click="userOption = 3">Add/Modify Classes</v-btn>
       <v-btn @click="userOption = 4">Add/Modify Topics</v-btn>
-      <v-btn @click="userOption = 5">Add/Modify Associated Classes?</v-btn>
     </v-row>
     <v-row justify="center" align="center">
       <v-col cols="12" sm="8" md="6">
@@ -88,9 +87,6 @@
               {{ topic.topic1 }}
             </v-card-text>
           </v-card>
-        </v-card>
-        <v-card v-show="userOption == 5">
-          <v-card-title>Check Reqs (WIP)</v-card-title>
         </v-card>
       </v-col>
     </v-row>
