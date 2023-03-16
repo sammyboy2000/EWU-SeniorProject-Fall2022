@@ -393,7 +393,47 @@ namespace Tutor.api.Services
             try
             {
                 _context.Topics.Update(t);
-                _context.Questions.Where(x => x.TopicId == t.Id).ToList().ForEach(x => x.TopicId = t.Id);
+                //_context.Questions.Where(x => x.TopicId == t.Id).ToList().ForEach(x => x.TopicId = t.Id);
+                _context.SaveChanges();
+            }
+            catch { return false; }
+            return true;
+        }
+
+        public bool UpdateClass(int? classId, string newClassCode, string newClassDesc)
+        {
+            Class c = _context.Classes.Where(x => x.Id == classId).First();
+            c.ClassCode = newClassCode;
+            c.ClassName = newClassDesc;
+            try
+            {
+                _context.Classes.Update(c);
+                _context.SaveChanges();
+            }
+            catch { return false; }
+            return true;
+        }
+
+        public bool RemoveClass(int? classId)
+        {
+            Class c = _context.Classes.Where(x => x.Id == classId).First();
+            try
+            {
+                var topics = _context.Topics.Where(x => x.ClassId == c.Id);
+                var questions = _context.Questions.Where(x => x.ClassId == c.Id);
+                foreach (var question in questions)
+                {
+                    RemoveQuestion(question);
+                }
+                foreach (var topic in topics)
+                {
+                    _context.Topics.Remove(topic);
+                }
+            }
+            catch { return false; }
+            try
+            {
+                _context.Classes.Remove(c);
                 _context.SaveChanges();
             }
             catch { return false; }

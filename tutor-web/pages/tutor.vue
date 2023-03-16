@@ -156,9 +156,7 @@
 </template>
 
 <script lang="ts">
-import { exit } from 'process'
 import { Component, Vue } from 'vue-property-decorator'
-import { VEditDialog } from 'vuetify/lib'
 import { JWT } from '~/scripts/jwt'
 import { Question, AnsweredQuestion } from '~/scripts/interfaces'
 import {

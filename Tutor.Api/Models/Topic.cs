@@ -16,8 +16,8 @@ namespace Tutor.Api.Models
 
         internal static void Seed(tutor_dbContext context)
         {
-            var topics = context.Topics.ToDictionary(x => x.Topic1);
-            if (!topics.ContainsKey("Lists"))
+            var topics = context.Topics.ToDictionary(x => x.Id);
+            if (!topics.ContainsKey(1))
             {
                 Topic t = new();
                 t.ClassId = 1;

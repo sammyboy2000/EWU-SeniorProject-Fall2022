@@ -55,7 +55,7 @@
           >
           <v-card v-for="c in classList" :key="c.id" @click="selectClass(c)">
             <v-card-text>
-              {{ c.classCode }}
+              {{ c.classCode + ': ' + c.className }}
               <v-card-text v-if="selectedClass == c">
                 <v-text-field
                   v-model="c.classCode"
@@ -67,8 +67,8 @@
                   label="Class Name"
                   required
                 ></v-text-field>
-                <v-btn color="primary" @click="updateClass(c)">Update</v-btn>
-                <v-btn color="secondary" @click="deleteClass(c)">Remove</v-btn>
+                <v-btn color="primary" @click="updateClass()">Update</v-btn>
+                <v-btn color="secondary" @click="removeClass()">Remove</v-btn>
               </v-card-text>
             </v-card-text>
           </v-card>
@@ -185,6 +185,7 @@ export default class Admin extends Vue {
   selectedClass: AppClass | null = null
   selectedQuestionIndex: number = -1
   permLevel: number = -1
+  areYouSure: boolean = false
   addClassDialog: boolean = false
   addTopicDialog: boolean = false
 
@@ -313,6 +314,54 @@ export default class Admin extends Vue {
         alert(response.data)
         this.getTopics()
         this.toggleTopicDialog()
+      })
+  }
+
+  updateClass() {
+    this.$axios
+      .post(
+        '/database/UpdateClass',
+        {},
+        {
+          params: {
+            classCode: this.selectedClass?.classCode,
+            className: this.selectedClass?.className,
+          },
+        }
+      )
+      .then((response) => {
+        alert(response.data)
+        this.getClasses()
+      })
+  }
+
+  
+  removeClass() {
+    if (this.selectedClass === null) {
+      alert('Select a class')
+      return
+    }
+    this.areYouSure = confirm(
+      'Are you sure you want to remove this class?' +
+        '\n' +
+        'Doing so will also remove all questions and topics associated with this class.'
+    )
+    if (!this.areYouSure) {
+      return
+    }
+    this.$axios
+      .post(
+        '/database/RemoveClass',
+        {},
+        {
+          params: {
+            classId: this.selectedClass?.id,
+          },
+        }
+      )
+      .then((response) => {
+        alert(response.data)
+        this.getClasses()
       })
   }
 }

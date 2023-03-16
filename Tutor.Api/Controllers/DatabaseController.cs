@@ -92,6 +92,7 @@ namespace Tutor.Api.Controllers
             }
         }
 
+// Class Methods
         [HttpPost("AddClass")]
         [Authorize]
         public String AddClass(string classCode, string? className)
@@ -101,6 +102,28 @@ namespace Tutor.Api.Controllers
             else { return "Failed to add class."; }
         }
 
+        [HttpPost("UpdateClass")]
+        [Authorize(Roles = "Admin")]
+        public String UpdateClass(string? classCode, string? className) {
+            if (classCode.IsNullOrEmpty()) { return "Class Code cannot be empty"; }
+            int? classId = _service.GetClassId(classCode!);
+            if (className.IsNullOrEmpty()) { return "Class Name cannot be empty."; }
+            bool result = _service.UpdateClass(classId!, classCode!, className!);
+            if (result) { return "Success"; }
+            else { return "Failed to modify class."; }
+        }
+
+        [HttpPost("RemoveClass")]
+        [Authorize(Roles = "Admin")]
+        public String RemoveClass(int? classId)
+        {
+            if (classId == null) { return "Class Id cannot be empty"; }
+            bool result = _service.RemoveClass(classId!);
+            if (result) { return "Success"; }
+            else { return "Failed to remove class."; }
+        }
+
+// Topic Methods
         [HttpPost("AddTopic")]
         [Authorize]
         public String AddTopic(string? classCode, string? topic)
