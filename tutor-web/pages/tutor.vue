@@ -87,7 +87,9 @@
             ></v-textarea>
             <v-btn color="primary" @click="modifyTopic()">Modify Topic</v-btn>
             <v-btn color="primary" @click="removeTopic()">Remove Topic</v-btn>
-            <v-btn color="primary" @click="toggleTopicDialog()">Add Topic</v-btn>
+            <v-btn color="primary" @click="toggleTopicDialog()"
+              >Add Topic</v-btn
+            >
           </v-card-text>
         </v-card>
       </v-col>
@@ -187,7 +189,6 @@ export default class Tutor extends Vue {
   addTopicDialog: boolean = false
   topicName: string = ''
 
-
   permLevel: number = -1
 
   async mounted() {
@@ -238,7 +239,7 @@ export default class Tutor extends Vue {
       })
   }
 
-  toggleTopicDialog(){
+  toggleTopicDialog() {
     this.addTopicDialog = !this.addTopicDialog
   }
 
