@@ -5,7 +5,7 @@
       <v-btn @click=";(userOption = 2), getAnsweredQuestionData()"
         >View Answered Questions</v-btn
       >
-      <v-btn @click="userOption = 3">Super Magic Button</v-btn>
+      <v-btn @click="userOption = 3">Modify/Remove Topics</v-btn>
     </v-row>
     <v-row>
       <v-col cols="8">
@@ -87,6 +87,7 @@
             ></v-textarea>
             <v-btn color="primary" @click="modifyTopic()">Modify Topic</v-btn>
             <v-btn color="primary" @click="removeTopic()">Remove Topic</v-btn>
+            <v-btn color="primary" @click="toggleTopicDialog()">Add Topic</v-btn>
           </v-card-text>
         </v-card>
       </v-col>
@@ -117,6 +118,38 @@
         <br />
       </v-col>
     </v-row>
+    <div>
+      <v-dialog v-model="addTopicDialog" max-width="500px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Add Topic</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="classCode"
+                    label="Class Code"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="topicName"
+                    label="Topic"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-spacer /><v-btn color="primary" @click="addTopic()"
+                  >Add</v-btn
+                >
+              </v-row>
+            </v-container>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </div>
   </v-container>
 </template>
 
@@ -151,6 +184,9 @@ export default class Tutor extends Vue {
   newTopic: string = ''
   isLoading: boolean = true
   areYouSure: boolean = false
+  addTopicDialog: boolean = false
+  topicName: string = ''
+
 
   permLevel: number = -1
 
@@ -200,6 +236,10 @@ export default class Tutor extends Vue {
       .then((response) => {
         this.topicData = response.data
       })
+  }
+
+  toggleTopicDialog(){
+    this.addTopicDialog = !this.addTopicDialog
   }
 
   answerQuestion() {
@@ -323,6 +363,25 @@ export default class Tutor extends Vue {
         console.log(response.data)
         this.initializeTopicData()
         this.initializeQuestionData()
+      })
+  }
+
+  addTopic() {
+    this.$axios
+      .post(
+        '/database/AddTopic',
+        {},
+        {
+          params: {
+            classCode: this.classCode,
+            topic: this.topicName,
+          },
+        }
+      )
+      .then((response) => {
+        alert(response.data)
+        this.initializeTopicData()
+        this.toggleTopicDialog()
       })
   }
 }
