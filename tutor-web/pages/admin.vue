@@ -49,7 +49,7 @@
           <v-card-title
             >Add/Modify Classes <v-spacer /><v-btn
               color="primary"
-              @click="toggleDialog"
+              @click="toggleClassDialog"
               >Add</v-btn
             ></v-card-title
           >
@@ -74,7 +74,11 @@
           </v-card>
         </v-card>
         <v-card v-show="userOption == 4">
-          <v-card-title>Add/Modify Topics</v-card-title>
+          <v-card-title>Add/Modify Topics<v-spacer /><v-btn
+              color="primary"
+              @click="toggleTopicDialog"
+              >Add</v-btn
+            ></v-card-title>
           <v-card v-for="topic in topics" :key="topic.id">
             <v-card-text>
               {{ classNameFromId(topic.classId) }}
@@ -89,7 +93,7 @@
       </v-col>
     </v-row>
     <div>
-      <v-dialog v-model="dialog" max-width="500px">
+      <v-dialog v-model="addClassDialog" max-width="500px">
         <v-card>
           <v-card-title>
             <span class="headline">Add Class</span>
@@ -112,6 +116,36 @@
                   ></v-text-field>
                 </v-col>
                 <v-spacer /><v-btn color="primary" @click="addClass">Add</v-btn>
+              </v-row>
+            </v-container>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </div>
+    <div>
+      <v-dialog v-model="addTopicDialog" max-width="500px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Add Topic</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="classCode"
+                    label="Class Code"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="topicName"
+                    label="Topic"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-spacer /><v-btn color="primary" @click="addTopic()">Add</v-btn>
               </v-row>
             </v-container>
           </v-card-text>
@@ -143,10 +177,12 @@ export default class Admin extends Vue {
   topics: Topic[] = []
   classCode: string = ''
   className: string = ''
+  topicName: string = ''
   selectedClass: AppClass | null = null
   selectedQuestionIndex: number = -1
   permLevel: number = -1
-  dialog: boolean = false
+  addClassDialog: boolean = false
+  addTopicDialog: boolean = false
 
   async mounted() {
     this.permLevel = await AuthenticationCheck(this.$axios)
@@ -157,8 +193,12 @@ export default class Admin extends Vue {
     this.getTopics()
   }
 
-  toggleDialog() {
-    this.dialog = !this.dialog
+  toggleClassDialog() {
+    this.addClassDialog = !this.addClassDialog
+  }
+
+  toggleTopicDialog() {
+    this.addTopicDialog = !this.addTopicDialog
   }
 
   getQuestions() {
@@ -249,7 +289,26 @@ export default class Admin extends Vue {
       .then((response) => {
         alert(response.data)
         this.getClasses()
-        this.toggleDialog()
+        this.toggleClassDialog()
+      })
+  }
+
+  addTopic() {
+    this.$axios
+      .post(
+        '/database/AddTopic',
+        {},
+        {
+          params: {
+            classCode: this.classCode,
+            topic: this.topicName,
+          },
+        }
+      )
+      .then((response) => {
+        alert(response.data)
+        this.getTopics()
+        this.toggleTopicDialog()
       })
   }
 }
