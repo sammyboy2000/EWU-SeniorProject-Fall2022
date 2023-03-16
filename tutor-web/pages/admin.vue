@@ -74,11 +74,13 @@
           </v-card>
         </v-card>
         <v-card v-show="userOption == 4">
-          <v-card-title>Add/Modify Topics<v-spacer /><v-btn
+          <v-card-title
+            >Add/Modify Topics<v-spacer /><v-btn
               color="primary"
               @click="toggleTopicDialog"
               >Add</v-btn
-            ></v-card-title>
+            ></v-card-title
+          >
           <v-card v-for="topic in topics" :key="topic.id">
             <v-card-text>
               {{ classNameFromId(topic.classId) }}
@@ -145,7 +147,9 @@
                     required
                   ></v-text-field>
                 </v-col>
-                <v-spacer /><v-btn color="primary" @click="addTopic()">Add</v-btn>
+                <v-spacer /><v-btn color="primary" @click="addTopic()"
+                  >Add</v-btn
+                >
               </v-row>
             </v-container>
           </v-card-text>
