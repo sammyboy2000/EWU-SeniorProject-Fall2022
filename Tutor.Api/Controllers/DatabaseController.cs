@@ -92,6 +92,15 @@ namespace Tutor.Api.Controllers
             }
         }
 
+        [HttpPost("AddClass")]
+        [Authorize]
+        public String AddClass(string classCode, string? className)
+        {
+            bool result = _service.AddClass(classCode, className!);
+            if (result) { return "Success"; }
+            else { return "Failed to add class."; }
+        }
+
         [HttpPost("AddTopic")]
         [Authorize]
         public String AddTopic(string? classCode, string? topic)

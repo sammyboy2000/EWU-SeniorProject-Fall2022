@@ -46,7 +46,13 @@
           </v-card>
         </v-card>
         <v-card v-show="userOption == 3">
-          <v-card-title>Add/Modify Classes <v-spacer /><v-btn @click="toggleDialog" color="primary">Add</v-btn></v-card-title>
+          <v-card-title
+            >Add/Modify Classes <v-spacer /><v-btn
+              color="primary"
+              @click="toggleDialog"
+              >Add</v-btn
+            ></v-card-title
+          >
           <v-card v-for="c in classList" :key="c.id" @click="selectClass(c)">
             <v-card-text>
               {{ c.classCode }}
@@ -61,8 +67,8 @@
                   label="Class Name"
                   required
                 ></v-text-field>
-                <v-btn @click="updateClass(c)" color="primary">Update</v-btn>
-                <v-btn @click="deleteClass(c)" color="secondary">Remove</v-btn>
+                <v-btn color="primary" @click="updateClass(c)">Update</v-btn>
+                <v-btn color="secondary" @click="deleteClass(c)">Remove</v-btn>
               </v-card-text>
             </v-card-text>
           </v-card>
@@ -83,35 +89,35 @@
       </v-col>
     </v-row>
     <div>
-    <v-dialog v-model="dialog" max-width="500px">
-      <v-card>
-        <v-card-title>
-          <span class="headline">Add Class</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="classCode"
-                  label="Class Code"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="className"
-                  label="Class Name"
-                  required
-                ></v-text-field>
-              </v-col>
-                <v-spacer /><v-btn @click="addClass" color="primary">Add</v-btn>
-            </v-row>
-          </v-container>
+      <v-dialog v-model="dialog" max-width="500px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Add Class</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="classCode"
+                    label="Class Code"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="className"
+                    label="Class Name"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-spacer /><v-btn color="primary" @click="addClass">Add</v-btn>
+              </v-row>
+            </v-container>
           </v-card-text>
-          </v-card>
-          </v-dialog>
-  </div>
+        </v-card>
+      </v-dialog>
+    </div>
   </v-container>
 </template>
 
@@ -141,7 +147,6 @@ export default class Admin extends Vue {
   selectedQuestionIndex: number = -1
   permLevel: number = -1
   dialog: boolean = false
-
 
   async mounted() {
     this.permLevel = await AuthenticationCheck(this.$axios)
@@ -230,7 +235,22 @@ export default class Admin extends Vue {
   }
 
   addClass() {
-    // Todo: Add class to database
+    this.$axios
+      .post(
+        '/database/AddClass',
+        {},
+        {
+          params: {
+            classCode: this.classCode,
+            className: this.className,
+          },
+        }
+      )
+      .then((response) => {
+        alert(response.data)
+        this.getClasses()
+        this.toggleDialog()
+      })
   }
 }
 </script>

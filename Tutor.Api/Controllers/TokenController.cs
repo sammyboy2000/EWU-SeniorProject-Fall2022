@@ -178,7 +178,7 @@ public class TokenController : Controller
         string str = "";
         var user = await _userManager.FindByNameAsync(initialUsername);
 
-        if(user == null || user.Email != initialUsername)
+        if (user == null || user.Email != initialUsername)
         {
             return "Invalid request";
         }
@@ -215,7 +215,7 @@ public class TokenController : Controller
             }
         }
 
-        if(string.IsNullOrEmpty(str))
+        if (string.IsNullOrEmpty(str))
         {
             return "Invalid Request";
         }

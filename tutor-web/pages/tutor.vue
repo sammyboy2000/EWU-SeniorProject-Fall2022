@@ -121,7 +121,9 @@
 </template>
 
 <script lang="ts">
+import { exit } from 'process'
 import { Component, Vue } from 'vue-property-decorator'
+import { VEditDialog } from 'vuetify/lib'
 import { JWT } from '~/scripts/jwt'
 import { Question, AnsweredQuestion } from '~/scripts/interfaces'
 import {
@@ -129,8 +131,6 @@ import {
   getAskedQuestionTopicName,
   getAnsweredQuestionTopicName,
 } from '~/scripts/methods'
-import { VEditDialog } from 'vuetify/lib'
-import { exit } from 'process'
 
 @Component({})
 export default class Tutor extends Vue {
@@ -326,6 +326,4 @@ export default class Tutor extends Vue {
       })
   }
 }
-
-
 </script>

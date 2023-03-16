@@ -15,16 +15,16 @@ namespace Tutor.api.Services
         {
             if (searchString == null)
             {
-                return _context.Classes.Select(x => x.ClassCode);
+                return _context.Classes.OrderBy(x => x.ClassCode).Select(x => x.ClassCode);
 
             }
-            return _context.Classes.Select(x => x.ClassCode)
+            return _context.Classes.OrderBy(x => x.ClassCode).Select(x => x.ClassCode)
                 .Where(x => x.Contains(searchString));
         }
 
         public IEnumerable<Class> GetClassesAdmin()
         {
-            return _context.Classes;
+            return _context.Classes.OrderBy(x => x.ClassCode);
         }
 
         //Added to get topics to populate dropdown --Jesse 2/28/2023
@@ -62,16 +62,46 @@ namespace Tutor.api.Services
             return _context.Topics;
         }
 
-        public void AddClass(string classCode)
+        public bool AddClass(string classCode)
         {
             var classes = _context.Classes.ToDictionary(f => f.ClassCode);
 
             if (!classes.ContainsKey(classCode))
             {
                 _context.Classes.Add(new Class { ClassCode = classCode });
+                _context.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool AddClass(string classCode, string? className)
+        {
+            if (className.IsNullOrEmpty())
+            {
+                return AddClass(classCode);
+            }
+            var classes = _context.Classes.ToDictionary(f => f.ClassCode);
+
+            if (!classes.ContainsKey(classCode))
+            {
+                _context.Classes.Add(new Class
+                {
+                    ClassCode = classCode,
+                    ClassName = className,
+                });
+                _context.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
             }
 
-            _context.SaveChanges();
+
 
         }
 
