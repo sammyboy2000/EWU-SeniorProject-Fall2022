@@ -58,7 +58,7 @@ builder.Services.AddSingleton(emailConfig);
 builder.Services.AddScoped<Tutor.Api.Services.EmailService>();
 
 Console.WriteLine("Begin SQL Connection");
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DeveloperConnection");
 builder.Services.AddDbContext<tutor_dbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<DatabaseService>();
 Console.WriteLine("End SQL Connection.");

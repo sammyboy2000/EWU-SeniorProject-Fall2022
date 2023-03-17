@@ -1,19 +1,14 @@
 <template>
   <v-container v-if="permLevel == 2" fluid>
     <v-row>
-      <v-btn @click="userOption = 1">View Questions</v-btn>
-      <v-btn @click="userOption = 2">View Statistics</v-btn>
-      <v-btn @click="userOption = 3">Add/Modify Classes</v-btn>
-      <v-btn @click="userOption = 4">Add/Modify Topics</v-btn>
+      <v-btn @click="userOption = 1, filter = -1">View Questions</v-btn>
+      <v-btn @click="userOption = 2, filter = -1">View Statistics</v-btn>
+      <v-btn @click="userOption = 3, filter = -1">Add/Modify Classes</v-btn>
+      <v-btn @click="userOption = 4, filter = -1">Add/Modify Topics</v-btn>
+      <v-btn @click="userOption = 5, filter = -1">Modify Users</v-btn>
     </v-row>
     <v-row justify="center" align="center">
       <v-col cols="12" sm="8" md="6">
-        <v-card class="py-4 justify-center">
-          <v-card-title>
-            This page will be used to view asked questions anonymously and view
-            data related to questions asked.
-          </v-card-title>
-        </v-card>
         <v-card v-show="userOption == 1">
           <v-card-title>Questions</v-card-title>
           <v-card
@@ -44,7 +39,7 @@
             </v-card-text>
           </v-card>
         </v-card>
-        <v-card v-show="userOption == 3">
+        <v-card-item v-show="userOption == 3">
           <v-card-title
             >Add/Modify Classes <v-spacer /><v-btn
               color="primary"
@@ -52,8 +47,16 @@
               >Add</v-btn
             ></v-card-title
           >
-          <v-card v-for="c in classList" :key="c.id" @click="selectClass(c)">
-            <v-card-text>
+          <v-select
+            v-model="classFilter"
+            :items="classPrefixes.slice(1)"
+            label="Filter by Classes"
+            style="width: 25%; padding: 5px"
+            multiple
+            @input="getfilteredClasses(), selectedClass = null"
+          ></v-select>
+          <v-card v-for="c in classList.slice(1)" :key="c.id" @click="selectClass(c)">
+            <v-card-text v-if="classFilter.length == 0">
               {{ c.classCode + ': ' + c.className }}
               <v-card-text v-if="selectedClass == c">
                 <v-text-field
@@ -71,21 +74,74 @@
               </v-card-text>
             </v-card-text>
           </v-card>
-        </v-card>
-        <v-card v-show="userOption == 4">
+          <v-card-item>
+            <v-card-text v-if="classFilter.length > 0">
+              <v-card
+                v-for="c in filteredClasses"
+                :key="c.id"
+                @click="selectClass(c)"
+                >
+                {{ c.classCode + ': ' + c.className }}
+                <v-card-text v-if="selectedClass == c">
+                  <v-text-field
+                    v-model="c.classCode"
+                    label="Class Code"
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="c.className"
+                    label="Class Name"
+                    required
+                  ></v-text-field>
+                  <v-btn color="primary" @click="updateClass()">Update</v-btn>
+                  <v-btn color="secondary" @click="removeClass()">Remove</v-btn>
+                </v-card-text>
+              </v-card>
+            </v-card-text>
+          </v-card-item>
+        </v-card-item>
+        <v-card-item v-show="userOption == 4">
           <v-card-title
             >Add/Modify Topics<v-spacer /><v-btn
               color="primary"
               @click="toggleTopicDialog"
               >Add</v-btn
-            ></v-card-title
-          >
-          <v-card v-for="topic in topics" :key="topic.id">
-            <v-card-text>
-              {{ classNameFromId(topic.classId) }}
+            ></v-card-title>
+          <v-select
+            v-model="filter"
+            :items="classList"
+            item-text="classCode"
+            item-value="id"
+            label="Filter by Class"
+            style="width: 25%; padding: 5px"
+          ></v-select>
+          <v-card v-for="c in classList.slice(1)" :key="c.id" style="margin-top: 5px;">
+            <v-card-text v-if="filter == -1">
+              {{ c.classCode }}
               <br />
-              {{ topic.topic1 }}
+              <ul>
+                <li v-for="topic in filteredTopics(c.id)" :key="topic.id">
+                {{ topic.topic1 }}
+                </li>
+              </ul>
             </v-card-text>
+          </v-card>
+          <v-card>
+            <v-card-text v-if="filter != -1">
+              {{ classList[filter].classCode }}
+              <br />
+              <ul>
+                <li v-for="topic in filteredTopics(classList[filter].id)" :key="topic.id">
+                {{ topic.topic1 }}
+                </li>
+              </ul>
+            </v-card-text>
+          </v-card>
+        </v-card-item>
+        <v-card v-if="userOption == 5">
+          <v-card-title>Modify Users</v-card-title>
+          <v-card>
+
           </v-card>
         </v-card>
       </v-col>
@@ -184,7 +240,12 @@ export default class Admin extends Vue {
   areYouSure: boolean = false
   addClassDialog: boolean = false
   addTopicDialog: boolean = false
+  filter: number = -1
+  classFilter: string[] = []
+  classPrefixes: string[] = []
+  filteredClasses: AppClass[] = []
 
+// Lifecycle
   async mounted() {
     this.permLevel = await AuthenticationCheck(this.$axios)
     if (this.permLevel !== 2) location.assign('/') // Redirect to home page if not a tutor
@@ -192,14 +253,46 @@ export default class Admin extends Vue {
     this.getStatistics()
     await this.getClasses()
     this.getTopics()
+    this.getClassPrefixes()
   }
 
+
+// Methods
   toggleClassDialog() {
     this.addClassDialog = !this.addClassDialog
   }
 
   toggleTopicDialog() {
     this.addTopicDialog = !this.addTopicDialog
+  }
+
+  filteredTopics(id: number) {
+    return this.topics.filter((t) => t.classId === id)
+  }
+
+  getClassPrefixes() {
+    let alreadyExists = ''
+    this.classPrefixes = []
+    this.classList.forEach((c) => {
+      let prefix = c.classCode.toString().slice(0, 4)
+      if (prefix !== alreadyExists) {
+        this.classPrefixes.push(prefix)
+        alreadyExists = prefix
+        console.log(alreadyExists)
+      }
+    })
+  }
+
+  getfilteredClasses() {
+    this.filteredClasses = []
+    this.classList.forEach((c) => {
+      this.classFilter.forEach((f) => {
+        if (c.classCode.toString().slice(0, 4) === f) {
+          this.filteredClasses.push(c)
+        }
+      })
+    })
+
   }
 
   getQuestions() {
@@ -233,9 +326,10 @@ export default class Admin extends Vue {
   }
 
   async getClasses() {
-    this.$axios
+    await this.$axios
       .get('Database/getClassesAdmin')
       .then((response) => {
+        response.data.unshift({ id: -1, classCode: 'All Classes' })
         this.classList = response.data
       })
       .catch((error) => {
