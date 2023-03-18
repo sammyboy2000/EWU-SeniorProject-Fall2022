@@ -10,6 +10,7 @@
         <v-tab :value="1">Answer Questions</v-tab>
         <v-tab :value="2" @click="getAnsweredQuestionData()">View Answered Questions</v-tab>
         <v-tab :value="3">Modify/Remove Topics</v-tab>
+        <v-tab :value="4">Manage User Privileges</v-tab>
       </v-tabs>
     </v-row>
     <v-row>
@@ -90,13 +91,48 @@
               rows="1"
               auto-grow
             ></v-textarea>
-            <v-btn color="primary" @click="modifyTopic()">Modify Topic</v-btn>
-            <v-btn color="primary" @click="removeTopic()">Remove Topic</v-btn>
             <v-btn color="primary" @click="toggleTopicDialog()"
               >Add Topic</v-btn
             >
+            <v-btn color="primary" @click="modifyTopic()">Modify Topic</v-btn>
+            <v-btn color="secondary" @click="removeTopic()">Remove Topic</v-btn>
           </v-card-text>
         </v-card>
+
+        <!-- Manage User Privileges -->
+
+        <v-card-item v-if="userOption == 4">
+          <v-card-title>Manage Users</v-card-title>
+          <v-text-field
+            v-model="inputUser"
+            label="User Email"
+            style="width: 25%; padding: 5px"
+          ></v-text-field>
+          <v-btn color="primary" @click="getFilteredUsers()">Search</v-btn>
+          <br /><br />
+          <v-card style="margin-top: 2px;">
+            <v-card>
+              <v-card-title>
+              {{ "User: " + returnedUser }}
+              </v-card-title>
+              <v-row>
+                <v-col cols="4" style="margin-left: 15px;">
+                  <v-checkbox v-model="userRoles[0]" label="Student"></v-checkbox>
+                </v-col>
+                <v-col cols="4">
+                  <v-checkbox v-model="userRoles[1]" label="Tutor"></v-checkbox>
+                </v-col>
+                <v-col cols="4" style="margin-left: 15px;">
+                  <v-checkbox v-model="userRoles[2]" label="Admin" disabled></v-checkbox>
+                </v-col>
+              </v-row>
+              <v-card-text>
+                <v-btn color="primary" @click="updateUser()">Update</v-btn>
+              </v-card-text>
+            </v-card>
+          </v-card>
+        </v-card-item>
+
       </v-col>
       <v-col cols="4">
         <v-card style="margin-bottom: 5px">
@@ -191,6 +227,9 @@ export default class Tutor extends Vue {
   areYouSure: boolean = false
   addTopicDialog: boolean = false
   topicName: string = ''
+  inputUser: string = ''
+  returnedUser: string = ''
+  userRoles: boolean[] = [false, false, false]
 
   permLevel: number = -1
 
@@ -386,6 +425,74 @@ export default class Tutor extends Vue {
         alert(response.data)
         this.initializeTopicData()
         this.toggleTopicDialog()
+      })
+  }
+
+  async getFilteredUsers() {
+    if(this.inputUser === '') {
+      alert('Please enter a username')
+      return
+    }
+    await this.$axios
+      .get('database/GetUser', {
+        params: {
+          username: this.inputUser,
+        },
+      })      
+      .then((response) => {
+        console.log(response.data)
+        if(response.data === 'No user found') {
+          alert('User not found')
+        }
+        else { 
+          this.returnedUser = response.data
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+      this.getUserRoles()
+  }
+
+  getUserRoles() {
+    this.$axios
+      .get('database/GetUserRoles', {
+        params: {
+          username: this.returnedUser,
+        },
+      })
+      .then((response) => {
+        this.userRoles = response.data
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+  updateUser() {
+    if(this.returnedUser === '') {
+      alert('Please search for a user.')
+      return
+    }
+    this.$axios
+      .post(
+        '/database/ModifyUserRoles',
+        {},
+        {
+          params: {
+            username: this.returnedUser,
+            isStudent: this.userRoles[0],
+            isTutor: this.userRoles[1],
+            isAdmin: this.userRoles[2],
+          },
+        }
+      )
+      .then((response) => {
+        if(response.data === true) alert("The user's roles have been updated.")
+        else alert("The user's roles have not been updated.")
+      })
+      .catch((error) => {
+        console.log(error)
       })
   }
 }

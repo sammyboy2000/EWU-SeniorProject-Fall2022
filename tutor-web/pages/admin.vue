@@ -725,6 +725,14 @@ export default class Admin extends Vue {
   }
 
   removeTopic() {
+    this.areYouSure = confirm(
+      'Are you sure you want to remove this topic?' +
+        '\n' +
+        'Doing so will also remove all questions associated with this topic.'
+    )
+    if (!this.areYouSure) {
+      return
+    }
     this.$axios
       .post(
         '/database/RemoveTopic',

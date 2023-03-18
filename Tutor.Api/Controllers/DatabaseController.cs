@@ -95,21 +95,21 @@ namespace Tutor.Api.Controllers
 
 // Admin User Methods
         [HttpGet("GetUser")]
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = "Tutor, Admin")]
         public String GetUser(String? username)
         {
             return _service.GetUserEmail(username!);
         }
 
         [HttpGet("GetUserRoles")]
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = "Tutor, Admin")]
         public IEnumerable<bool> GetUserRoles(String? username)
         {
             return _service.GetUserRoles(username!);
         }
 
         [HttpPost("ModifyUserRoles")]
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = "Tutor, Admin")]
         public bool ModifyUserRoles(String? username, bool? isStudent, bool? isTutor, bool? isAdmin)
         {
             return _service.ModifyUserRoles(username!, (bool)isStudent!, (bool)isTutor!, (bool)isAdmin!);
