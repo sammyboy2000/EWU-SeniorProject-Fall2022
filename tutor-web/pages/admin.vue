@@ -7,11 +7,11 @@
         align-tabs="center"
         >
         <v-tab v-show="" :value="0" disabled ></v-tab>
-        <v-tab :value="1" @click="filter = -1, classCode = ''">View Questions</v-tab>
-        <v-tab :value="2" @click="filter = -1, classCode = ''">View Statistics</v-tab>
-        <v-tab :value="3" @click="filter = -1, classCode = ''">Add/Modify Classes</v-tab>
-        <v-tab :value="4" @click="filter = -1, classCode = ''">Add/Modify Topics</v-tab>
-        <v-tab :value="5" @click="filter = -1, classCode = ''">Manage Users</v-tab>
+        <v-tab :value="1" @click="filter = -1, classCode = '', classFilter = []">View Questions</v-tab>
+        <v-tab :value="2" @click="filter = -1, classCode = '', classFilter = []">View Statistics</v-tab>
+        <v-tab :value="3" @click="filter = -1, classCode = '', classFilter = []">Add/Modify Classes</v-tab>
+        <v-tab :value="4" @click="filter = -1, classCode = '', classFilter = []">Add/Modify Topics</v-tab>
+        <v-tab :value="5" @click="filter = -1, classCode = '', classFilter = []">Manage Users</v-tab>
       </v-tabs>
     </v-row>
     <v-row justify="center" align="center">
@@ -20,13 +20,32 @@
         <!-- This is Option 1 (View Questions) -->
 
           <v-card-item v-show="userOption == 1">
-              <v-card-title>Questions</v-card-title>
+            <v-card-title>Questions</v-card-title>
+            <v-select
+              v-model="filter"
+              :items="classList"
+              item-text="classCode"
+              item-value="id"
+              label="Filter by Class"
+              style="width: 25%; padding: 5px"
+            ></v-select>
+            <v-divider />
+            <v-card-title>Unanswered Questions</v-card-title>
               <v-card
                 v-for="question in unansweredQuestions"
                 :key="question.questionId"
                 style="margin-top: 2px;"
               >
-                <v-card-text>{{ question.question1 }}</v-card-text>
+              <v-card-text v-if="filter == -1">
+                  Class: {{ classNameFromId(question.classId) }} <br />
+                  Topic: {{ topicNameFromId(question.topicId) }} <br />
+                  Question: {{ question.question1 }}
+              </v-card-text>
+                <v-card-text v-if="filter == question.classId">
+                  Class: {{ classNameFromId(question.classId) }} <br />
+                  Topic: {{ topicNameFromId(question.topicId) }} <br />
+                  Question: {{ question.question1 }}
+                </v-card-text>
               </v-card>
               <v-card-title>Responses</v-card-title>
               <v-card
@@ -34,17 +53,40 @@
                 :key="question.questionId"
                 style="margin-top: 2px;"
               >
-                <v-card-text>{{ "Question: " + question.question }}</v-card-text>
-                <v-card-text>{{ "Response: " + question.response }}</v-card-text>
-              </v-card>
+              <v-card-text v-if="filter == -1">
+                  Class: {{ classNameFromId(question.classId) }} <br />
+                  Topic: {{ topicNameFromId(question.topicId) }} <br />
+                  Question: {{ question.question }} <br />
+                  Response: {{ question.response }}
+              </v-card-text>
+                <v-card-text v-if="filter == question.classId">
+                  Class: {{ classNameFromId(question.classId) }} <br />
+                  Topic: {{ topicNameFromId(question.topicId) }} <br />
+                  Question: {{ question.question }} <br />
+                  Response: {{ question.response }}
+                </v-card-text>
+            </v-card>
           </v-card-item>
 
         <!-- This is Option 2 (View Statistics) -->
 
         <v-card-item v-show="userOption == 2">
           <v-card-title>Statistics</v-card-title>
-          <v-card v-for="stat in topicStatistics" :key="stat.topicId">
-            <v-card-text>
+          <v-select
+            v-model="filter"
+            :items="classList"
+            item-text="classCode"
+            item-value="id"
+            label="Filter by Class"
+            style="width: 25%; padding: 5px"
+          ></v-select>
+          <v-card v-for="stat in topicStatistics" :key="stat.topicId" style="margin-top: 2px;">
+            <v-card-text v-if="filter == -1">
+              Class: {{ stat.classCode }} <br />
+              Topic: {{ stat.topic }} <br />
+              Occurrences: {{ stat.occurences }}
+            </v-card-text>
+            <v-card-text v-if="filter == stat.classId">
               Class: {{ stat.classCode }} <br />
               Topic: {{ stat.topic }} <br />
               Occurrences: {{ stat.occurences }}
@@ -508,6 +550,17 @@ export default class Admin extends Vue {
     this.classList.forEach((c) => {
       if (c.id == i) {
         s = c.classCode
+        return s
+      }
+    })
+    return s
+  }
+
+  topicNameFromId(i: number): string {
+    let s = 'error'
+    this.topics.forEach((t) => {
+      if (t.id == i) {
+        s = t.topic1
         return s
       }
     })
