@@ -3,8 +3,8 @@
     <v-row>
       <v-tabs
         v-model="userOption"
-        color="deep-purple-accent-4"
         align-tabs="center"
+        background-color="primary darken-1"
         >
         <v-tab v-show="" :value="0" disabled ></v-tab>
         <v-tab :value="1">View Questions</v-tab>
@@ -55,7 +55,7 @@
             </div>
             <br />
             <div>
-              <v-header style="font-size: 16pt; color: black"
+              <v-header style="font-size: 16pt; font-weight: bold;"
                 >Question:</v-header
               >
               <br />

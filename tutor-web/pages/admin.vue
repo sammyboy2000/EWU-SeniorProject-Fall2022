@@ -3,23 +3,23 @@
     <v-row>
       <v-tabs
         v-model="userOption"
-        color="deep-purple-accent-4"
         align-tabs="center"
+        background-color="primary darken-1"
         >
         <v-tab v-show="" :value="0" disabled ></v-tab>
-        <v-tab :value="1" @click="filter = -1, classCode = '', classFilter = []">View Questions</v-tab>
+        <v-tab :value="1" @click="filter = -1, classCode = '', classFilter = []" >View Questions</v-tab>
         <v-tab :value="2" @click="filter = -1, classCode = '', classFilter = []">View Statistics</v-tab>
         <v-tab :value="3" @click="filter = -1, classCode = '', classFilter = []">Add/Modify Classes</v-tab>
         <v-tab :value="4" @click="filter = -1, classCode = '', classFilter = []">Add/Modify Topics</v-tab>
         <v-tab :value="5" @click="filter = -1, classCode = '', classFilter = []">Manage Users</v-tab>
       </v-tabs>
     </v-row>
-    <v-row justify="center" align="center">
-      <v-col cols="12" sm="8" md="6">
+
+
 
         <!-- This is Option 1 (View Questions) -->
-
-          <v-card-item v-show="userOption == 1">
+        <v-row v-if="userOption == 1">
+          <v-col cols="4">
             <v-card-title>Questions</v-card-title>
             <v-select
               v-model="filter"
@@ -27,9 +27,13 @@
               item-text="classCode"
               item-value="id"
               label="Filter by Class"
-              style="width: 25%; padding: 5px"
+              style="width: 25%; padding-left: 15px;"
             ></v-select>
-            <v-divider />
+          </v-col>
+        </v-row>
+        <v-divider :thickness="5"></v-divider>
+        <v-row v-if="userOption == 1">
+          <v-col cols="6">
             <v-card-title>Unanswered Questions</v-card-title>
               <v-card
                 v-for="question in unansweredQuestions"
@@ -47,6 +51,8 @@
                   Question: {{ question.question1 }}
                 </v-card-text>
               </v-card>
+            </v-col>
+            <v-col cols="6">
               <v-card-title>Responses</v-card-title>
               <v-card
                 v-for="question in answeredQuestions"
@@ -66,10 +72,11 @@
                   Response: {{ question.response }}
                 </v-card-text>
             </v-card>
-          </v-card-item>
-
+        </v-col>
+      </v-row>
         <!-- This is Option 2 (View Statistics) -->
-
+    <v-row justify="center" align="center" v-if="userOption != 1">
+      <v-col cols="12" sm="8" md="6">
         <v-card-item v-show="userOption == 2">
           <v-card-title>Statistics</v-card-title>
           <v-select

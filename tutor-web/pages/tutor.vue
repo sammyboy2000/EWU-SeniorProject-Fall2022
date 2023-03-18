@@ -3,8 +3,8 @@
     <v-row>
       <v-tabs
         v-model="userOption"
-        color="deep-purple-accent-4"
         align-tabs="center"
+        background-color="primary darken-1"
         >
         <v-tab v-show="" :value="0" disabled ></v-tab>
         <v-tab :value="1">Answer Questions</v-tab>
@@ -25,8 +25,11 @@
               style="width: 25%; padding: 5px"
               @change="initializeQuestionData(selectedClass)"
             ></v-select>
-            Selected Question on right to answer:
+            <v-card-title v-if="selectedQuestion == null">
+              Select a question from the list to answer ->
+            </v-card-title>
             <v-card-title v-if="selectedQuestion !== null">
+              {{ "Question:" }} <br />
               {{ selectedQuestion.question1 }}
             </v-card-title>
             <v-textarea
