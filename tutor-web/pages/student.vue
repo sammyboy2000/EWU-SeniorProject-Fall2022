@@ -15,8 +15,9 @@
       <v-col cols="8">
         <v-card v-show="userOption == 1">
           <v-card-title>
-            <p>Welcome to the Student Question Page.</p>
-            <p>This page will be allow the students to ask questions!</p>
+            <v-header style="font-size: 16pt;"
+              >Welcome! <br /> Select a class below to begin</v-header
+            >
           </v-card-title>
           <v-card-text>
             <v-select
@@ -138,24 +139,26 @@
               v-model="modQuestion"
               auto-grow
             ></v-textarea>
-            <v-btn
-              v-if="editOption == false"
-              color="primary"
-              @click="editOption = true"
-              >Edit</v-btn
-            >
-            <v-btn
-              v-if="editOption == true"
-              color="primary"
-              @click="editSelectedQuestion(), (editOption = false)"
-              >Save Changes</v-btn
-            >
-            <v-btn
-              v-if="editOption == false"
-              color="secondary"
-              @click="removeSelectedQuestion()"
-              >Remove</v-btn
-            >
+            <v-card-item style="padding: 5px;">
+              <v-btn
+                v-if="editOption == false"
+                color="primary"
+                @click="editOption = true"
+                >Edit</v-btn
+              >
+              <v-btn
+                v-if="editOption == true"
+                color="primary"
+                @click="editSelectedQuestion(), (editOption = false)"
+                >Save Changes</v-btn
+              >
+              <v-btn
+                v-if="editOption == false"
+                color="secondary"
+                @click="removeSelectedQuestion()"
+                >Remove</v-btn
+              >
+          </v-card-item>
           </div>
         </v-card>
         <br />
@@ -189,6 +192,7 @@ export default class Student extends Vue {
   studentName: string = '' // student username
   studentQuestions: Question[] = [] // student questions
   answeredQuestions: AnsweredQuestion[] = [] // answered questions
+  answeredtopicList: string[] = [] // answered questions topic list
   selectedQuestion: Question | null = null // selected question
   selectedQuestionIndex: number = -1 // selected question index
   editOption: boolean = false // edit option
@@ -259,7 +263,7 @@ export default class Student extends Vue {
       .then(async (response) => {
         console.log(response.data)
         this.answeredQuestions = response.data
-        this.topicList = await getAnsweredQuestionTopicName(
+        this.answeredtopicList = await getAnsweredQuestionTopicName(
           this.answeredQuestions,
           this.$axios
         )

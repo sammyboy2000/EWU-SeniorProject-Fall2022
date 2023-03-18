@@ -19,7 +19,7 @@
 
         <!-- This is Option 1 (View Questions) -->
         <v-row v-if="userOption == 1">
-          <v-col cols="4">
+          <v-col cols="4" sm="8">
             <v-card-title>Questions</v-card-title>
             <v-select
               v-model="filter"
