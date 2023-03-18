@@ -5,15 +5,16 @@
       <v-btn @click="userOption = 2, filter = -1">View Statistics</v-btn>
       <v-btn @click="userOption = 3, filter = -1">Add/Modify Classes</v-btn>
       <v-btn @click="userOption = 4, filter = -1">Add/Modify Topics</v-btn>
-      <v-btn @click="userOption = 5, filter = -1">Modify Users</v-btn>
+      <v-btn @click="userOption = 5, filter = -1">Manage Users</v-btn>
     </v-row>
     <v-row justify="center" align="center">
       <v-col cols="12" sm="8" md="6">
-        <v-card v-show="userOption == 1">
+        <v-card-item v-show="userOption == 1">
           <v-card-title>Questions</v-card-title>
           <v-card
             v-for="question in unansweredQuestions"
             :key="question.questionId"
+            style="margin-top: 2px;"
           >
             <v-card-text>{{ question.question1 }}</v-card-text>
           </v-card>
@@ -21,6 +22,7 @@
           <v-card
             v-for="question in answeredQuestions"
             :key="question.questionId"
+            style="margin-top: 2px;"
           >
             <v-card-text>
               {{ question.question }}
@@ -28,8 +30,8 @@
               {{ question.response }}
             </v-card-text>
           </v-card>
-        </v-card>
-        <v-card v-show="userOption == 2">
+        </v-card-item>
+        <v-card-item v-show="userOption == 2">
           <v-card-title>Statistics</v-card-title>
           <v-card v-for="stat in topicStatistics" :key="stat.topicId">
             <v-card-text>
@@ -38,7 +40,7 @@
               Occurrences: {{ stat.occurences }}
             </v-card-text>
           </v-card>
-        </v-card>
+        </v-card-item>
         <v-card-item v-show="userOption == 3">
           <v-card-title
             >Add/Modify Classes <v-spacer /><v-btn
@@ -53,9 +55,9 @@
             label="Filter by Classes"
             style="width: 25%; padding: 5px"
             multiple
-            @input="getfilteredClasses(), selectedClass = null"
+            @input="getFilteredClasses(), selectedClass = null"
           ></v-select>
-          <v-card v-for="c in classList.slice(1)" :key="c.id" @click="selectClass(c)">
+          <v-card v-for="c in classList.slice(1)" :key="c.id" @click="selectClass(c)" style="margin-top: 2px;">
             <v-card-text v-if="classFilter.length == 0">
               {{ c.classCode + ': ' + c.className }}
               <v-card-text v-if="selectedClass == c">
@@ -80,6 +82,7 @@
                 v-for="c in filteredClasses"
                 :key="c.id"
                 @click="selectClass(c)"
+                style="margin-top: 2px;"
                 >
                 {{ c.classCode + ': ' + c.className }}
                 <v-card-text v-if="selectedClass == c">
@@ -115,7 +118,7 @@
             label="Filter by Class"
             style="width: 25%; padding: 5px"
           ></v-select>
-          <v-card v-for="c in classList.slice(1)" :key="c.id" style="margin-top: 5px;">
+          <v-card v-for="c in classList.slice(1)" :key="c.id" style="margin-top: 2px;">
             <v-card-text v-if="filter == -1">
               {{ c.classCode }}
               <br />
@@ -138,12 +141,38 @@
             </v-card-text>
           </v-card>
         </v-card-item>
-        <v-card v-if="userOption == 5">
-          <v-card-title>Modify Users</v-card-title>
-          <v-card>
-
+        <v-card-item v-if="userOption == 5">
+          <v-card-title>Manage Users</v-card-title>
+          <v-text-field
+            v-model="inputUser"
+            label="User Email"
+            style="width: 25%; padding: 5px"
+          ></v-text-field>
+          <v-btn color="primary" @click="getFilteredUsers()">Search</v-btn>
+          <br /><br />
+          <v-card style="margin-top: 2px;">
+            <v-card>
+              <v-card-title>
+              {{ "User: " + returnedUser }}
+              </v-card-title>
+              <v-row>
+                <v-col cols="4" style="margin-left: 15px;">
+                  <v-checkbox v-model="userRoles[0]" label="Student"></v-checkbox>
+                </v-col>
+                <v-col cols="4">
+                  <v-checkbox v-model="userRoles[1]" label="Tutor"></v-checkbox>
+                </v-col>
+                <v-col cols="4" style="margin-left: 15px;">
+                  <v-checkbox v-model="userRoles[2]" label="Admin"></v-checkbox>
+                </v-col>
+              </v-row>
+              <v-card-text>
+                <v-btn color="primary" @click="updateUser()">Update</v-btn>
+                <v-btn color="secondary" @click="removeUser()">Remove</v-btn>
+              </v-card-text>
+            </v-card>
           </v-card>
-        </v-card>
+        </v-card-item>
       </v-col>
     </v-row>
     <div>
@@ -244,6 +273,9 @@ export default class Admin extends Vue {
   classFilter: string[] = []
   classPrefixes: string[] = []
   filteredClasses: AppClass[] = []
+  inputUser: string = ''
+  returnedUser: string = ''
+  userRoles: boolean[] = [false, false, false]
 
 // Lifecycle
   async mounted() {
@@ -278,12 +310,11 @@ export default class Admin extends Vue {
       if (prefix !== alreadyExists) {
         this.classPrefixes.push(prefix)
         alreadyExists = prefix
-        console.log(alreadyExists)
       }
     })
   }
 
-  getfilteredClasses() {
+  getFilteredClasses() {
     this.filteredClasses = []
     this.classList.forEach((c) => {
       this.classFilter.forEach((f) => {
@@ -292,7 +323,6 @@ export default class Admin extends Vue {
         }
       })
     })
-
   }
 
   getQuestions() {
@@ -454,5 +484,75 @@ export default class Admin extends Vue {
         this.getClasses()
       })
   }
+
+  async getFilteredUsers() {
+    if(this.inputUser === '') {
+      alert('Please enter a username')
+      return
+    }
+    await this.$axios
+      .get('database/GetUser', {
+        params: {
+          username: this.inputUser,
+        },
+      })      
+      .then((response) => {
+        console.log(response.data)
+        if(response.data === 'No user found') {
+          alert('User not found')
+        }
+        else { 
+          this.returnedUser = response.data
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+      this.getUserRoles()
+  }
+
+  getUserRoles() {
+    this.$axios
+      .get('database/GetUserRoles', {
+        params: {
+          username: this.returnedUser,
+        },
+      })
+      .then((response) => {
+        this.userRoles = response.data
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+  updateUser() {
+    if(this.returnedUser === '') {
+      alert('Please search for a user.')
+      return
+    }
+    this.$axios
+      .post(
+        '/database/ModifyUserRoles',
+        {},
+        {
+          params: {
+            username: this.returnedUser,
+            isStudent: this.userRoles[0],
+            isTutor: this.userRoles[1],
+            isAdmin: this.userRoles[2],
+          },
+        }
+      )
+      .then((response) => {
+        if(response.data === true) alert("The user's roles have been updated.")
+        else alert("The user's roles have not been updated.")
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+// End of Class
 }
 </script>

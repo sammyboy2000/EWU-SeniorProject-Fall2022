@@ -100,9 +100,6 @@ namespace Tutor.api.Services
             {
                 return false;
             }
-
-
-
         }
 
         //Checks via question's GUID
@@ -182,7 +179,14 @@ namespace Tutor.api.Services
             {
                 return null;
             }
-            return _context.Students.Where(x => x.Email.Contains(studentUsername)).Select(x => x.Id).First();
+            try
+            {
+                int? studentId = _context.Students.Where(x => x.Email.Contains(studentUsername)).Select(x => x.Id).First();
+                return studentId;
+            }
+            catch (InvalidOperationException e) {
+                return null;
+            }
         }
 
         public int? GetClassId(string classCode)
@@ -353,6 +357,11 @@ namespace Tutor.api.Services
             return s.Email;
         }
 
+        public string GetTutorUsername(int tutorId)
+        {
+            return _context.ApiUsers.Where(x => x.UserId == tutorId).Select(x => x.ExternalId).First();
+        }
+
         public bool AddTopic(string classCode, string topic)
         {
             Topic t = new Topic();
@@ -434,6 +443,56 @@ namespace Tutor.api.Services
             try
             {
                 _context.Classes.Remove(c);
+                _context.SaveChanges();
+            }
+            catch { return false; }
+            return true;
+        }
+
+// Admin User Methods
+        public String GetUserEmail(string username)
+        {
+            try
+            {
+                return _context.ApiUsers.Where(x => x.ExternalId == username).Select(x => x.ExternalId).First(); 
+            }
+            catch(InvalidOperationException e) { return "No user found"; }
+        }
+
+        public IEnumerable<bool> GetUserRoles(string username)
+        {
+            bool[] userRoles = new bool[3];
+            try
+            {
+                userRoles[0] = _context.ApiUsers.Where(x => x.ExternalId == username).Select(x => x.IsStudent).First();
+                userRoles[1] = _context.ApiUsers.Where(x => x.ExternalId == username).Select(x => x.IsTutor).First();
+                userRoles[2] = _context.ApiUsers.Where(x => x.ExternalId == username).Select(x => x.IsAdmin).First();
+                return userRoles;
+            }
+            catch (InvalidOperationException e) { return null; }
+        }
+
+        public bool ModifyUserRoles(string username, bool isStudent, bool isTutor, bool isAdmin)
+        {
+            ApiUser user = _context.ApiUsers.Where(x => x.ExternalId == username).First();
+            user.IsStudent = isStudent;
+            user.IsTutor = isTutor;
+            user.IsAdmin = isAdmin;
+            try
+            {
+                _context.ApiUsers.Update(user);
+                _context.SaveChanges();
+            }
+            catch { return false; }
+            return true;
+        }
+
+        public bool RemoveUser(string username)
+        {
+            ApiUser user = _context.ApiUsers.Where(x => x.ExternalId == username).First();
+            try
+            {
+                _context.ApiUsers.Remove(user);
                 _context.SaveChanges();
             }
             catch { return false; }
