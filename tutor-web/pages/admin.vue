@@ -719,6 +719,8 @@ export default class Admin extends Vue {
       .then((response) => {
         alert(response.data)
         this.getTopics()
+        this.getQuestions()
+        this.getStatistics()
       })
   }
 
@@ -737,6 +739,8 @@ export default class Admin extends Vue {
       .then((response) => {
         alert(response.data)
         this.getTopics()
+        this.getQuestions()
+        this.getStatistics()
       })
   }
 
