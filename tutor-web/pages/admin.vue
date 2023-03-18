@@ -2,24 +2,23 @@
   <v-container v-if="permLevel == 2" fluid>
     <v-row>
       <v-tabs
-      v-model="userOption"
-      color="deep-purple-accent-4"
-      align-tabs="center"
-
-      >
-      <v-tab v-show="" :value="0" disabled ></v-tab>
-      <v-tab :value="1">View Questions</v-tab>
-      <v-tab :value="2">View Statistics</v-tab>
-      <v-tab :value="3">Add/Modify Classes</v-tab>
-      <v-tab :value="4">Add/Modify Topics</v-tab>
-      <v-tab :value="5">Manage Users</v-tab>
-    </v-tabs>
+        v-model="userOption"
+        color="deep-purple-accent-4"
+        align-tabs="center"
+        >
+        <v-tab v-show="" :value="0" disabled ></v-tab>
+        <v-tab :value="1" @click="filter = -1, classCode = ''">View Questions</v-tab>
+        <v-tab :value="2" @click="filter = -1, classCode = ''">View Statistics</v-tab>
+        <v-tab :value="3" @click="filter = -1, classCode = ''">Add/Modify Classes</v-tab>
+        <v-tab :value="4" @click="filter = -1, classCode = ''">Add/Modify Topics</v-tab>
+        <v-tab :value="5" @click="filter = -1, classCode = ''">Manage Users</v-tab>
+      </v-tabs>
     </v-row>
     <v-row justify="center" align="center">
-      <v-col cols="12">
+      <v-col cols="12" sm="8" md="6">
 
         <!-- This is Option 1 (View Questions) -->
-        <v-row>
+
           <v-card-item v-show="userOption == 1">
               <v-card-title>Questions</v-card-title>
               <v-card
@@ -35,10 +34,10 @@
                 :key="question.questionId"
                 style="margin-top: 2px;"
               >
-                <v-card-text>{{ question.question + "\n" +  question.response }}</v-card-text>
+                <v-card-text>{{ "Question: " + question.question }}</v-card-text>
+                <v-card-text>{{ "Response: " + question.response }}</v-card-text>
               </v-card>
           </v-card-item>
-        </v-row>
 
         <!-- This is Option 2 (View Statistics) -->
 
@@ -55,7 +54,7 @@
 
         <!-- This is Option 3 (Add/Modify Classes) -->
         
-        <v-card-item v-show="userOption == 3">
+        <v-card-item v-show="userOption == 3" class="included">
           <v-card-title
             >Add/Modify Classes <v-spacer /><v-btn
               color="primary"
@@ -71,10 +70,15 @@
             multiple
             @input="getFilteredClasses(), selectedClass = null"
           ></v-select>
-          <v-card v-for="c in classList.slice(1)" :key="c.id" @click="selectClass(c)" style="margin-top: 2px;">
-            <v-card-text v-if="classFilter.length == 0">
+          <v-card v-for="c in classList.slice(1)" 
+           :key="c.id" 
+           v-click-outside="{ handler: onClickOutside, include }" 
+           @click="selectClass(c), isActive = true" 
+           style="margin-top: 2px;"
+          >
+            <v-card-text v-if="classFilter.length == 0" >
               {{ c.classCode + ': ' + c.className }}
-              <v-card-text v-if="selectedClass == c">
+              <v-card-text v-if="isActive == true && selectedClass == c">
                 <v-text-field
                   v-model="c.classCode"
                   label="Class Code"
@@ -124,9 +128,17 @@
           <v-card-title
             >Add/Modify Topics<v-spacer /><v-btn
               color="primary"
-              @click="toggleTopicDialog"
+              @click="toggleTopicDialog(), classCode = '', topicName = ''"
               >Add</v-btn
-            ></v-card-title>
+            >
+            &nbsp;
+            <v-btn
+             color="secondary"
+             @click="toggleTopicEditDialog()"
+             >Modify</v-btn
+            >
+          </v-card-title>
+            
           <v-select
             v-model="filter"
             :items="classList"
@@ -135,7 +147,7 @@
             label="Filter by Class"
             style="width: 25%; padding: 5px"
           ></v-select>
-          <v-card v-for="c in classList.slice(1)" :key="c.id" @click="selectClass(c)" style="margin-top: 2px;">
+          <v-card v-for="c in classList.slice(1)" :key="c.id" style="margin-top: 2px;">
             <v-card-text v-if="filter == -1">
               {{ c.classCode }}
               <br />
@@ -195,6 +207,7 @@
         </v-card-item>
       </v-col>
     </v-row>
+    <!--Dialogs-->
     <div>
       <v-dialog v-model="addClassDialog" max-width="500px">
         <v-card>
@@ -235,11 +248,14 @@
             <v-container>
               <v-row>
                 <v-col cols="12">
-                  <v-text-field
+                  <v-select
                     v-model="classCode"
-                    label="Class Code"
+                    :items="classList.slice(1)"
+                    item-text="classCode"
+                    item-value="classCode"
+                    label="Class"
                     required
-                  ></v-text-field>
+                  ></v-select>
                 </v-col>
                 <v-col cols="12">
                   <v-text-field
@@ -257,6 +273,75 @@
         </v-card>
       </v-dialog>
     </div>
+    <div>
+      <v-dialog v-model="editTopicDialog" max-width="500px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Edit or Remove Topic</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-select
+                    v-model="classCode"
+                    :items="classList.slice(1)"
+                    item-text="classCode"
+                    item-value="id"
+                    label="Class Code"
+                    required
+                  >
+                  </v-select>
+                </v-col>
+                <v-col cols="12">
+                  <v-select
+                    v-model="topicName"
+                    :items="filteredTopics(classCode)"
+                    item-text="topic1"
+                    item-value="topic1"
+                    label="Topic"
+                    required
+                  >
+                  </v-select>
+                </v-col>
+                <v-spacer /><v-btn color="primary" @click="classCode = classNameFromId(classCode), toggleRenameTopicDialog()"
+                  >Edit</v-btn
+                >
+                &nbsp;
+                <v-btn 
+                 color="secondary" 
+                 @click="classCode = classNameFromId(classCode), removeTopic(), toggleTopicEditDialog()"
+                  >Remove</v-btn
+                >
+              </v-row>
+            </v-container>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="renameTopicDialog" max-width="450px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Rename Topic</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="renameTopicName"
+                    label="Topic"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-spacer /><v-btn color="primary" @click="renameTopic(), toggleRenameTopicDialog(), toggleTopicEditDialog()"
+                  >Confirm</v-btn>
+              </v-row>
+            </v-container>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </div>
+    <!--End Dialogs-->
   </v-container>
 </template>
 
@@ -283,12 +368,15 @@ export default class Admin extends Vue {
   classCode: string = ''
   className: string = ''
   topicName: string = ''
+  renameTopicName: string = ''
   selectedClass: AppClass | null = null
   selectedQuestionIndex: number = -1
   permLevel: number = -1
   areYouSure: boolean = false
   addClassDialog: boolean = false
   addTopicDialog: boolean = false
+  editTopicDialog: boolean = false
+  renameTopicDialog: boolean = false
   filter: number = -1
   classFilter: string[] = []
   classPrefixes: string[] = []
@@ -296,6 +384,7 @@ export default class Admin extends Vue {
   inputUser: string = ''
   returnedUser: string = ''
   userRoles: boolean[] = [false, false, false]
+  isActive: boolean = false
 
 // Lifecycle
   async mounted() {
@@ -310,12 +399,28 @@ export default class Admin extends Vue {
 
 
 // Methods
+  onClickOutside() {
+    this.isActive = false
+  }
+
+  include() {
+    return [document.querySelector('.included')]
+  }
+
   toggleClassDialog() {
     this.addClassDialog = !this.addClassDialog
   }
 
   toggleTopicDialog() {
     this.addTopicDialog = !this.addTopicDialog
+  }
+
+  toggleTopicEditDialog() {
+    this.editTopicDialog = !this.editTopicDialog
+  }
+
+  toggleRenameTopicDialog() {
+    this.renameTopicDialog = !this.renameTopicDialog
   }
 
   filteredTopics(id: number) {
@@ -573,10 +678,67 @@ export default class Admin extends Vue {
       })
   }
 
-  // removeUser
+  // CHECK HERE
+  removeUser() {
+    if(this.returnedUser === '') {
+      alert('Please search for a user.')
+      return
+    }
+    this.$axios
+      .post(
+        '/database/RemoveUser',
+        {},
+        {
+          params: {
+            username: this.returnedUser,
+          },
+        }
+      )
+      .then((response) => {
+        if(response.data === true) alert("The user has been removed.")
+        else alert("The user has not been removed.")
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
 
+  renameTopic() {
+    this.$axios
+      .post(
+        '/database/ModifyTopic',
+        {},
+        {
+          params: {
+            classCode: this.classCode,
+            topic: this.topicName,
+            newTopic: this.renameTopicName,
+          },
+        }
+      )
+      .then((response) => {
+        alert(response.data)
+        this.getTopics()
+      })
+  }
 
+  removeTopic() {
+    this.$axios
+      .post(
+        '/database/RemoveTopic',
+        {},
+        {
+          params: {
+            classCode: this.classCode,
+            topic: this.topicName,
+          },
+        }
+      )
+      .then((response) => {
+        alert(response.data)
+        this.getTopics()
+      })
+  }
 
-// End of Class
-}
+} // End of Class
 </script>

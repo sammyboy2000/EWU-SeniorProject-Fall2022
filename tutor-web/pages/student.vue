@@ -1,10 +1,15 @@
 <template>
   <v-container v-if="isLoading == false && permLevel == 0" fluid>
     <v-row>
-      <v-btn @click="userOption = 1">Ask a Question</v-btn>
-      <v-btn @click=";(userOption = 2), getAnsweredQuestionData()"
-        >View Answered Questions</v-btn
-      >
+      <v-tabs
+        v-model="userOption"
+        color="deep-purple-accent-4"
+        align-tabs="center"
+        >
+        <v-tab v-show="" :value="0" disabled ></v-tab>
+        <v-tab :value="1">View Questions</v-tab>
+        <v-tab :value="2" @click="getAnsweredQuestionData()">View Statistics</v-tab>
+      </v-tabs>
     </v-row>
     <v-row>
       <v-col cols="8">

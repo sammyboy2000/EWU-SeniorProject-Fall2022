@@ -1,11 +1,16 @@
 <template>
   <v-container v-if="permLevel == 1" fluid>
     <v-row>
-      <v-btn @click="userOption = 1">Answer Questions</v-btn>
-      <v-btn @click=";(userOption = 2), getAnsweredQuestionData()"
-        >View Answered Questions</v-btn
-      >
-      <v-btn @click="userOption = 3">Modify/Remove Topics</v-btn>
+      <v-tabs
+        v-model="userOption"
+        color="deep-purple-accent-4"
+        align-tabs="center"
+        >
+        <v-tab v-show="" :value="0" disabled ></v-tab>
+        <v-tab :value="1">Answer Questions</v-tab>
+        <v-tab :value="2" @click="getAnsweredQuestionData()">View Answered Questions</v-tab>
+        <v-tab :value="3">Modify/Remove Topics</v-tab>
+      </v-tabs>
     </v-row>
     <v-row>
       <v-col cols="8">
