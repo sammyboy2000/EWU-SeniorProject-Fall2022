@@ -450,6 +450,11 @@ namespace Tutor.api.Services
         }
 
 // Admin User Methods
+                public IEnumerable<AnsweredQuestion> GetAdminAnsweredQuestions()
+        {
+            return _context.AnsweredQuestions;
+        }
+
         public String GetUserEmail(string username)
         {
             try

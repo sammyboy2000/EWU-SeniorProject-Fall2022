@@ -1,36 +1,47 @@
 <template>
   <v-container v-if="permLevel == 2" fluid>
     <v-row>
-      <v-btn @click="userOption = 1, filter = -1">View Questions</v-btn>
-      <v-btn @click="userOption = 2, filter = -1">View Statistics</v-btn>
-      <v-btn @click="userOption = 3, filter = -1">Add/Modify Classes</v-btn>
-      <v-btn @click="userOption = 4, filter = -1">Add/Modify Topics</v-btn>
-      <v-btn @click="userOption = 5, filter = -1">Manage Users</v-btn>
+      <v-tabs
+      v-model="userOption"
+      color="deep-purple-accent-4"
+      align-tabs="center"
+
+      >
+      <v-tab v-show="" :value="0" disabled ></v-tab>
+      <v-tab :value="1">View Questions</v-tab>
+      <v-tab :value="2">View Statistics</v-tab>
+      <v-tab :value="3">Add/Modify Classes</v-tab>
+      <v-tab :value="4">Add/Modify Topics</v-tab>
+      <v-tab :value="5">Manage Users</v-tab>
+    </v-tabs>
     </v-row>
     <v-row justify="center" align="center">
-      <v-col cols="12" sm="8" md="6">
-        <v-card-item v-show="userOption == 1">
-          <v-card-title>Questions</v-card-title>
-          <v-card
-            v-for="question in unansweredQuestions"
-            :key="question.questionId"
-            style="margin-top: 2px;"
-          >
-            <v-card-text>{{ question.question1 }}</v-card-text>
-          </v-card>
-          <v-card-title>Answered Questions</v-card-title>
-          <v-card
-            v-for="question in answeredQuestions"
-            :key="question.questionId"
-            style="margin-top: 2px;"
-          >
-            <v-card-text>
-              {{ question.question }}
-              <br />
-              {{ question.response }}
-            </v-card-text>
-          </v-card>
-        </v-card-item>
+      <v-col cols="12">
+
+        <!-- This is Option 1 (View Questions) -->
+        <v-row>
+          <v-card-item v-show="userOption == 1">
+              <v-card-title>Questions</v-card-title>
+              <v-card
+                v-for="question in unansweredQuestions"
+                :key="question.questionId"
+                style="margin-top: 2px;"
+              >
+                <v-card-text>{{ question.question1 }}</v-card-text>
+              </v-card>
+              <v-card-title>Responses</v-card-title>
+              <v-card
+                v-for="question in answeredQuestions"
+                :key="question.questionId"
+                style="margin-top: 2px;"
+              >
+                <v-card-text>{{ question.question + "\n" +  question.response }}</v-card-text>
+              </v-card>
+          </v-card-item>
+        </v-row>
+
+        <!-- This is Option 2 (View Statistics) -->
+
         <v-card-item v-show="userOption == 2">
           <v-card-title>Statistics</v-card-title>
           <v-card v-for="stat in topicStatistics" :key="stat.topicId">
@@ -41,6 +52,9 @@
             </v-card-text>
           </v-card>
         </v-card-item>
+
+        <!-- This is Option 3 (Add/Modify Classes) -->
+        
         <v-card-item v-show="userOption == 3">
           <v-card-title
             >Add/Modify Classes <v-spacer /><v-btn
@@ -103,6 +117,9 @@
             </v-card-text>
           </v-card-item>
         </v-card-item>
+
+        <!-- This is Option 4 (Add/Modify Topics) -->
+
         <v-card-item v-show="userOption == 4">
           <v-card-title
             >Add/Modify Topics<v-spacer /><v-btn
@@ -118,7 +135,7 @@
             label="Filter by Class"
             style="width: 25%; padding: 5px"
           ></v-select>
-          <v-card v-for="c in classList.slice(1)" :key="c.id" style="margin-top: 2px;">
+          <v-card v-for="c in classList.slice(1)" :key="c.id" @click="selectClass(c)" style="margin-top: 2px;">
             <v-card-text v-if="filter == -1">
               {{ c.classCode }}
               <br />
@@ -141,6 +158,9 @@
             </v-card-text>
           </v-card>
         </v-card-item>
+
+        <!-- This is Option 5 (Manage Users) -->
+
         <v-card-item v-if="userOption == 5">
           <v-card-title>Manage Users</v-card-title>
           <v-text-field
@@ -335,7 +355,7 @@ export default class Admin extends Vue {
         console.log(error)
       })
     this.$axios
-      .get('Questions/GetAnsweredQuestions')
+      .get('Questions/GetAdminAnsweredQuestions')
       .then((response) => {
         this.answeredQuestions = response.data
       })
@@ -552,6 +572,10 @@ export default class Admin extends Vue {
         console.log(error)
       })
   }
+
+  // removeUser
+
+
 
 // End of Class
 }

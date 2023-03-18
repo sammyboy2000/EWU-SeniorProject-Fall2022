@@ -66,6 +66,13 @@ namespace Tutor.Api.Controllers
             return _database.GetTutorAnsweredQuestions(tutorId);
         }
 
+        [HttpGet("GetAdminAnsweredQuestions")]
+        [Authorize(Roles = Roles.Admin)]
+        public IEnumerable<AnsweredQuestion>? GetAdminAnsweredQuestions()
+        {
+            return _database.GetAdminAnsweredQuestions();
+        }
+
         //Added by Jesse: 2/28/2023 to remove selected question from unanswered questions
         [HttpPost("StudentRemoveQuestion")]
         [Authorize(Roles = Roles.Student)]
