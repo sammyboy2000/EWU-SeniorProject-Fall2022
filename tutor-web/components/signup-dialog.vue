@@ -82,11 +82,13 @@ export default class SettingsDialog extends Vue {
 
   submitCredentials() {
     this.$axios
-      .post('Token/RegisterStudent', {
-        username: this.username,
-        password: this.password,
-        firstname: this.firstname,
-        lastname: this.lastname,
+      .post('Token/RegisterStudent', {}, {
+        params: {
+          username: this.username,
+          password: this.password,
+          firstname: this.firstname,
+          lastname: this.lastname,
+        },
       })
       .then((result) => {
         console.log(result)
