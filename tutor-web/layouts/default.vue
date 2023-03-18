@@ -108,21 +108,21 @@ export default {
     },
 
     checkName() {
-    this.$axios
-      .post(
-        '/Token/getName',
-        {},
-        {
-          params: {
-            username: JWT.getUserName(),
-          },
-        }
-      )
-      .then((result) => {
-        this.username = ', ' + result.data
-      })
-      .catch(function (error) {})
-  }
+      this.$axios
+        .post(
+          '/Token/getName',
+          {},
+          {
+            params: {
+              username: JWT.getUserName(),
+            },
+          }
+        )
+        .then((result) => {
+          this.username = ', ' + result.data
+        })
+        .catch(function (error) {})
+    },
   },
 }
 </script>

@@ -5,77 +5,95 @@
         v-model="userOption"
         align-tabs="center"
         background-color="primary darken-1"
+      >
+        <v-tab v-show="" :value="0" disabled></v-tab>
+        <v-tab
+          :value="1"
+          @click=";(filter = -1), (classCode = ''), (classFilter = [])"
+          >View Questions</v-tab
         >
-        <v-tab v-show="" :value="0" disabled ></v-tab>
-        <v-tab :value="1" @click="filter = -1, classCode = '', classFilter = []" >View Questions</v-tab>
-        <v-tab :value="2" @click="filter = -1, classCode = '', classFilter = []">View Statistics</v-tab>
-        <v-tab :value="3" @click="filter = -1, classCode = '', classFilter = []">Add/Modify Classes</v-tab>
-        <v-tab :value="4" @click="filter = -1, classCode = '', classFilter = []">Add/Modify Topics</v-tab>
-        <v-tab :value="5" @click="filter = -1, classCode = '', classFilter = []">Manage Users</v-tab>
+        <v-tab
+          :value="2"
+          @click=";(filter = -1), (classCode = ''), (classFilter = [])"
+          >View Statistics</v-tab
+        >
+        <v-tab
+          :value="3"
+          @click=";(filter = -1), (classCode = ''), (classFilter = [])"
+          >Add/Modify Classes</v-tab
+        >
+        <v-tab
+          :value="4"
+          @click=";(filter = -1), (classCode = ''), (classFilter = [])"
+          >Add/Modify Topics</v-tab
+        >
+        <v-tab
+          :value="5"
+          @click=";(filter = -1), (classCode = ''), (classFilter = [])"
+          >Manage Users</v-tab
+        >
       </v-tabs>
     </v-row>
 
-
-
-        <!-- This is Option 1 (View Questions) -->
-        <v-row v-if="userOption == 1">
-          <v-col cols="4" sm="8">
-            <v-card-title>Questions</v-card-title>
-            <v-select
-              v-model="filter"
-              :items="classList"
-              item-text="classCode"
-              item-value="id"
-              label="Filter by Class"
-              style="width: 25%; padding-left: 15px;"
-            ></v-select>
-          </v-col>
-        </v-row>
-        <v-divider :thickness="5"></v-divider>
-        <v-row v-if="userOption == 1">
-          <v-col cols="6">
-            <v-card-title>Unanswered Questions</v-card-title>
-              <v-card
-                v-for="question in unansweredQuestions"
-                :key="question.questionId"
-                style="margin-top: 2px;"
-              >
-              <v-card-text v-if="filter == -1">
-                  Class: {{ classNameFromId(question.classId) }} <br />
-                  Topic: {{ topicNameFromId(question.topicId) }} <br />
-                  Question: {{ question.question1 }}
-              </v-card-text>
-                <v-card-text v-if="filter == question.classId">
-                  Class: {{ classNameFromId(question.classId) }} <br />
-                  Topic: {{ topicNameFromId(question.topicId) }} <br />
-                  Question: {{ question.question1 }}
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="6">
-              <v-card-title>Responses</v-card-title>
-              <v-card
-                v-for="question in answeredQuestions"
-                :key="question.questionId"
-                style="margin-top: 2px;"
-              >
-              <v-card-text v-if="filter == -1">
-                  Class: {{ classNameFromId(question.classId) }} <br />
-                  Topic: {{ topicNameFromId(question.topicId) }} <br />
-                  Question: {{ question.question }} <br />
-                  Response: {{ question.response }}
-              </v-card-text>
-                <v-card-text v-if="filter == question.classId">
-                  Class: {{ classNameFromId(question.classId) }} <br />
-                  Topic: {{ topicNameFromId(question.topicId) }} <br />
-                  Question: {{ question.question }} <br />
-                  Response: {{ question.response }}
-                </v-card-text>
-            </v-card>
-        </v-col>
-      </v-row>
-        <!-- This is Option 2 (View Statistics) -->
-    <v-row justify="center" align="center" v-if="userOption != 1">
+    <!-- This is Option 1 (View Questions) -->
+    <v-row v-if="userOption == 1">
+      <v-col cols="4" sm="8">
+        <v-card-title>Questions</v-card-title>
+        <v-select
+          v-model="filter"
+          :items="classList"
+          item-text="classCode"
+          item-value="id"
+          label="Filter by Class"
+          style="width: 25%; padding-left: 15px"
+        ></v-select>
+      </v-col>
+    </v-row>
+    <v-divider :thickness="5"></v-divider>
+    <v-row v-if="userOption == 1">
+      <v-col cols="6">
+        <v-card-title>Unanswered Questions</v-card-title>
+        <v-card
+          v-for="question in unansweredQuestions"
+          :key="question.questionId"
+          style="margin-top: 2px"
+        >
+          <v-card-text v-if="filter == -1">
+            Class: {{ classNameFromId(question.classId) }} <br />
+            Topic: {{ topicNameFromId(question.topicId) }} <br />
+            Question: {{ question.question1 }}
+          </v-card-text>
+          <v-card-text v-if="filter == question.classId">
+            Class: {{ classNameFromId(question.classId) }} <br />
+            Topic: {{ topicNameFromId(question.topicId) }} <br />
+            Question: {{ question.question1 }}
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="6">
+        <v-card-title>Responses</v-card-title>
+        <v-card
+          v-for="question in answeredQuestions"
+          :key="question.questionId"
+          style="margin-top: 2px"
+        >
+          <v-card-text v-if="filter == -1">
+            Class: {{ classNameFromId(question.classId) }} <br />
+            Topic: {{ topicNameFromId(question.topicId) }} <br />
+            Question: {{ question.question }} <br />
+            Response: {{ question.response }}
+          </v-card-text>
+          <v-card-text v-if="filter == question.classId">
+            Class: {{ classNameFromId(question.classId) }} <br />
+            Topic: {{ topicNameFromId(question.topicId) }} <br />
+            Question: {{ question.question }} <br />
+            Response: {{ question.response }}
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+    <!-- This is Option 2 (View Statistics) -->
+    <v-row v-if="userOption != 1" justify="center" align="center">
       <v-col cols="12" sm="8" md="6">
         <v-card-item v-show="userOption == 2">
           <v-card-title>Statistics</v-card-title>
@@ -87,7 +105,11 @@
             label="Filter by Class"
             style="width: 25%; padding: 5px"
           ></v-select>
-          <v-card v-for="stat in topicStatistics" :key="stat.topicId" style="margin-top: 2px;">
+          <v-card
+            v-for="stat in topicStatistics"
+            :key="stat.topicId"
+            style="margin-top: 2px"
+          >
             <v-card-text v-if="filter == -1">
               Class: {{ stat.classCode }} <br />
               Topic: {{ stat.topic }} <br />
@@ -102,7 +124,7 @@
         </v-card-item>
 
         <!-- This is Option 3 (Add/Modify Classes) -->
-        
+
         <v-card-item v-show="userOption == 3" class="included">
           <v-card-title
             >Add/Modify Classes <v-spacer /><v-btn
@@ -117,15 +139,16 @@
             label="Filter by Classes"
             style="width: 25%; padding: 5px"
             multiple
-            @input="getFilteredClasses(), selectedClass = null"
+            @input="getFilteredClasses(), (selectedClass = null)"
           ></v-select>
-          <v-card v-for="c in classList.slice(1)" 
-           :key="c.id" 
-           v-click-outside="{ handler: onClickOutside, include }" 
-           @click="selectClass(c), isActive = true" 
-           style="margin-top: 2px;"
+          <v-card
+            v-for="c in classList.slice(1)"
+            :key="c.id"
+            v-click-outside="{ handler: onClickOutside, include }"
+            style="margin-top: 2px"
+            @click="selectClass(c), (isActive = true)"
           >
-            <v-card-text v-if="classFilter.length == 0" >
+            <v-card-text v-if="classFilter.length == 0">
               {{ c.classCode + ': ' + c.className }}
               <v-card-text v-if="isActive == true && selectedClass == c">
                 <v-text-field
@@ -148,9 +171,9 @@
               <v-card
                 v-for="c in filteredClasses"
                 :key="c.id"
+                style="margin-top: 2px"
                 @click="selectClass(c)"
-                style="margin-top: 2px;"
-                >
+              >
                 {{ c.classCode + ': ' + c.className }}
                 <v-card-text v-if="selectedClass == c">
                   <v-text-field
@@ -177,17 +200,15 @@
           <v-card-title
             >Add/Modify Topics<v-spacer /><v-btn
               color="primary"
-              @click="toggleTopicDialog(), classCode = '', topicName = ''"
+              @click="toggleTopicDialog(), (classCode = ''), (topicName = '')"
               >Add</v-btn
             >
             &nbsp;
-            <v-btn
-             color="secondary"
-             @click="toggleTopicEditDialog()"
-             >Modify</v-btn
+            <v-btn color="secondary" @click="toggleTopicEditDialog()"
+              >Modify</v-btn
             >
           </v-card-title>
-            
+
           <v-select
             v-model="filter"
             :items="classList"
@@ -196,13 +217,17 @@
             label="Filter by Class"
             style="width: 25%; padding: 5px"
           ></v-select>
-          <v-card v-for="c in classList.slice(1)" :key="c.id" style="margin-top: 2px;">
+          <v-card
+            v-for="c in classList.slice(1)"
+            :key="c.id"
+            style="margin-top: 2px"
+          >
             <v-card-text v-if="filter == -1">
               {{ c.classCode }}
               <br />
               <ul>
                 <li v-for="topic in filteredTopics(c.id)" :key="topic.id">
-                {{ topic.topic1 }}
+                  {{ topic.topic1 }}
                 </li>
               </ul>
             </v-card-text>
@@ -212,8 +237,11 @@
               {{ classList[filter].classCode }}
               <br />
               <ul>
-                <li v-for="topic in filteredTopics(classList[filter].id)" :key="topic.id">
-                {{ topic.topic1 }}
+                <li
+                  v-for="topic in filteredTopics(classList[filter].id)"
+                  :key="topic.id"
+                >
+                  {{ topic.topic1 }}
                 </li>
               </ul>
             </v-card-text>
@@ -231,19 +259,22 @@
           ></v-text-field>
           <v-btn color="primary" @click="getFilteredUsers()">Search</v-btn>
           <br /><br />
-          <v-card style="margin-top: 2px;">
+          <v-card style="margin-top: 2px">
             <v-card>
               <v-card-title>
-              {{ "User: " + returnedUser }}
+                {{ 'User: ' + returnedUser }}
               </v-card-title>
               <v-row>
-                <v-col cols="4" style="margin-left: 15px;">
-                  <v-checkbox v-model="userRoles[0]" label="Student"></v-checkbox>
+                <v-col cols="4" style="margin-left: 15px">
+                  <v-checkbox
+                    v-model="userRoles[0]"
+                    label="Student"
+                  ></v-checkbox>
                 </v-col>
                 <v-col cols="4">
                   <v-checkbox v-model="userRoles[1]" label="Tutor"></v-checkbox>
                 </v-col>
-                <v-col cols="4" style="margin-left: 15px;">
+                <v-col cols="4" style="margin-left: 15px">
                   <v-checkbox v-model="userRoles[2]" label="Admin"></v-checkbox>
                 </v-col>
               </v-row>
@@ -353,13 +384,22 @@
                   >
                   </v-select>
                 </v-col>
-                <v-spacer /><v-btn color="primary" @click="classCode = classNameFromId(classCode), toggleRenameTopicDialog()"
+                <v-spacer /><v-btn
+                  color="primary"
+                  @click="
+                    ;(classCode = classNameFromId(classCode)),
+                      toggleRenameTopicDialog()
+                  "
                   >Edit</v-btn
                 >
                 &nbsp;
-                <v-btn 
-                 color="secondary" 
-                 @click="classCode = classNameFromId(classCode), removeTopic(), toggleTopicEditDialog()"
+                <v-btn
+                  color="secondary"
+                  @click="
+                    ;(classCode = classNameFromId(classCode)),
+                      removeTopic(),
+                      toggleTopicEditDialog()
+                  "
                   >Remove</v-btn
                 >
               </v-row>
@@ -382,8 +422,15 @@
                     required
                   ></v-text-field>
                 </v-col>
-                <v-spacer /><v-btn color="primary" @click="renameTopic(), toggleRenameTopicDialog(), toggleTopicEditDialog()"
-                  >Confirm</v-btn>
+                <v-spacer /><v-btn
+                  color="primary"
+                  @click="
+                    renameTopic(),
+                      toggleRenameTopicDialog(),
+                      toggleTopicEditDialog()
+                  "
+                  >Confirm</v-btn
+                >
               </v-row>
             </v-container>
           </v-card-text>
@@ -435,7 +482,7 @@ export default class Admin extends Vue {
   userRoles: boolean[] = [false, false, false]
   isActive: boolean = false
 
-// Lifecycle
+  // Lifecycle
   async mounted() {
     this.permLevel = await AuthenticationCheck(this.$axios)
     if (this.permLevel !== 2) location.assign('/') // Redirect to home page if not a tutor
@@ -446,8 +493,7 @@ export default class Admin extends Vue {
     this.getClassPrefixes()
   }
 
-
-// Methods
+  // Methods
   onClickOutside() {
     this.isActive = false
   }
@@ -480,7 +526,7 @@ export default class Admin extends Vue {
     let alreadyExists = ''
     this.classPrefixes = []
     this.classList.forEach((c) => {
-      let prefix = c.classCode.toString().slice(0, 4)
+      const prefix = c.classCode.toString().slice(0, 4)
       if (prefix !== alreadyExists) {
         this.classPrefixes.push(prefix)
         alreadyExists = prefix
@@ -640,7 +686,6 @@ export default class Admin extends Vue {
       })
   }
 
-  
   removeClass() {
     if (this.selectedClass === null) {
       alert('Select a class')
@@ -671,7 +716,7 @@ export default class Admin extends Vue {
   }
 
   async getFilteredUsers() {
-    if(this.inputUser === '') {
+    if (this.inputUser === '') {
       alert('Please enter a username')
       return
     }
@@ -680,20 +725,19 @@ export default class Admin extends Vue {
         params: {
           username: this.inputUser,
         },
-      })      
+      })
       .then((response) => {
         console.log(response.data)
-        if(response.data === 'No user found') {
+        if (response.data === 'No user found') {
           alert('User not found')
-        }
-        else { 
+        } else {
           this.returnedUser = response.data
         }
       })
       .catch((error) => {
         console.log(error)
       })
-      this.getUserRoles()
+    this.getUserRoles()
   }
 
   getUserRoles() {
@@ -712,7 +756,7 @@ export default class Admin extends Vue {
   }
 
   updateUser() {
-    if(this.returnedUser === '') {
+    if (this.returnedUser === '') {
       alert('Please search for a user.')
       return
     }
@@ -730,7 +774,7 @@ export default class Admin extends Vue {
         }
       )
       .then((response) => {
-        if(response.data === true) alert("The user's roles have been updated.")
+        if (response.data === true) alert("The user's roles have been updated.")
         else alert("The user's roles have not been updated.")
       })
       .catch((error) => {
@@ -740,7 +784,7 @@ export default class Admin extends Vue {
 
   // CHECK HERE
   removeUser() {
-    if(this.returnedUser === '') {
+    if (this.returnedUser === '') {
       alert('Please search for a user.')
       return
     }
@@ -755,8 +799,8 @@ export default class Admin extends Vue {
         }
       )
       .then((response) => {
-        if(response.data === true) alert("The user has been removed.")
-        else alert("The user has not been removed.")
+        if (response.data === true) alert('The user has been removed.')
+        else alert('The user has not been removed.')
       })
       .catch((error) => {
         console.log(error)
@@ -811,6 +855,5 @@ export default class Admin extends Vue {
         this.getStatistics()
       })
   }
-
 } // End of Class
 </script>
