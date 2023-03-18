@@ -91,7 +91,7 @@
             :key="answer.questionId"
           >
             <v-card-title>{{ answer.question }}</v-card-title>
-            <v-card-text>Topic: {{ topicList[index] }}</v-card-text>
+            <v-card-text>Topic: {{ answeredtopicList[index] }}</v-card-text>
             <v-card-text>Reply: {{ answer.response }}</v-card-text>
             <v-card-text>
               Created at:

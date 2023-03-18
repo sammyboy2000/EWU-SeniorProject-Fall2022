@@ -48,7 +48,7 @@
             :key="answer.questionId"
           >
             <v-card-title>{{ answer.question }}</v-card-title>
-            <v-card-text>Topic: {{ topicList[index] }}</v-card-text>
+            <v-card-text>Topic: {{ answeredtopicList[index] }}</v-card-text>
             <v-card-text>Response: {{ answer.response }}</v-card-text>
             <v-card-text>
               Created at:
@@ -233,6 +233,7 @@ export default class Tutor extends Vue {
   inputUser: string = ''
   returnedUser: string = ''
   userRoles: boolean[] = [false, false, false]
+  answeredtopicList: string[] = []
 
   permLevel: number = -1
 
@@ -330,7 +331,7 @@ export default class Tutor extends Vue {
       .then(async (response) => {
         console.log(response.data)
         this.answeredQuestions = response.data
-        this.topicList = await getAnsweredQuestionTopicName(
+        this.answeredtopicList = await getAnsweredQuestionTopicName(
           this.answeredQuestions,
           this.$axios
         )
