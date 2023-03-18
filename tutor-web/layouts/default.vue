@@ -96,7 +96,7 @@ export default {
   },
   async mounted() {
     if (JWT.loadToken(this.$axios) != null) {
-      this.username = JWT.getName()
+      this.checkName()
       this.isLoggedIn = true
     }
     this.permLevel = await AuthenticationCheck(this.$axios)
@@ -106,6 +106,23 @@ export default {
       JWT.deleteToken()
       location.assign('/')
     },
+
+    checkName() {
+    this.$axios
+      .post(
+        '/Token/getName',
+        {},
+        {
+          params: {
+            username: JWT.getUserName(),
+          },
+        }
+      )
+      .then((result) => {
+        this.username = ', ' + result.data
+      })
+      .catch(function (error) {})
+  }
   },
 }
 </script>
