@@ -1,9 +1,10 @@
 <template>
   <v-row justify="center" align="center" style="background-color: darkred">
     <v-col cols="12" sm="8" md="6">
-        <v-card>
+      <v-card>
         <v-card-item class="logo py-4 d-flex justify-center">
-          <v-img src="\EWUlogoAlt.png" max-height="30%" :contain="true"> </v-img>
+          <v-img src="\EWUlogoAlt.png" max-height="30%" :contain="true">
+          </v-img>
         </v-card-item>
         <v-divider></v-divider>
         <v-card-item>
@@ -40,7 +41,9 @@
           <v-card-actions>
             <v-spacer />
             <v-btn v-if="!isLoggedIn" color="primary"> <login-dialog /> </v-btn>
-            <v-btn v-if="!isLoggedIn" color="primary"> <signup-dialog /> </v-btn>
+            <v-btn v-if="!isLoggedIn" color="primary">
+              <signup-dialog />
+            </v-btn>
             <v-btn v-if="isLoggedIn" @click="deleteToken()">Log Out </v-btn>
             <v-btn v-if="isStudent" color="primary" nuxt to="/student">
               Ask A Question</v-btn

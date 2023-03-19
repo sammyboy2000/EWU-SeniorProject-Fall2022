@@ -5,18 +5,21 @@
         v-model="userOption"
         align-tabs="center"
         background-color="primary darken-1"
-        >
-        <v-tab v-show="" :value="0" disabled ></v-tab>
+      >
+        <v-tab v-show="" :value="0" disabled></v-tab>
         <v-tab :value="1">View Questions</v-tab>
-        <v-tab :value="2" @click="getAnsweredQuestionData()">View Statistics</v-tab>
+        <v-tab :value="2" @click="getAnsweredQuestionData()"
+          >View Statistics</v-tab
+        >
       </v-tabs>
     </v-row>
     <v-row>
       <v-col cols="8">
         <v-card v-show="userOption == 1">
           <v-card-title>
-            <v-header style="font-size: 16pt;"
-              >Welcome! <br /> Select a class below to begin</v-header
+            <v-header style="font-size: 16pt"
+              >Welcome! <br />
+              Select a class below to begin</v-header
             >
           </v-card-title>
           <v-card-text>
@@ -56,7 +59,7 @@
             </div>
             <br />
             <div>
-              <v-header style="font-size: 16pt; font-weight: bold;"
+              <v-header style="font-size: 16pt; font-weight: bold"
                 >Question:</v-header
               >
               <br />
@@ -139,7 +142,7 @@
               v-model="modQuestion"
               auto-grow
             ></v-textarea>
-            <v-card-item style="padding: 5px;">
+            <v-card-item style="padding: 5px">
               <v-btn
                 v-if="editOption == false"
                 color="primary"
@@ -158,7 +161,7 @@
                 @click="removeSelectedQuestion()"
                 >Remove</v-btn
               >
-          </v-card-item>
+            </v-card-item>
           </div>
         </v-card>
         <br />

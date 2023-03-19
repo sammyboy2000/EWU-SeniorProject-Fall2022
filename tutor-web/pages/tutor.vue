@@ -5,10 +5,12 @@
         v-model="userOption"
         align-tabs="center"
         background-color="primary darken-1"
-        >
-        <v-tab v-show="" :value="0" disabled ></v-tab>
+      >
+        <v-tab v-show="" :value="0" disabled></v-tab>
         <v-tab :value="1">Answer Questions</v-tab>
-        <v-tab :value="2" @click="getAnsweredQuestionData()">View Answered Questions</v-tab>
+        <v-tab :value="2" @click="getAnsweredQuestionData()"
+          >View Answered Questions</v-tab
+        >
         <v-tab :value="3">Modify/Remove Topics</v-tab>
         <v-tab :value="4">Manage User Privileges</v-tab>
       </v-tabs>
@@ -29,7 +31,7 @@
               Select a question from the list to answer ->
             </v-card-title>
             <v-card-title v-if="selectedQuestion !== null">
-              {{ "Question:" }} <br />
+              {{ 'Question:' }} <br />
               {{ selectedQuestion.question1 }}
             </v-card-title>
             <v-textarea
@@ -113,20 +115,27 @@
           ></v-text-field>
           <v-btn color="primary" @click="getFilteredUsers()">Search</v-btn>
           <br /><br />
-          <v-card style="margin-top: 2px;">
+          <v-card style="margin-top: 2px">
             <v-card>
               <v-card-title>
-              {{ "User: " + returnedUser }}
+                {{ 'User: ' + returnedUser }}
               </v-card-title>
               <v-row>
-                <v-col cols="4" style="margin-left: 15px;">
-                  <v-checkbox v-model="userRoles[0]" label="Student"></v-checkbox>
+                <v-col cols="4" style="margin-left: 15px">
+                  <v-checkbox
+                    v-model="userRoles[0]"
+                    label="Student"
+                  ></v-checkbox>
                 </v-col>
                 <v-col cols="4">
                   <v-checkbox v-model="userRoles[1]" label="Tutor"></v-checkbox>
                 </v-col>
-                <v-col cols="4" style="margin-left: 15px;">
-                  <v-checkbox v-model="userRoles[2]" label="Admin" disabled></v-checkbox>
+                <v-col cols="4" style="margin-left: 15px">
+                  <v-checkbox
+                    v-model="userRoles[2]"
+                    label="Admin"
+                    disabled
+                  ></v-checkbox>
                 </v-col>
               </v-row>
               <v-card-text>
@@ -135,7 +144,6 @@
             </v-card>
           </v-card>
         </v-card-item>
-
       </v-col>
       <v-col cols="4">
         <v-card style="margin-bottom: 5px">
@@ -433,7 +441,7 @@ export default class Tutor extends Vue {
   }
 
   async getFilteredUsers() {
-    if(this.inputUser === '') {
+    if (this.inputUser === '') {
       alert('Please enter a username')
       return
     }
@@ -442,20 +450,19 @@ export default class Tutor extends Vue {
         params: {
           username: this.inputUser,
         },
-      })      
+      })
       .then((response) => {
         console.log(response.data)
-        if(response.data === 'No user found') {
+        if (response.data === 'No user found') {
           alert('User not found')
-        }
-        else { 
+        } else {
           this.returnedUser = response.data
         }
       })
       .catch((error) => {
         console.log(error)
       })
-      this.getUserRoles()
+    this.getUserRoles()
   }
 
   getUserRoles() {
@@ -474,7 +481,7 @@ export default class Tutor extends Vue {
   }
 
   updateUser() {
-    if(this.returnedUser === '') {
+    if (this.returnedUser === '') {
       alert('Please search for a user.')
       return
     }
@@ -492,7 +499,7 @@ export default class Tutor extends Vue {
         }
       )
       .then((response) => {
-        if(response.data === true) alert("The user's roles have been updated.")
+        if (response.data === true) alert("The user's roles have been updated.")
         else alert("The user's roles have not been updated.")
       })
       .catch((error) => {

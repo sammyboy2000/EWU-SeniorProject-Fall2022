@@ -9,7 +9,7 @@
         <v-card>
           <v-card-title>User Info</v-card-title>
           <v-card-text>
-            Email (Optional):
+            New Email (Optional):
             <v-text-field v-model="email"></v-text-field>
           </v-card-text>
           <v-card-text>
@@ -69,8 +69,9 @@ export default class User extends Vue {
   setLoggedIn() {
     if (this.permLevel === 0 || this.permLevel === 1 || this.permLevel === 2) {
       this.isLoggedIn = true
+    } else {
+      this.isLoggedIn = false
     }
-    else { this.isLoggedIn = false }
   }
 
   updateUser() {

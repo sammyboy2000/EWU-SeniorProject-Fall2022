@@ -8,7 +8,7 @@
         </v-btn>
       </v-toolbar-title>
       <v-spacer />
-      <v-text v-if="username != null">Welcome {{ username }}!</v-text>
+      <v-text v-if="username != null">Welcome{{ username }}!</v-text>
       <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>mdi-menu</v-icon>
       </v-btn>
@@ -108,21 +108,21 @@ export default {
     },
 
     checkName() {
-    this.$axios
-      .post(
-        '/Token/getName',
-        {},
-        {
-          params: {
-            username: JWT.getUserName(),
-          },
-        }
-      )
-      .then((result) => {
-        this.username = ', ' + result.data
-      })
-      .catch(function (error) {})
-  }
+      this.$axios
+        .post(
+          '/Token/getName',
+          {},
+          {
+            params: {
+              username: JWT.getUserName(),
+            },
+          }
+        )
+        .then((result) => {
+          this.username = ', ' + result.data
+        })
+        .catch(function (error) {})
+    },
   },
 }
 </script>
