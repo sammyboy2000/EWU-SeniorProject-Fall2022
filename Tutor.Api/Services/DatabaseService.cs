@@ -184,7 +184,8 @@ namespace Tutor.api.Services
                 int? studentId = _context.Students.Where(x => x.Email.Contains(studentUsername)).Select(x => x.Id).First();
                 return studentId;
             }
-            catch (InvalidOperationException e) {
+            catch (InvalidOperationException e)
+            {
                 return null;
             }
         }
@@ -286,21 +287,45 @@ namespace Tutor.api.Services
             {
                 int classId = _context.Classes.Where(x => x.ClassCode == classCode).First().Id;
                 int topicId = _context.Topics.Where(x => x.Topic1 == topic).First().Id;
-                var questions = _context.Questions.Where(x => x.ClassId == classId && x.TopicId == topicId);
-                foreach (var q in questions)
+                try
                 {
-                    if (!topicAggregate.Exists(x => x.TopicId == q.TopicId))
+                    var questions = _context.Questions.Where(x => x.ClassId == classId && x.TopicId == topicId);
+                    foreach (var q in questions)
                     {
-                        topicAggregate.Add(new TopicAggregate
+                        if (!topicAggregate.Exists(x => x.TopicId == q.TopicId))
                         {
-                            ClassCode = classCode,
-                            ClassId = classId,
-                            Topic = topic,
-                            TopicId = topicId,
-                            Occurences = _context.Questions.Where(x => x.TopicId == q.TopicId).Count(),
-                        });
+                            topicAggregate.Add(new TopicAggregate
+                            {
+                                ClassCode = classCode,
+                                ClassId = classId,
+                                Topic = topic,
+                                TopicId = topicId,
+                                Occurences = _context.Questions.Where(x => x.TopicId == q.TopicId).Count() + _context.AnsweredQuestions.Where(x => x.TopicId == q.TopicId).Count(),
+                            });
+                        }
                     }
                 }
+                catch { }
+                try
+                {
+                    var aquestions = _context.AnsweredQuestions.Where(x => x.ClassId == classId && x.TopicId == topicId);
+
+                    foreach (var q in aquestions)
+                    {
+                        if (!topicAggregate.Exists(x => x.TopicId == q.TopicId))
+                        {
+                            topicAggregate.Add(new TopicAggregate
+                            {
+                                ClassCode = classCode,
+                                ClassId = classId,
+                                Topic = topic,
+                                TopicId = topicId,
+                                Occurences = _context.Questions.Where(x => x.TopicId == q.TopicId).Count() + _context.AnsweredQuestions.Where(x => x.TopicId == q.TopicId).Count(),
+                            });
+                        }
+                    }
+                }
+                catch { }
                 return topicAggregate;
             }
             catch { return null; }
@@ -311,21 +336,44 @@ namespace Tutor.api.Services
             try
             {
                 int classId = _context.Classes.Where(x => x.ClassCode == className).First().Id;
-                var questions = _context.Questions.Where(x => x.ClassId == classId);
-                foreach (var q in questions)
+                try
                 {
-                    if (!topicAggregate.Exists(x => x.TopicId == q.TopicId))
+                    var questions = _context.Questions.Where(x => x.ClassId == classId);
+                    foreach (var q in questions)
                     {
-                        topicAggregate.Add(new TopicAggregate
+                        if (!topicAggregate.Exists(x => x.TopicId == q.TopicId))
                         {
-                            ClassCode = className,
-                            ClassId = classId,
-                            Topic = _context.Topics.Where(x => x.Id == q.TopicId).First().Topic1,
-                            TopicId = q.TopicId,
-                            Occurences = _context.Questions.Where(x => x.TopicId == q.TopicId).Count(),
-                        });
+                            topicAggregate.Add(new TopicAggregate
+                            {
+                                ClassCode = className,
+                                ClassId = classId,
+                                Topic = _context.Topics.Where(x => x.Id == q.TopicId).First().Topic1,
+                                TopicId = q.TopicId,
+                                Occurences = _context.Questions.Where(x => x.TopicId == q.TopicId).Count() + _context.AnsweredQuestions.Where(x => x.TopicId == q.TopicId).Count(),
+                            });
+                        }
                     }
                 }
+                catch { }
+                try
+                {
+                    var aquestions = _context.AnsweredQuestions.Where(x => x.ClassId == classId);
+                    foreach (var q in aquestions)
+                    {
+                        if (!topicAggregate.Exists(x => x.TopicId == q.TopicId))
+                        {
+                            topicAggregate.Add(new TopicAggregate
+                            {
+                                ClassCode = className,
+                                ClassId = classId,
+                                Topic = _context.Topics.Where(x => x.Id == q.TopicId).First().Topic1,
+                                TopicId = q.TopicId,
+                                Occurences = _context.Questions.Where(x => x.TopicId == q.TopicId).Count() + _context.AnsweredQuestions.Where(x => x.TopicId == q.TopicId).Count(),
+                            });
+                        }
+                    }
+                }
+                catch { }
                 return topicAggregate;
             }
             catch { return null; }
@@ -333,21 +381,44 @@ namespace Tutor.api.Services
         public IEnumerable<TopicAggregate> GetQuestionStatistics()
         {
             List<TopicAggregate> topicAggregate = new();
-            var questions = _context.Questions;
-            foreach (var q in questions)
+            try
             {
-                if (!topicAggregate.Exists(x => x.TopicId == q.TopicId))
+                var questions = _context.Questions;
+                foreach (var q in questions)
                 {
-                    topicAggregate.Add(new TopicAggregate
+                    if (!topicAggregate.Exists(x => x.TopicId == q.TopicId))
                     {
-                        ClassCode = _context.Classes.Where(x => x.Id == q.ClassId).First().ClassCode,
-                        ClassId = q.ClassId,
-                        Topic = _context.Topics.Where(x => x.Id == q.TopicId).First().Topic1,
-                        TopicId = q.TopicId,
-                        Occurences = _context.Questions.Where(x => x.TopicId == q.TopicId).Count(),
-                    });
+                        topicAggregate.Add(new TopicAggregate
+                        {
+                            ClassCode = _context.Classes.Where(x => x.Id == q.ClassId).First().ClassCode,
+                            ClassId = q.ClassId,
+                            Topic = _context.Topics.Where(x => x.Id == q.TopicId).First().Topic1,
+                            TopicId = q.TopicId,
+                            Occurences = _context.Questions.Where(x => x.TopicId == q.TopicId).Count() + _context.AnsweredQuestions.Where(x => x.TopicId == q.TopicId).Count(),
+                        });
+                    }
                 }
             }
+            catch { }
+            try
+            {
+                var aquestions = _context.AnsweredQuestions;
+                foreach (var q in aquestions)
+                {
+                    if (!topicAggregate.Exists(x => x.TopicId == q.TopicId))
+                    {
+                        topicAggregate.Add(new TopicAggregate
+                        {
+                            ClassCode = _context.Classes.Where(x => x.Id == q.ClassId).First().ClassCode,
+                            ClassId = q.ClassId,
+                            Topic = _context.Topics.Where(x => x.Id == q.TopicId).First().Topic1,
+                            TopicId = q.TopicId,
+                            Occurences = _context.Questions.Where(x => x.TopicId == q.TopicId).Count() + _context.AnsweredQuestions.Where(x => x.TopicId == q.TopicId).Count(),
+                        });
+                    }
+                }
+            }
+            catch { }
             return topicAggregate;
         }
 
@@ -449,8 +520,8 @@ namespace Tutor.api.Services
             return true;
         }
 
-// Admin User Methods
-                public IEnumerable<AnsweredQuestion> GetAdminAnsweredQuestions()
+        // Admin User Methods
+        public IEnumerable<AnsweredQuestion> GetAdminAnsweredQuestions()
         {
             return _context.AnsweredQuestions;
         }
@@ -459,9 +530,9 @@ namespace Tutor.api.Services
         {
             try
             {
-                return _context.ApiUsers.Where(x => x.ExternalId == username).Select(x => x.ExternalId).First(); 
+                return _context.ApiUsers.Where(x => x.ExternalId == username).Select(x => x.ExternalId).First();
             }
-            catch(InvalidOperationException e) { return "No user found"; }
+            catch (InvalidOperationException e) { return "No user found"; }
         }
 
         public IEnumerable<bool> GetUserRoles(string username)

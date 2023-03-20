@@ -93,7 +93,7 @@ namespace Tutor.Api.Controllers
         }
 
 
-// Admin User Methods
+        // Admin User Methods
         [HttpGet("GetUser")]
         [Authorize(Roles = "Tutor, Admin")]
         public String GetUser(String? username)
@@ -122,7 +122,7 @@ namespace Tutor.Api.Controllers
             return _service.RemoveUser(username!);
         }
 
-// Class Methods
+        // Class Methods
         [HttpPost("AddClass")]
         [Authorize]
         public String AddClass(string classCode, string? className)
@@ -134,7 +134,8 @@ namespace Tutor.Api.Controllers
 
         [HttpPost("UpdateClass")]
         [Authorize(Roles = "Admin")]
-        public String UpdateClass(string? classCode, string? className) {
+        public String UpdateClass(string? classCode, string? className)
+        {
             if (classCode.IsNullOrEmpty()) { return "Class Code cannot be empty"; }
             int? classId = _service.GetClassId(classCode!);
             if (className.IsNullOrEmpty()) { return "Class Name cannot be empty."; }
@@ -153,7 +154,7 @@ namespace Tutor.Api.Controllers
             else { return "Failed to remove class."; }
         }
 
-// Topic Methods
+        // Topic Methods
         [HttpPost("AddTopic")]
         [Authorize]
         public String AddTopic(string? classCode, string? topic)

@@ -325,6 +325,7 @@ export default class Tutor extends Vue {
       )
       .then((response) => {
         console.log(response.data)
+        alert(response.data)
         this.initializeQuestionData()
       })
   }
