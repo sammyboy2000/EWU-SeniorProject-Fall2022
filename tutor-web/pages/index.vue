@@ -1,6 +1,6 @@
 <template>
-  <v-row justify="center" align="center" style="background-color: darkred">
-    <v-col cols="12" sm="8" md="6">
+  <v-row justify="center" align="center" style="background-color: darkred; height: 120%">
+    <v-col cols="12" sm="8" md="6" style="height: 100%">
       <v-card>
         <v-card-item class="logo py-4 d-flex justify-center">
           <v-img src="\EWUlogoAlt.png" max-height="30%" :contain="true">
@@ -12,7 +12,7 @@
             Welcome to EWU Tutoring.
           </v-card-title>
           <v-card-title v-if="isLoggedIn" class="headline">
-            Welcome to back to EWU Tutoring{{ userName }}.
+            Welcome back to EWU Tutoring{{ userName }}.
           </v-card-title>
           <v-card-text>
             <p v-if="isLoggedIn">What would you like to do today?</p>
