@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="permLevel == 1" fluid>
+  <v-container v-if="permLevel[1] == 1" fluid>
     <v-row>
       <v-tabs
         v-model="userOption"
@@ -243,11 +243,11 @@ export default class Tutor extends Vue {
   userRoles: boolean[] = [false, false, false]
   answeredtopicList: string[] = []
 
-  permLevel: number = -1
+  permLevel: number[] = [-1, -1, -1]
 
   async mounted() {
     this.permLevel = await AuthenticationCheck(this.$axios) // Check authentication
-    if (this.permLevel !== 1) location.assign('/') // Redirect to home page if not a tutor
+    if (this.permLevel[1] !== 1) location.assign('/') // Redirect to home page if not a tutor
     this.setTutorUsername()
     this.initializeQuestionData()
     this.initializeClassData()
@@ -499,12 +499,30 @@ export default class Tutor extends Vue {
         }
       )
       .then((response) => {
-        if (response.data === true) alert("The user's roles have been updated.")
-        else alert("The user's roles have not been updated.")
+        if (response.data === true) {
+          this.updateUserRoles()  
+          alert("The user's roles have been updated.")
+        }
+          else alert("The user's roles have not been updated.")
       })
       .catch((error) => {
         console.log(error)
       })
   }
+
+  updateUserRoles() {
+    this.$axios.post('/Token/UpdateUserRoles', {}, {
+      params: {
+        returnedUsername: this.returnedUser,
+        updateStudent: this.userRoles[0],
+        updateTutor: this.userRoles[1],
+        updateAdmin: this.userRoles[2],
+      },
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
 }
+
 </script>

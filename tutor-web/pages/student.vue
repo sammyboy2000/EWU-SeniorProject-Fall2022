@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="isLoading == false && permLevel == 0" fluid>
+  <v-container v-if="isLoading == false && permLevel[0] == 0" fluid>
     <v-row>
       <v-tabs
         v-model="userOption"
@@ -200,13 +200,13 @@ export default class Student extends Vue {
   selectedQuestionIndex: number = -1 // selected question index
   editOption: boolean = false // edit option
 
-  permLevel: number = -1 // permission level
+  permLevel: number[] = [-1, -1, -1] // permission level
   isLoading: boolean = true // is loading
 
   // Mounted functions
   async mounted() {
     this.permLevel = await AuthenticationCheck(this.$axios) // check authentication
-    if (this.permLevel !== 0) location.assign('/') // redirect to home page if not student
+    if (this.permLevel[0] !== 0) location.assign('/') // redirect to home page if not student
     this.setStudentUsername()
     this.initializeClassData()
     this.initializeQuestionData()

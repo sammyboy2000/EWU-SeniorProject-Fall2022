@@ -254,21 +254,22 @@ public class TokenController : Controller
     // Maybe use this instead of individual methods for each role
     [HttpGet("AuthCheck")]
     [Authorize]
-    public string AuthCheck()
+    public string[] AuthCheck()
     {
+        var permStringArray = new string[3] { "Unauthorized", "Unauthorized", "Unauthorized" };
         if (User.IsInRole(Roles.Admin))
         {
-            return "Authorized as Admin";
+            permStringArray[2] = "Authorized as Admin";
         }
-        else if (User.IsInRole(Roles.Tutor))
+        if (User.IsInRole(Roles.Tutor))
         {
-            return "Authorized as Tutor";
+            permStringArray[1] = "Authorized as Tutor";
         }
-        else if (User.IsInRole(Roles.Student))
+        if (User.IsInRole(Roles.Student))
         {
-            return "Authorized as Student";
+            permStringArray[0] = "Authorized as Student";
         }
-        return "Unauthorized";
+        return permStringArray;
     }
 
     [HttpPost("getName")]
@@ -308,6 +309,74 @@ public class TokenController : Controller
             }
         }
         return "";
+    }
+
+    [HttpPost("UpdateUserRoles")]
+    [Authorize(Roles = Roles.Admin)]
+    public async Task<string> UpdateUserRolesAsync(string returnedUsername, bool updateStudent, bool updateTutor, bool updateAdmin)
+    {
+        returnedUsername = returnedUsername.Split(' ')[0];
+        var user = await _userManager.FindByNameAsync(returnedUsername);
+
+        if (user == null || user.Email != returnedUsername)
+        {
+            return "Invalid request ";
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+
+        if (updateStudent && !roles.Contains(Roles.Student))
+        {
+            await _userManager.AddToRoleAsync(user, Roles.Student);
+        }
+        else if (!updateStudent && roles.Contains(Roles.Student))
+        {
+            await _userManager.RemoveFromRoleAsync(user, Roles.Student);
+        }
+
+        if (updateTutor && !roles.Contains(Roles.Tutor))
+        {
+            await _userManager.AddToRoleAsync(user, Roles.Tutor);
+        }
+        else if (!updateTutor && roles.Contains(Roles.Tutor))
+        {
+            await _userManager.RemoveFromRoleAsync(user, Roles.Tutor);
+        }
+
+        if (updateAdmin && !roles.Contains(Roles.Admin))
+        {
+            await _userManager.AddToRoleAsync(user, Roles.Admin);
+        }
+        else if (!updateAdmin && roles.Contains(Roles.Admin))
+        {
+            await _userManager.RemoveFromRoleAsync(user, Roles.Admin);
+        }
+
+        return "Successfully updated user roles";
+    }
+
+    [HttpPost("RemoveUser")]
+    [Authorize(Roles = Roles.Admin)]
+    public async Task<string> RemoveUserAsync(string returnedUsername)
+    {
+        returnedUsername = returnedUsername.Split(' ')[0];
+        var user = await _userManager.FindByNameAsync(returnedUsername);
+
+        if (user == null || user.Email != returnedUsername)
+        {
+            return "Invalid request";
+        }
+
+        var result = await _userManager.DeleteAsync(user);
+
+        if (result.Succeeded)
+        {
+            return "Successfully deleted user";
+        }
+        else
+        {
+            return "Failed to delete user";
+        }
     }
 
 }

@@ -46,7 +46,7 @@ export default class User extends Vue {
   initialEmail: string = ''
   password: string = ''
 
-  permLevel: number = -1 // permission level
+  permLevel: number[] = [-1,-1,-1] // permission level
   isLoggedIn: boolean = false // is logged in
   isLoading: boolean = true // is loading
   status: string = ''
@@ -67,7 +67,7 @@ export default class User extends Vue {
   }
 
   setLoggedIn() {
-    if (this.permLevel === 0 || this.permLevel === 1 || this.permLevel === 2) {
+    if (this.permLevel[0] === 0 || this.permLevel[1] === 1 || this.permLevel[2] === 2) {
       this.isLoggedIn = true
     } else {
       this.isLoggedIn = false

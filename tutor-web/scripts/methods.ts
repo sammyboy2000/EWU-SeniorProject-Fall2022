@@ -2,14 +2,14 @@ import { NuxtAxiosInstance } from '@nuxtjs/axios'
 import { Question, AnsweredQuestion } from '~/scripts/interfaces'
 
 export async function AuthenticationCheck($axios: NuxtAxiosInstance) {
-  let permLevel = -1
+  let permLevel = [-1, -1, -1]
   await $axios
     .get('Token/AuthCheck')
     .then((result) => {
-      if (result.data === 'Authorized as Student') permLevel = 0
-      else if (result.data === 'Authorized as Tutor') permLevel = 1
-      else if (result.data === 'Authorized as Admin') permLevel = 2
-      else permLevel = -1
+      if (result.data[0] === 'Authorized as Student') permLevel[0] = 0
+      if (result.data[1] === 'Authorized as Tutor') permLevel[1] = 1
+      if (result.data[2] === 'Authorized as Admin') permLevel[2] = 2
+      console.log("Results: ", result.data)
     })
     .catch(function (error) {
       console.log('Unauthorized Access' + error)

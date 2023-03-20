@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="permLevel == 2" fluid>
+  <v-container v-if="permLevel[2] == 2" fluid>
     <v-row>
       <v-tabs
         v-model="userOption"
@@ -467,7 +467,7 @@ export default class Admin extends Vue {
   renameTopicName: string = ''
   selectedClass: AppClass | null = null
   selectedQuestionIndex: number = -1
-  permLevel: number = -1
+  permLevel: number[] = [-1, -1, -1]
   areYouSure: boolean = false
   addClassDialog: boolean = false
   addTopicDialog: boolean = false
@@ -485,7 +485,7 @@ export default class Admin extends Vue {
   // Lifecycle
   async mounted() {
     this.permLevel = await AuthenticationCheck(this.$axios)
-    if (this.permLevel !== 2) location.assign('/') // Redirect to home page if not a tutor
+    if (this.permLevel[2] !== 2) location.assign('/') // Redirect to home page if not a tutor
     this.getQuestions()
     this.getStatistics()
     await this.getClasses()
@@ -774,15 +774,31 @@ export default class Admin extends Vue {
         }
       )
       .then((response) => {
-        if (response.data === true) alert("The user's roles have been updated.")
-        else alert("The user's roles have not been updated.")
+        if (response.data === true) {
+          this.updateUserRoles()  
+          alert("The user's roles have been updated.")
+        }
+          else alert("The user's roles have not been updated.")
       })
       .catch((error) => {
         console.log(error)
       })
   }
 
-  // CHECK HERE
+  updateUserRoles() {
+    this.$axios.post('/Token/UpdateUserRoles', {}, {
+      params: {
+        returnedUsername: this.returnedUser,
+        updateStudent: this.userRoles[0],
+        updateTutor: this.userRoles[1],
+        updateAdmin: this.userRoles[2],
+      },
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+
   removeUser() {
     if (this.returnedUser === '') {
       alert('Please search for a user.')
@@ -799,9 +815,33 @@ export default class Admin extends Vue {
         }
       )
       .then((response) => {
-        if (response.data === true) alert('The user has been removed.')
+        if (response.data === true) {
+          this.removeUserFromToken()
+          alert('The user has been removed.')
+        }
         else alert('The user has not been removed.')
       })
+      .catch((error) => {
+        console.log(error)
+      })
+      location.reload()
+  }
+
+  removeUserFromToken() {
+    if (this.returnedUser === '') {
+      alert('Please search for a user.')
+      return
+    }
+    this.$axios
+      .post(
+        '/Token/RemoveUser',
+        {},
+        {
+          params: {
+            returnedUsername: this.returnedUser,
+          },
+        }
+      )
       .catch((error) => {
         console.log(error)
       })

@@ -54,7 +54,7 @@
             </v-row>
             <v-row>
               <v-col class="text-right">
-                <v-btn color="primary" @click="submitCredentials()">
+                <v-btn color="primary" @click="submitCredentials(), toggleDialog()">
                   submit
                 </v-btn>
               </v-col>

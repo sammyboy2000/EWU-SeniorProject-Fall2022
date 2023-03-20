@@ -73,7 +73,7 @@ export default class IndexPage extends Vue {
   userName: string = ''
   isLoggedIn: boolean = false
   isLoading: boolean = false
-  permLevel: number = -1
+  permLevel: number[] = [-1, -1, -1]
   isStudent: boolean = false
   isTutor: boolean = false
   isAdmin: boolean = false
@@ -89,16 +89,19 @@ export default class IndexPage extends Vue {
   }
 
   permAssignment() {
-    if (this.permLevel === 0) {
+    if (this.permLevel[0] === 0) {
       this.isLoggedIn = true
       this.isStudent = true
-    } else if (this.permLevel === 1) {
+    }
+    if (this.permLevel[1] === 1) {
       this.isLoggedIn = true
       this.isTutor = true
-    } else if (this.permLevel === 2) {
+    }
+    if (this.permLevel[2] === 2) {
       this.isLoggedIn = true
       this.isAdmin = true
-    } else {
+    } 
+    else if (this.permLevel[0] === -1 && this.permLevel[1] === -1 && this.permLevel[2] === -1) {
       this.isLoggedIn = false
       this.isStudent = false
       this.isTutor = false

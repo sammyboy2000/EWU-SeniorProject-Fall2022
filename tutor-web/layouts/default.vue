@@ -27,14 +27,18 @@
           <v-btn text block nuxt to="/"> Home <v-icon>mdi-home</v-icon></v-btn>
         </v-list-item>
 
-        <v-list-item v-show="permLevel != -1">
-          <v-btn v-if="permLevel == 0" text block nuxt to="/student">
+        <v-list-item v-show="permLevel[0] != -1">
+          <v-btn v-show="permLevel[0] == 0" text block nuxt to="/student">
             Ask A Question <v-icon>mdi-controller-classic</v-icon></v-btn
           >
-          <v-btn v-if="permLevel == 1" text block nuxt to="/tutor">
+        </v-list-item>
+        <v-list-item v-show="permLevel[1] != -1">
+          <v-btn v-show="permLevel[1] == 1" text block nuxt to="/tutor">
             Answer Questions <v-icon>mdi-controller-classic</v-icon></v-btn
           >
-          <v-btn v-if="permLevel == 2" text block nuxt to="/admin">
+        </v-list-item>
+        <v-list-item v-show="permLevel[2] != -1">
+          <v-btn v-show="permLevel[2] == 2" text block nuxt to="/admin">
             View Statistics <v-icon>mdi-controller-classic</v-icon></v-btn
           >
         </v-list-item>
@@ -90,7 +94,7 @@ export default {
       title: 'EWU Tutoring',
       isLoggedIn: false,
       jwt: JWT._getData,
-      permLevel: -1,
+      permLevel: [-1, -1, -1],
       username: null,
     }
   },
