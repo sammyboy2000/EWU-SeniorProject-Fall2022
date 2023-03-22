@@ -9,7 +9,7 @@
         <v-tab v-show="" :value="0" disabled></v-tab>
         <v-tab :value="1">View Questions</v-tab>
         <v-tab :value="2" @click="getAnsweredQuestionData()"
-          >View Statistics</v-tab
+          >View Answered Questions</v-tab
         >
       </v-tabs>
     </v-row>
