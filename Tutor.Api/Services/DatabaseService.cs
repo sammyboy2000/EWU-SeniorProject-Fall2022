@@ -57,6 +57,15 @@ namespace Tutor.api.Services
             return _context.Topics.Where(x => x.Id == searchString).First().Topic1;
         }
 
+        public String GetClassCode(int? searchString)
+        {
+            if (searchString == null)
+            {
+                return "";
+            }
+            return _context.Classes.Where(x => x.Id == searchString).First().ClassCode;
+        }
+
         public IEnumerable<Topic> GetTopicNames()
         {
             return _context.Topics;

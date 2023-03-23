@@ -59,6 +59,13 @@ namespace Tutor.Api.Controllers
             return _service.GetTopicName(i);
         }
 
+        [HttpGet("getClassCode")]
+        [Authorize]
+        public String GetClassCode(int? i)
+        {
+            return _service.GetClassCode(i);
+        }
+
         [HttpGet("getTopicNameAdmin")]
         [Authorize(Roles = Roles.Admin)]
         public IEnumerable<Topic> GetTopicNamesAdmin()

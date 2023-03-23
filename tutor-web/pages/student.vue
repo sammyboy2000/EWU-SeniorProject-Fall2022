@@ -94,6 +94,7 @@
             :key="answer.questionId"
           >
             <v-card-title>{{ answer.question }}</v-card-title>
+            <v-card-text>Class: {{ answeredClassCodeList[index] }}</v-card-text>
             <v-card-text>Topic: {{ answeredtopicList[index] }}</v-card-text>
             <v-card-text>Reply: {{ answer.response }}</v-card-text>
             <v-card-text>
@@ -178,6 +179,7 @@ import {
   AuthenticationCheck,
   getAskedQuestionTopicName,
   getAnsweredQuestionTopicName,
+  getAnsweredQuestionClassCode,
 } from '~/scripts/methods'
 
 @Component({})
@@ -185,6 +187,7 @@ export default class Student extends Vue {
   name: string = 'Student'
   userOption: number = 1 // 1 = ask question, 2 = view answered questions
   classData: [] = [] // class data from database
+  classCodeList: string[] = [] // class list from database to handle questions class names
   selectedClass: string = '' // selected class from dropdown
   topicData: [] = [] // topic data from database
   topicList: string[] = [] // topic list from database to handle questions topic names
@@ -196,6 +199,7 @@ export default class Student extends Vue {
   studentQuestions: Question[] = [] // student questions
   answeredQuestions: AnsweredQuestion[] = [] // answered questions
   answeredtopicList: string[] = [] // answered questions topic list
+  answeredClassCodeList: string[] = [] // class list from database to handle questions class names
   selectedQuestion: Question | null = null // selected question
   selectedQuestionIndex: number = -1 // selected question index
   editOption: boolean = false // edit option
@@ -267,6 +271,10 @@ export default class Student extends Vue {
         console.log(response.data)
         this.answeredQuestions = response.data
         this.answeredtopicList = await getAnsweredQuestionTopicName(
+          this.answeredQuestions,
+          this.$axios
+        )
+        this.answeredClassCodeList = await getAnsweredQuestionClassCode(
           this.answeredQuestions,
           this.$axios
         )

@@ -36,6 +36,25 @@ export async function getAnsweredQuestionTopicName(
   return topicList
 }
 
+export async function getAnsweredQuestionClassCode(
+  questionList: AnsweredQuestion[],
+  $axios: NuxtAxiosInstance
+) {
+  const classCodeList: string[] = []
+  for (let j = 0; j < questionList.length; j++) {
+    await $axios
+      .get('/database/getClassCode', {
+        params: {
+          i: questionList[j].classId,
+        },
+      })
+      .then((response) => {
+        classCodeList[j] = response.data
+      })
+  }
+  return classCodeList
+}
+
 export async function getAskedQuestionTopicName(
   questionList: Question[],
   $axios: NuxtAxiosInstance

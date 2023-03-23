@@ -50,6 +50,7 @@
             :key="answer.questionId"
           >
             <v-card-title>{{ answer.question }}</v-card-title>
+            <v-card-text>Class: {{ answeredClassCode[index] }}</v-card-text>
             <v-card-text>Topic: {{ answeredtopicList[index] }}</v-card-text>
             <v-card-text>Response: {{ answer.response }}</v-card-text>
             <v-card-text>
@@ -215,6 +216,7 @@ import {
   AuthenticationCheck,
   getAskedQuestionTopicName,
   getAnsweredQuestionTopicName,
+  getAnsweredQuestionClassCode,
 } from '~/scripts/methods'
 
 @Component({})
@@ -242,6 +244,7 @@ export default class Tutor extends Vue {
   returnedUser: string = ''
   userRoles: boolean[] = [false, false, false]
   answeredtopicList: string[] = []
+  answeredClassCode: string[] = []
 
   permLevel: number[] = [-1, -1, -1]
 
@@ -341,6 +344,10 @@ export default class Tutor extends Vue {
         console.log(response.data)
         this.answeredQuestions = response.data
         this.answeredtopicList = await getAnsweredQuestionTopicName(
+          this.answeredQuestions,
+          this.$axios
+        )
+        this.answeredClassCode = await getAnsweredQuestionClassCode(
           this.answeredQuestions,
           this.$axios
         )
