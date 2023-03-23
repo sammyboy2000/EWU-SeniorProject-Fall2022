@@ -158,6 +158,7 @@
         >
           <v-card-title>Question {{ index + 1 }}</v-card-title>
           <v-card-text>
+            Class: {{ classCodeList[index] }} <br /><br />
             Topic: {{ topicList[index] }} <br /><br />
             {{ question.question1 }}
             <br /><br />
@@ -215,6 +216,7 @@ import { Question, AnsweredQuestion } from '~/scripts/interfaces'
 import {
   AuthenticationCheck,
   getAskedQuestionTopicName,
+  getAskedQuestionClassCode,
   getAnsweredQuestionTopicName,
   getAnsweredQuestionClassCode,
 } from '~/scripts/methods'
@@ -234,6 +236,7 @@ export default class Tutor extends Vue {
   selectedClass: string = ''
   topicData: [] = []
   topicList: string[] = []
+  classCodeList: string[] = []
   selectedTopic: string = ''
   newTopic: string = ''
   isLoading: boolean = true
@@ -278,6 +281,10 @@ export default class Tutor extends Vue {
       .then(async (response) => {
         this.questionData = response.data.slice(0, 4)
         this.topicList = await getAskedQuestionTopicName(
+          this.questionData,
+          this.$axios
+        )
+        this.classCodeList = await getAskedQuestionClassCode(
           this.questionData,
           this.$axios
         )

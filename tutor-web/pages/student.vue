@@ -127,6 +127,7 @@
         >
           <v-card-title>Question {{ index + 1 }}</v-card-title>
           <v-card-text>
+            Class: {{ classCodeList[index] }} <br /><br />
             Topic: {{ topicList[index] }} <br /><br />
             Question:<br />{{ question.question1 }} <br /><br />
             Created on:
@@ -178,6 +179,7 @@ import { Question, AnsweredQuestion } from '~/scripts/interfaces'
 import {
   AuthenticationCheck,
   getAskedQuestionTopicName,
+  getAskedQuestionClassCode,
   getAnsweredQuestionTopicName,
   getAnsweredQuestionClassCode,
 } from '~/scripts/methods'
@@ -253,6 +255,10 @@ export default class Student extends Vue {
         console.log(response.data)
         this.studentQuestions = response.data
         this.topicList = await getAskedQuestionTopicName(
+          this.studentQuestions,
+          this.$axios
+        )
+        this.classCodeList = await getAskedQuestionClassCode(
           this.studentQuestions,
           this.$axios
         )

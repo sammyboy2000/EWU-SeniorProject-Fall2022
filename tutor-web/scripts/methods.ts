@@ -21,7 +21,7 @@ export async function getAnsweredQuestionTopicName(
   questionList: AnsweredQuestion[],
   $axios: NuxtAxiosInstance
 ) {
-  const topicList: string[] = []
+  const antopicList: string[] = []
   for (let j = 0; j < questionList.length; j++) {
     await $axios
       .get('/database/getTopicName', {
@@ -30,17 +30,17 @@ export async function getAnsweredQuestionTopicName(
         },
       })
       .then((response) => {
-        topicList[j] = response.data
+        antopicList[j] = response.data
       })
   }
-  return topicList
+  return antopicList
 }
 
 export async function getAnsweredQuestionClassCode(
   questionList: AnsweredQuestion[],
   $axios: NuxtAxiosInstance
 ) {
-  const classCodeList: string[] = []
+  const anclassCodeList: string[] = []
   for (let j = 0; j < questionList.length; j++) {
     await $axios
       .get('/database/getClassCode', {
@@ -49,10 +49,10 @@ export async function getAnsweredQuestionClassCode(
         },
       })
       .then((response) => {
-        classCodeList[j] = response.data
+        anclassCodeList[j] = response.data
       })
   }
-  return classCodeList
+  return anclassCodeList
 }
 
 export async function getAskedQuestionTopicName(
@@ -72,4 +72,23 @@ export async function getAskedQuestionTopicName(
       })
   }
   return topicList
+}
+
+export async function getAskedQuestionClassCode(
+  questionList: Question[],
+  $axios: NuxtAxiosInstance
+) {
+  const classCodeList: string[] = []
+  for (let j = 0; j < questionList.length; j++) {
+    await $axios
+      .get('/database/getClassCode', {
+        params: {
+          i: questionList[j].classId,
+        },
+      })
+      .then((response) => {
+        classCodeList[j] = response.data
+      })
+  }
+  return classCodeList
 }
